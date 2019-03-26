@@ -61,6 +61,10 @@ if date != None and version and committee:
                     print("Content-Type: text/html\r\n\r\n<h3>Data submitted!</h3>You may see the updated committee data at: <a href='https://reporter.apache.org/?%s'>https://reporter.apache.org/?%s</a>." % (committee, committee))
         except Exception as e:
             err = e
+    else:
+        err = "User %s not a member of PMC %s nor an ASF member" % (user, committee)
+else:
+    err = "Date '%s', version '%s' or committee '%s' is missing" % (date, version, committee)
 
 if not saved:
     if dojson:
