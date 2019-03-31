@@ -6,6 +6,8 @@ if sys.hexversion < 0x030000F0:
    This script reads: 
    https://whimsy.apache.org/public/committee-info.json
    https://whimsy.apache.org/public/public_ldap_people.json
+   https://whimsy.apache.org/public/public_ldap_projects.json
+
    and updates:
    data/pmcs.json - members of pmcs
    data/projects.json - committers of projects
