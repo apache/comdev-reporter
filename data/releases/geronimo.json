@@ -63,6 +63,7 @@
  "el_2.2_spec-1.1": 1535673600, 
  "gerinomo-jcache-simple-1.0.0": 1529020800, 
  "gerinomo-jcache-simple-1.0.1": 1535328000, 
+ "gerinomo-jcache-simple-1.0.2": 1554076800, 
  "geronimo-annotation_1.3-spec-1.0": 1498773600, 
  "geronimo-config-1.0": 1505347200, 
  "geronimo-config-1.1": 1515196800, 
@@ -94,6 +95,7 @@
  "openapi-1.0.4": 1547337600, 
  "openapi-1.0.5": 1548892800, 
  "openapi-1.0.6": 1551312000, 
+ "openapi-1.0.7": 1554076800, 
  "opentracing-1.0.1": 1545350400, 
  "opentracing-1.0.2": 1551312000, 
  "safeguard-1.2.0": 1545350400, 
@@ -106,6 +108,7 @@
  "xbean-4.10": 1538265600, 
  "xbean-4.11": 1538784000, 
  "xbean-4.12": 1541030400, 
+ "xbean-4.13": 1554076800, 
  "xbean-4.7": 1521417600, 
  "xbean-4.8": 1524009600, 
  "xbean-4.9": 1530489600
