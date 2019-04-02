@@ -143,6 +143,7 @@
  "org.apache.felix.webconsole-4.3.4": 1494547200, 
  "org.apache.felix.webconsole.plugins.ds-2.0.8": 1506729600, 
  "org.apache.felix.webconsole.plugins.event-1.1.8": 1506729600, 
+ "org.apache.felix.webconsole.plugins.memoryusage-1.0.10": 1554163200, 
  "org.apache.felix.webconsole.plugins.memoryusage-1.0.8": 1519772400, 
  "org.apache.felix.webconsole.plugins.obr-1.0.4": 1494288000, 
  "org.apache.felix.webconsole.plugins.subsystems-0.1.0": 1447632000
