@@ -11,9 +11,10 @@ dojson = form['json'].value if 'json' in form else None
     
 def getPMCs(uid):
     groups = []
-    ldapdata = subprocess.check_output(['ldapsearch', '-x', '-LLL', '(|(memberUid=%s)(member=uid=%s,ou=people,dc=apache,dc=org))' % (uid, uid), 'cn'])
-    picked = {}
-    for match in re.finditer(r"dn: cn=([a-zA-Z0-9]+),ou=pmc,ou=committees,ou=groups,dc=apache,dc=org", ldapdata):
+    ldapdata = subprocess.check_output(['ldapsearch', '-x', '-LLL',
+        '-b', 'ou=project,ou=groups,dc=apache,dc=org',
+        'member=uid=%s,ou=people,dc=apache,dc=org' % uid, 'dn'])
+    for match in re.finditer(r"dn: cn=([a-zA-Z0-9]+),ou=project,ou=groups,dc=apache,dc=org", ldapdata):
         group = match.group(1)
         if group != "incubator":
             groups.append(group)
