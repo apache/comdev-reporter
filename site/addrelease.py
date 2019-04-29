@@ -1,8 +1,8 @@
 #!/usr/bin/env python
-import os, sys, re, json, subprocess, urllib, datetime, time
-import base64, urllib2, cgi
+import os, re, json, subprocess
+import cgi
 
-form = cgi.FieldStorage();
+form = cgi.FieldStorage()
 user = os.environ['HTTP_X_AUTHENTICATED_USER'] if 'HTTP_X_AUTHENTICATED_USER' in os.environ else "nobody"
 date = int(form['date'].value) if ('date' in form and len(form['date'].value) > 0) else None
 version = form['version'].value.strip() if ('version' in form and len(form['version'].value.strip()) > 0) else None
@@ -36,7 +36,7 @@ def getReleaseData(committee):
         with open("/var/www/reporter.apache.org/data/releases/%s.json" % committee, "r") as f:
             x = json.loads(f.read())
             f.close()
-        return x;
+        return x
     except:
         return {}
 

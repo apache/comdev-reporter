@@ -6,9 +6,9 @@
    TODO: cache the LDAP query responses or use the appropriate json files instead
 """
 
-import os, sys, json, urllib2, re, time, base64, cgi, subprocess, calendar
+import os, json, urllib2, re, time, base64, cgi, subprocess, calendar
 
-form = cgi.FieldStorage();
+form = cgi.FieldStorage()
 user = os.environ['HTTP_X_AUTHENTICATED_USER'] if 'HTTP_X_AUTHENTICATED_USER' in os.environ else None
 project = form['project'].value if ('project' in form and len(form['project'].value) > 0) else None
 jiraname = form['jiraname'].value if ('jiraname' in form and len(form['jiraname'].value) > 0) else None
