@@ -5,8 +5,6 @@ import cgi
 sys.path.append("../scripts") # module is in sibling directory
 import ldap_info
 
-print("done")
-
 form = cgi.FieldStorage()
 user = os.environ['HTTP_X_AUTHENTICATED_USER'] if 'HTTP_X_AUTHENTICATED_USER' in os.environ else "nobody"
 date = int(form['date'].value) if ('date' in form and len(form['date'].value) > 0) else None
