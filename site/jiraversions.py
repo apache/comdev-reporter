@@ -6,7 +6,10 @@
    TODO: cache the LDAP query responses or use the appropriate json files instead
 """
 
-import os, json, urllib2, re, time, base64, cgi, subprocess, calendar
+import os, sys, json, urllib2, time, base64, cgi, calendar
+
+sys.path.append("../scripts") # module is in sibling directory
+import ldap_info
 
 form = cgi.FieldStorage()
 user = os.environ['HTTP_X_AUTHENTICATED_USER'] if 'HTTP_X_AUTHENTICATED_USER' in os.environ else None
@@ -23,20 +26,6 @@ If a valid JIRA name is used, the project json file will be updated.
 
 """
 
-# find groups to which the UID belongs
-# TODO only needs to determine if the user belongs to a single group; so could simplify the LDAP search
-def getPMCs(uid):
-    groups = []
-    ldapdata = subprocess.check_output(['ldapsearch', '-x', '-LLL',
-        '-b', 'ou=project,ou=groups,dc=apache,dc=org',
-        'member=uid=%s,ou=people,dc=apache,dc=org' % uid, 'dn'])
-    for match in re.finditer(r"dn: cn=([a-zA-Z0-9]+),ou=project,ou=groups,dc=apache,dc=org", ldapdata):
-        group = match.group(1)
-        if group != "incubator":
-            groups.append(group)
-    return groups
-
-
 # Get the existing release data
 def getReleaseData(project):
     try:
@@ -45,24 +34,12 @@ def getReleaseData(project):
     except:
         return {}
 
-# is the user an ASF member?
-def isMember(uid):
-    members = []
-    ldapdata = subprocess.check_output(['ldapsearch', '-x', '-LLL', '-b', 'cn=member,ou=groups,dc=apache,dc=org'])
-    for match in re.finditer(r"memberUid: ([-a-z0-9_.]+)", ldapdata):
-        group = match.group(1)
-        members.append(group)
-    if uid in members:
-        return True
-    return False
-
-
 jirapass = ""
 with open("/var/www/reporter.apache.org/data/jirapass.txt", "r") as f:
     jirapass = f.read().strip()
 
 # Do the cheapest checks first
-if jiraname and user and (isMember(user) or project in getPMCs(user)):
+if jiraname and user and (ldap_info.isMember(user) or project in ldap_info.getPMCownership(user)):
     jiraname = jiraname.upper()
     base64string = base64.encodestring('%s:%s' % ('githubbot', jirapass))[:-1]
     try:
