@@ -180,6 +180,20 @@ def cycles():
             cycles['http server'] = cycles[ctte]
     return cycles
 
+def getPMCs(uid, incubator=False):
+    """Returns the array of PMC committees to which the uid belongs. Excludes incubator by default"""
+    pmcs = []
+    cttes = cidata['committees']
+    for ent in cttes:
+        ctte = cttes[ent]
+        if not ctte['pmc']:
+            continue
+        if ent == 'incubator' and not incubator:
+            continue
+        if uid in ctte['roster']:
+            pmcs.append(ent)
+    return pmcs
+
 if __name__ == '__main__':
     mails=PMCmails()
     print(mails)
@@ -190,3 +204,8 @@ if __name__ == '__main__':
     json.dump(PMCsummary(), sys.stdout, indent=1, sort_keys=True)
     json.dump(pmcdates(), sys.stdout, indent=1, sort_keys=True)
     json.dump(cycles(), sys.stdout, indent=1, sort_keys=True)
+    print("")
+    for arg in sys.argv[1:]:
+        print("%s member of: %s" % (arg, getPMCs(arg)))
+    for arg in sys.argv[1:]:
+        print("%s member of: %s" % (arg, getPMCs(arg, True)))
