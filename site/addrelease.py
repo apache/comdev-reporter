@@ -1,6 +1,11 @@
 #!/usr/bin/env python
-import os, re, json, subprocess
+import os, sys, json
 import cgi
+
+sys.path.append("../scripts") # module is in sibling directory
+import ldap_info
+
+print("done")
 
 form = cgi.FieldStorage()
 user = os.environ['HTTP_X_AUTHENTICATED_USER'] if 'HTTP_X_AUTHENTICATED_USER' in os.environ else "nobody"
@@ -9,28 +14,6 @@ version = form['version'].value.strip() if ('version' in form and len(form['vers
 committee = form['committee'].value if 'committee' in form else None
 dojson = form['json'].value if 'json' in form else None
     
-def getPMCs(uid):
-    groups = []
-    ldapdata = subprocess.check_output(['ldapsearch', '-x', '-LLL',
-        '-b', 'ou=project,ou=groups,dc=apache,dc=org',
-        'member=uid=%s,ou=people,dc=apache,dc=org' % uid, 'dn'])
-    for match in re.finditer(r"dn: cn=([a-zA-Z0-9]+),ou=project,ou=groups,dc=apache,dc=org", ldapdata):
-        group = match.group(1)
-        if group != "incubator":
-            groups.append(group)
-    return groups
-
-
-def isMember(uid):
-    members = []
-    ldapdata = subprocess.check_output(['ldapsearch', '-x', '-LLL', '-b', 'cn=member,ou=groups,dc=apache,dc=org'])
-    for match in re.finditer(r"memberUid: ([-a-z0-9_.]+)", ldapdata):
-        group = match.group(1)
-        members.append(group)
-    if uid in members:
-        return True
-    return False
-
 def getReleaseData(committee):
     try:
         with open("/var/www/reporter.apache.org/data/releases/%s.json" % committee, "r") as f:
@@ -43,7 +26,7 @@ def getReleaseData(committee):
 saved = False
 err = None
 if date != None and version and committee:
-    if committee in getPMCs(user) or isMember(user):
+    if committee in ldap_info.getPMCownership(user) or ldap_info.isMember(user):
         rdata = getReleaseData(committee)
         if date >= 86400: # allow for local time just in case
             rdata[version] = date
