@@ -32,14 +32,7 @@ def loadJson(url):
         resp.close()
     return j
 
-cidata = {} # The data read from the file
-
-
-def update_cache():
-    global cidata # Python defaults to creating a local variable
-    cidata = loadJson(URL)
-
-update_cache() # done when loading
+cidata = loadJson(URL) # The data read from the file
 
 def PMCmails():
 
@@ -147,16 +140,15 @@ def pmcdates():
                 date = calendar.timegm(time.strptime(est[0:7], '%m/%Y'))
             except Exception as e:
                 print("Date parse error for %s: %s %s" % (ent, est, e))
-                pass
         dates[ent] = {'pmc': [est, date], 'roster': {} }
         ids = {}
-        for id in roster:
-            rid = roster[id]
+        for uid in roster:
+            rid = roster[uid]
             try:
                 date = calendar.timegm(time.strptime(rid['date'], '%Y-%m-%d'))
             except:
                 date = 0
-            ids[id] = [rid['name'], date]
+            ids[uid] = [rid['name'], date]
         dates[ent]['roster'] = ids
         # The 'CI' internal name for Web Services is 'ws' but reporter code originally used 'webservices'
         if ent == 'ws':
@@ -167,18 +159,18 @@ def cycles():
 
     committees = cidata['committees']
 
-    cycles={}
+    report_cycles={}
     for ctte in committees:
         c = committees[ctte]
         if not c['pmc']:
             continue
-        cycles[ctte] = c['report']
+        report_cycles[ctte] = c['report']
         # Duplicate some entries for now so the code can find them (the existing json has the duplicates)
         if ctte == 'ws': # Special processing
-            cycles['webservices'] = cycles[ctte]
+            report_cycles['webservices'] = report_cycles[ctte]
         if ctte == 'httpd': # Special processing
-            cycles['http server'] = cycles[ctte]
-    return cycles
+            report_cycles['http server'] = report_cycles[ctte]
+    return report_cycles
 
 def getPMCs(uid, incubator=False):
     """Returns the array of PMC committees to which the uid belongs. Excludes incubator by default"""
@@ -195,10 +187,10 @@ def getPMCs(uid, incubator=False):
     return pmcs
 
 if __name__ == '__main__':
-    mails=PMCmails()
-    print(mails)
-    print("Expect false: "+str('whimsy' in mails))
-    print("Expect true: "+str('whimsical' in mails))
+    emails=PMCmails()
+    print(emails)
+    print("Expect false: "+str('whimsy' in emails))
+    print("Expect true: "+str('whimsical' in emails))
     import sys
     json.dump(PMCnames(), sys.stdout, indent=1, sort_keys=True)
     json.dump(PMCsummary(), sys.stdout, indent=1, sort_keys=True)
