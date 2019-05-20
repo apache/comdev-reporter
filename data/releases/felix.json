@@ -78,6 +78,8 @@
  "org.apache.felix.healthcheck.core-2.0.2": 1554422400, 
  "org.apache.felix.healthcheck.generalchecks-2.0.0": 1551052800, 
  "org.apache.felix.healthcheck.webconsoleplugin-2.0.0": 1551052800, 
+ "org.apache.felix.healthchecks.api-2.0.2": 1558310400, 
+ "org.apache.felix.healthchecks.core-2.0.6": 1558310400, 
  "org.apache.felix.http.base-3.0.6": 1452294000, 
  "org.apache.felix.http.base-4.0.0": 1525039200, 
  "org.apache.felix.http.bridge-3.0.6": 1452294000, 
