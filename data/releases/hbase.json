@@ -169,6 +169,7 @@
  "2.1.4": 1553558400.0, 
  "hbase-2.0.0-alpha-4": 1509753600.0, 
  "hbase-connectors-1.0.0": 1556841600, 
+ "hbase-filesystem-1.0.0-alpha1": 1560229200, 
  "hbase-thirdparty-1.0.0": 1499212800, 
  "hbase-thirdparty-1.0.1": 1503878400, 
  "hbase-thirdparty-2.1.0": 1522195200, 
