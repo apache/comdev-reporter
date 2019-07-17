@@ -3598,6 +3598,10 @@
    "Mike Tutkowski",
    0
   ],
+  "nathanejohnson": [
+   "Nathan Johnson",
+   1563393600
+  ],
   "nslater": [
    "Naomi Slater",
    0
@@ -13846,6 +13850,88 @@
   ],
   "tandraschko": [
    "Thomas Andraschko",
+   0
+  ]
+ },
+ "openwhisk": {
+  "akrabat": [
+   "Rob Allen",
+   0
+  ],
+  "bdelacretaz": [
+   "Bertrand Delacretaz",
+   0
+  ],
+  "chetanm": [
+   "Chetan Mehrotra",
+   0
+  ],
+  "csantanapr": [
+   "Carlos Santana",
+   0
+  ],
+  "dgrove": [
+   "Dave Grove",
+   0
+  ],
+  "dragos": [
+   "Dragos Dascalita Haut",
+   0
+  ],
+  "dubeejw": [
+   "James Dubee",
+   0
+  ],
+  "houshengbo": [
+   "Vincent Hou",
+   0
+  ],
+  "jamesthomas": [
+   "James Thomas",
+   0
+  ],
+  "jeremiaswerner": [
+   "Jeremias Werner",
+   0
+  ],
+  "ksobkowiak": [
+   "Krzysztof Sobkowiak",
+   0
+  ],
+  "markusthoemmes": [
+   "Markus Thömmes",
+   0
+  ],
+  "mattsicker": [
+   "Matt Sicker",
+   0
+  ],
+  "mrutkowski": [
+   "Matt Rutkowski",
+   0
+  ],
+  "msciabarra": [
+   "Michele Sciabarra",
+   0
+  ],
+  "rabbah": [
+   "Rodric Rabbah",
+   0
+  ],
+  "slange": [
+   "Sven Lange-Last",
+   0
+  ],
+  "style95": [
+   "Dominic Kim",
+   0
+  ],
+  "tardieu": [
+   "Olivier Tardieu",
+   0
+  ],
+  "tysonnorris": [
+   "Tyson Norris",
    0
   ]
  },
