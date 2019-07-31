@@ -12,7 +12,7 @@
         "id": "issues",
         "icon": "bell",
         "description": "Issues",
-        "help": "If there are any <u>specific issues the board needs to be aware of</u>, please write them here. Otherwise, write \"There are no issues requiring board attention.\" Issues could be: <ul><li>The project is blocked by Infra on an issue.</li><li>The project does not have sufficient oversight from the PMC.</li></ul>",
+        "help": "If there are any <u>specific issues the board needs to be aware of</u>, please write them here. Otherwise, write \"There are no issues requiring board attention.\" Issues could be: <ul><li>The project is blocked by Infra on an issue.</li><li>The project does not have sufficient oversight from the PMC.</li><li>There are concerning trademark issues.</li></ul>",
         "placeholder": "If issues, write them here, otherwise state that there aren't any!"
     },
     {
