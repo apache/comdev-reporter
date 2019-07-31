@@ -42,6 +42,7 @@ uc = UrlCache(interval=1800, silent=True)
 # Relative path to home directory from here (site)
 RAOHOME = '../'
 
+COMMITTER_INFO = 'https://whimsy.apache.org/public/public_ldap_people.json'
 MEMBER_INFO = 'https://whimsy.apache.org/public/member-info.json'
 PROJECTS = 'https://whimsy.apache.org/public/public_ldap_projects.json'
 
@@ -98,6 +99,7 @@ def loadJson(url):
 
 projects = loadJson(PROJECTS)['projects']
 members = loadJson(MEMBER_INFO)['members']
+committers = loadJson(COMMITTER_INFO)['people']
 
 def getPMCs(uid):
     """Returns the array of LDAP committee groups to which the uid belongs. Excludes incubator"""
@@ -373,7 +375,8 @@ if re.match(r"^[-a-zA-Z0-9_.]+$", user):
         'releases': rdata,
         'keys': keys,
         'health': health,
-        'checker': checker
+        'checker': checker,
+        'you': committers[user],
     }
 
     # AFAICT dumps always uses \n for EOL
