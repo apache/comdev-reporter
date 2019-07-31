@@ -140,6 +140,6 @@ function health_tips(data) {
     if (jira[0] || jira[1]) txt += "- %u JIRA tickets opened and %u closed in the past quarter.".format(jira[0], jira[1]);
     
     // Append header IF there is data, otherwise nah.
-    if (txt.length > 0) txt = "<h5>Potentially useful observations for your health metrics:</h5>" + txt;
+    if (txt.length > 0) txt = "<h5>Potentially useful observations for your community health section:</h5>" + txt;
     return txt;
 }
