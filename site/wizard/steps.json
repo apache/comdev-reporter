@@ -1,0 +1,47 @@
+{
+    "steps": [
+    {
+        "id": "meta",
+        "icon": "home",
+        "description": "Base Data",
+        "noinput": true,
+        "help": "Bla bla",
+        "helpgenerator": "generate_meta"
+    },
+    {
+        "id": "issues",
+        "icon": "bell",
+        "description": "Issues",
+        "help": "If there are any <u>specific issues the board needs to be aware of</u>, please write them here. Otherwise, write \"There are no issues requiring board attention.\" Issues could be: <ul><li>The project is blocked by Infra on an issue.</li><li>The project does not have sufficient oversight from the PMC.</li></ul>",
+        "placeholder": "If issues, write them here, otherwise state that there aren't any!"
+    },
+    {
+        "id": "basic",
+        "icon": "chart-bar",
+        "description": "Basic Information",
+        "help": "This is the basic project community data. You can usually leave this part as is, unless you wish to add additional information.",
+        "generator": "generate_pmc_roster"
+    },
+    {
+        "id": "activity",
+        "icon": "skiing",
+        "description": "Project Activity",
+        "help": "Please write a few lines (or more!) about the recent activity in the project and the community. This could be new software releases, new features, or comunity activity such as conferences and meetups.",
+        "placeholder": "Example activity entries:\n\n- Apache Foo 1.2.3 Was released on 2019-04-05\n- Project members attended FooCon, it was a resounding success!\n- Added support for FooLib 2 and Async Gnoming."
+    },
+    {
+        "id": "health",
+        "icon": "heartbeat",
+        "description": "Community Health",
+        "help": "Tell us how your community is doing. Is there an influx of new contributors, is there a good flow of email on the mailing lists, or are things in decline? Are there any community metrics you'd like to showcase or make note of?",
+        "placeholder": "Example health entries: \n\nWe had 25 contributors this quarter - including several new ones - in addition\nto the existing PMC and committers, and more activity on our issue tracker.\nNotably, there have been very promising contributions from some new developers\nto help with technical debt, particularly to remove uses of an internal\npackage that makes it impossible to use Apache Foo in an Splorg environment with\nnewer versions of Gson.\n\nHealth of the community remains strong with many active release lines,\nfeature development, active user and developer base including new\nparticipants and continued participants."
+    },
+    {
+        "id": "review",
+        "icon": "microscope",
+        "description": "Review Report",
+        "help": "That's it, we've compiled your report for you. Please review it:",
+        "generator": "compile_report"
+    }
+    ]
+}
