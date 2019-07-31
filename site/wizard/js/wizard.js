@@ -1022,16 +1022,19 @@ function generate_pmc_roster(data) {
     l = lcm(y1, y2);
     x1 = l/y2;
     x2 = l/y1;
-    while (x1 >= 8) {
-        x1 /= 2;
-        x2 /= 2;
+    while (x1 >= 10) {
+        x1 /= 1.25;
+        x2 /= 1.25;
     }
     x1 = Math.round(x1)
     x2 = Math.round(x2)
-    while ((x1 > 1 && x1 == x2) || (Math.floor(x1) == Math.floor(x2*2) && x2 > 1)) {
-        x1 /= 2
-        x2 /= 2
+    
+    while ((x1/x2) == Math.floor(x1/x2) && x2 > 1) {
+        let k = (x1/x2)
+        x1 /= k
+        x2 /= k
     }
+    
     txt += "There are currently %u committers and %u PMC members in this project (%u:%u committer-to-pmc ratio).\n\n".format(no_com, no_pmc, x1, x2);
     
     
