@@ -98,7 +98,7 @@ function health_tips(data) {
         let a = ml.split('-', 2);
         ml = "%s@%s.apache.org".format(a[1], a[0]);
         let pct_change =Math.floor( 100 * ( (mldata.quarterly[0] - mldata.quarterly[1]) / (mldata.quarterly[1]*1.0) ));
-        pct_change_txt = "%u%".format(pct_change);
+        let pct_change_txt = "%u%".format(pct_change);
         if (isNaN(pct_change)) {
             pct_change_txt = 'big';
         }
