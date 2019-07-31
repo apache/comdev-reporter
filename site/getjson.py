@@ -248,6 +248,7 @@ if re.match(r"^[-a-zA-Z0-9_.]+$", user):
     if (os.path.exists(wanted_file) and os.path.getmtime(wanted_file) > (time.time() - 7200)):
         dump = json.load(open(wanted_file, "r"))
         dump['you'] = committers[user]
+        dump = json.dumps(dump)
         sys.stdout.write("Content-Type: application/json\r\nContent-Length: %u\r\n\r\n" % (len(dump)))
         sys.stdout.write(dump)
         sys.exit(0)
