@@ -93,10 +93,6 @@
     font-size: 0.85rem;
 }
 
-#step_text {
-    margin-bottom: 10px !important;
-}
-
 .wizard-tip {
     width: 720px;
     border: 1.5px solid #3339;
@@ -105,6 +101,10 @@
     margin: 10px auto;
     padding: 10px;
     font-size: 0.85rem;
+}
+
+#step_text {
+    margin-bottom: 10px !important;
 }
 
 
@@ -167,3 +167,13 @@
     height: 5em;
   }
 }
+
+
+ .fade {
+   opacity: 1;
+   -webkit-transition: opacity 0.01s linear !important;
+      -moz-transition: opacity 0.01s linear !important;
+       -ms-transition: opacity 0.01s linear !important;
+        -o-transition: opacity 0.01s linear !important;
+           transition: opacity 0.01s linear !important;
+ }

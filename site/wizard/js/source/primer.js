@@ -3,10 +3,15 @@ let report = [null,null,null,null,null,null];
 let current_step = 0;
 let cycles = {};
 
+function modal(txt) {
+    document.getElementById('alert_text').innerText = txt;
+    $("#alert").modal();
+}
+
 function prime_wizard(state, json) {
     // Adjust title(s)
     if (!json.pdata[project]) {
-        alert("Could not find project data for %s!".format(project));
+        modal("Could not find project data for %s!".format(project));
         return;
     }
     pdata = json;
@@ -43,7 +48,7 @@ function build_steps(s, start) {
         report[current_step] = text.value;
     }
     if (!start && text && current_step > 0 && text.value.length == 0 && s > current_step) {
-        alert("Please complete this report section before continuing to the next step.");
+        modal("Please complete this report section before continuing to the next step.");
         return
     }
     
@@ -52,7 +57,7 @@ function build_steps(s, start) {
         for (var i = 1; i < 5; i++) {
             let step = step_json[i];
             if (report[i] == null || report[i].length == 0) {
-                alert("Please fill out the \"%s\" section before you preview the report!".format(step.description));
+                modal("Please fill out the \"%s\" section before you preview the report!".format(step.description));
                 return
             }
         }

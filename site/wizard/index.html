@@ -20,8 +20,8 @@
  <div id="wizard_spinner" style="margin-top: 80px; height: 300px !important;">
   <h4 style="text-align: center;">Loading base data..</h4>
   <div class="loader"></div>
-  
  </div>
+ 
    <div id="wrapper" style="display: none;">
     <h2 id="pname" style="text-align: center;">Board Report Wizard</h2>
     <div id="steps">
@@ -49,10 +49,31 @@ placeholder="Example activity:
     <div id="tips" class="wizard-tip"></div>
     </div>
    
+   <!-- Modal for notices -->
+  <div class="modal fade" id="alert" role="dialog">
+    <div class="modal-dialog">
+    
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title">We hit a snag!</h4>
+        </div>
+        <div class="modal-body">
+          <p id="alert_text" style="font-size: 0.85rem;"></p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+      
+    </div>
+  </div>
+   
    <footer style="text-align: center; font-size: 0.8rem;">
     Powered by the <a href='./'>ASF Board Report Wizard</a>. Copyright&copy; 2019 <a href='https://community.apache.org'>Apache Community Development</a>.<br/>
     Queries or other feedback should go to our mailing list: dev@community.apache.org
    </footer>
+   
    
    
 
