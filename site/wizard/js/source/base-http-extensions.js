@@ -21,6 +21,7 @@ var async_escrow = {}
 var async_maxwait = 250; // ms to wait before displaying spinner
 var async_status = 'clear';
 var async_cache = {}
+var no_spinner = true;
 
 // Escrow spinner check
 async function escrow_check() {
@@ -33,26 +34,28 @@ async function escrow_check() {
         }
     }
     // Fetch or create the spinner
-    let spinner = document.getElementById('spinner');
-    if (!spinner) {
-        spinner = new HTML('div', { id: 'spinner', class: 'spinner'});
-        spinwheel = new HTML('div', {id: 'spinwheel', class: 'spinwheel'});
-        spinner.inject(spinwheel);
-        spinner.inject(new HTML('h2', {}, "Loading, please wait.."));
-        document.body.appendChild(spinner);
-    }
-    // Show or don't show spinner?
-    if (show_spinner) {
-        spinner.style.display = 'block';
-        if (async_status === 'clear') {
-            console.log("Waiting for JSON resource, deploying spinner");
-            async_status = 'waiting';
+    if (!no_spinner) {
+        let spinner = document.getElementById('spinner');
+        if (!spinner) {
+            spinner = new HTML('div', { id: 'spinner', class: 'spinner'});
+            spinwheel = new HTML('div', {id: 'spinwheel', class: 'spinwheel'});
+            spinner.inject(spinwheel);
+            spinner.inject(new HTML('h2', {}, "Loading, please wait.."));
+            document.body.appendChild(spinner);
         }
-    } else {
-        spinner.style.display = 'none';
-        if (async_status === 'waiting') {
-            console.log("All URLs out of escrow, dropping spinner");
-            async_status = 'clear';
+        // Show or don't show spinner?
+        if (show_spinner) {
+            spinner.style.display = 'block';
+            if (async_status === 'clear') {
+                console.log("Waiting for JSON resource, deploying spinner");
+                async_status = 'waiting';
+            }
+        } else {
+            spinner.style.display = 'none';
+            if (async_status === 'waiting') {
+                console.log("All URLs out of escrow, dropping spinner");
+                async_status = 'clear';
+            }
         }
     }
 }
