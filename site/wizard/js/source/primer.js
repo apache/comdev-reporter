@@ -135,7 +135,7 @@ function compile_report() {
         let step = step_json[i];
         rep += "\n## %s:\n".format(step.description);
         if (report[i] !== null) {
-            rep += report[i];
+            rep += report[i].replace(/(\r?\n)+$/, '');
         } else {
             rep += "Nothing to note...\n";
         }
