@@ -1063,12 +1063,13 @@ function splash(state, json, all) {
     pdata = json;
     let html = document.body;
     html.style.margin = '16px';
-    let link = all ? '(<a href="javascript:splash({}, pdata, false);">show only your projects</a>)' : '(<a href="javascript:splash({}, pdata, true);">show all projects</a>)'
-    html.innerHTML = '<h3>Your Projects: %s</h3>'.format(link);
+    let link = all ? 'All projects (<a href="javascript:splash({}, pdata, false);">show only your projects</a>):' : 'Your projects (<a href="javascript:splash({}, pdata, true);">show all projects</a>):'
+    html.innerHTML = '<h3>%s</h3>'.format(link);
     let tbl = new HTML('table', {cellpadding: '8px', style: {margin: '20px'}});
     let hdr = new HTML('tr', {style: {color: "#963"}})
     hdr.inject([
         new HTML('td', {}, "Project:"),
+        new HTML('td', {}, "Chair:"),
         new HTML('td', {}, "Next report date:"),
         new HTML('td', {}, "Wizard link:")
     ])
@@ -1076,12 +1077,22 @@ function splash(state, json, all) {
     let keys = json.pdata;
     if (all) keys = cycles;
     for (var key in keys) {
-        let tr = new HTML('tr');
-        let rd = new HTML('td', {}, getReportDate(cycles, key, true));
-        let link = new HTML('td', {}, new HTML('a', {href: '?%s'.format(key)}, "Start reporting guide"));
-        let title = new HTML('td', {}, new HTML('b', {}, key));
-        tr.inject([title, rd, link])
-        tbl.inject(tr);
+        if (pdata.pmcsummary[key]) {
+            let tlpname = pdata.pmcsummary[key].name;
+            let chair = pdata.pmcsummary[key].chair;
+            let ccolor = '#000';
+            if (chair == pdata.you.name) {
+                chair += " (You!)";
+                ccolor = '#195';
+            }
+            let tr = new HTML('tr');
+            let rd = new HTML('td', {}, getReportDate(cycles, key, true));
+            let link = new HTML('td', {}, new HTML('a', {href: '?%s'.format(key)}, "Wizard for %s".format(tlpname)));
+            let title = new HTML('td', {}, new HTML('b', {}, tlpname));
+            let cname = new HTML('td', {style: {color: ccolor}}, new HTML('b', {}, chair));
+            tr.inject([title, cname, rd, link])
+            tbl.inject(tr);
+        }
     }
     html.inject(tbl);
     
@@ -1392,7 +1403,7 @@ function getReportDate(json, pmc, dateOnly) {
 	while (nextdate < today && dates.length > 0) {
 		nextdate = dates.shift();
 	}
-	if (dateOnly) return nextdate ? nextdate.toDateString() : "Unknown(?)";
+	if (dateOnly) return nextdate ? (nextdate.toDateString() + " ("  + moment(nextdate).fromNow() + ")"): "Unknown(?)";
 	
 	let txt = "";
 	txt += "<b>Reporting schedule:</b> " + (json[pmc] ? formatRm(json[pmc]) : "Unknown(?)") + "<br>"

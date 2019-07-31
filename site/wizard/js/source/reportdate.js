@@ -90,7 +90,7 @@ function getReportDate(json, pmc, dateOnly) {
 	while (nextdate < today && dates.length > 0) {
 		nextdate = dates.shift();
 	}
-	if (dateOnly) return nextdate ? nextdate.toDateString() : "Unknown(?)";
+	if (dateOnly) return nextdate ? (nextdate.toDateString() + " ("  + moment(nextdate).fromNow() + ")"): "Unknown(?)";
 	
 	let txt = "";
 	txt += "<b>Reporting schedule:</b> " + (json[pmc] ? formatRm(json[pmc]) : "Unknown(?)") + "<br>"
