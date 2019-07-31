@@ -66,10 +66,18 @@ function generate_meta(data) {
 }
 
 
-function splash(state, json) {
+function pre_splash(state, json) {
+    cycles = json;
+    GET("/getjson.py", splash, {});
+}
+
+function splash(state, json, all) {
+    pdata = json;
     let html = document.body;
-    html.innerHTML = '';
-    let tbl = new HTML('table');
+    html.style.margin = '16px';
+    let link = all ? '(<a href="javascript:splash({}, pdata, false);">show only your projects</a>)' : '(<a href="javascript:splash({}, pdata, true);">show all projects</a>)'
+    html.innerHTML = '<h3>Your Projects: %s</h3>'.format(link);
+    let tbl = new HTML('table', {cellpadding: '8px', style: {margin: '20px'}});
     let hdr = new HTML('tr', {style: {color: "#963"}})
     hdr.inject([
         new HTML('td', {}, "Project:"),
@@ -77,10 +85,11 @@ function splash(state, json) {
         new HTML('td', {}, "Wizard link:")
     ])
     tbl.inject(hdr);
-    
-    for (var key in json) {
+    let keys = json.pdata;
+    if (all) keys = cycles;
+    for (var key in keys) {
         let tr = new HTML('tr');
-        let rd = new HTML('td', {}, getReportDate(json, key, true));
+        let rd = new HTML('td', {}, getReportDate(cycles, key, true));
         let link = new HTML('td', {}, new HTML('a', {href: '?%s'.format(key)}, "Start reporting guide"));
         let title = new HTML('td', {}, new HTML('b', {}, key));
         tr.inject([title, rd, link])

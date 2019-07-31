@@ -19,7 +19,7 @@ console.log("/******* ASF Board Report Wizard initializing ********/")
 // Adjust titles:
 let project = location.search.substr(1);
 if (project.length < 2) {
-    GET("/reportingcycles.json", splash, {});
+    GET("/reportingcycles.json", pre_splash, {});
 } else {
     document.title = "ASF Board Report Wizard: %s".format(project);
     let titles = document.getElementsByClassName("title");
