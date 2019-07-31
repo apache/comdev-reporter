@@ -37,7 +37,7 @@ import committee_info
 from urlutils import UrlCache
 
 # This script may be called frequently, so don't just rely on IfNewer checks
-uc = UrlCache(interval=60, silent=True)
+uc = UrlCache(interval=1800, silent=True)
 
 # Relative path to home directory from here (site)
 RAOHOME = '../'
