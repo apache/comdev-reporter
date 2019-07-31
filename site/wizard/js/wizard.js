@@ -1220,7 +1220,28 @@ function compile_report(data, okay) {
     return rep;
 }
 
-
+function activity_tips(data) {
+    let three_months_ago = moment().subtract(3, 'months');
+    let txt = "";
+    
+    // Releases
+    let rtxt = "";
+    for (var rel in data.releases[project]) {
+        let reldate = moment(data.releases[project][rel] * 1000.0);
+        if (reldate > three_months_ago) {
+            rtxt += "<li>%s was released on %s.</li>".format(rel, reldate.format('YYYY-MM-DD'));
+        }
+    }
+    if (rtxt != '') {
+        rtxt = "<h6>Releases this quarter: </h6><ul>" + rtxt + "</ul>";
+    }
+    
+    
+    // Put it all together
+    txt += rtxt;
+    if (txt) txt = "<h5>Potentially useful data I found:</h5>" + txt
+    return txt;
+}
 
 /******************************************
  Fetched from source/init.js

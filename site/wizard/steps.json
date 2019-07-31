@@ -27,7 +27,8 @@
         "icon": "skiing",
         "description": "Project Activity",
         "help": "Please write a few lines (or more!) about the recent activity in the project and the community. This could be new software releases, new features, or community activity such as conferences and meetups.",
-        "placeholder": "Example activity entries:\n\n- Apache Foo 1.2.3 Was released on 2019-04-05\n- Project members attended FooCon, it was a resounding success!\n- Added support for FooLib 2 and Async Gnoming."
+        "placeholder": "Example activity entries:\n\n- Apache Foo 1.2.3 Was released on 2019-04-05\n- Project members attended FooCon, it was a resounding success!\n- Added support for FooLib 2 and Async Gnoming.",
+        "tipgenerator": "activity_tips"
     },
     {
         "id": "health",
