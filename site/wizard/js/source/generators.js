@@ -91,9 +91,7 @@ function splash(state, json) {
 }
 
 function health_tips(data) {
-    let txt = "";
-    txt += "<h5>Potentially useful observations for your health metrics:</h5>";
-    
+    let txt = "";    
     // Mailing list changes
     for (var ml in data.delivery[project]) {
         let mldata = data.delivery[project][ml];
@@ -117,5 +115,7 @@ function health_tips(data) {
     let jira = data.jira[project];
     if (jira[0] || jira[1]) txt += "- %u JIRA tickets opened and %u closed in the past quarter.".format(jira[0], jira[1]);
     
+    // Append header IF there is data, otherwise nah.
+    if (txt.length > 0) txt = "<h5>Potentially useful observations for your health metrics:</h5>" + txt;
     return txt;
 }
