@@ -104,6 +104,18 @@ function build_steps(s, start) {
             } else {
                 text.value = '';
             }
+            
+            // tips??
+            let tip = document.getElementById('tips');
+            if (element.tipgenerator) {
+                let data = eval("%s(pdata);".format(element.tipgenerator));
+                if (data && data.length > 0) {
+                    tip.innerHTML = data;
+                    tip.style.display = 'block';
+                }
+            } else {
+                tip.style.display = 'none';
+            }
         }
     }
     

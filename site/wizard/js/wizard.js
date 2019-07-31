@@ -1078,6 +1078,36 @@ function splash(state, json) {
     
 }
 
+function health_tips(data) {
+    let txt = "";
+    txt += "<h5>Potentially useful observations for your health metrics:</h5>";
+    
+    // Mailing list changes
+    for (var ml in data.delivery[project]) {
+        let mldata = data.delivery[project][ml];
+        let a = ml.split('-', 2);
+        ml = "%s@%s.apache.org".format(a[1], a[0]);
+        let pct_change =Math.floor( 100 * ( (mldata.quarterly[0] - mldata.quarterly[1]) / (mldata.quarterly[1]*1.0) ));
+        if (pct_change > 25) {
+            txt += "<span style='color: #080'>- %s had a %u% increase in traffic in the past quarter (%u emails compared to %u)</span><br/>".format(ml, pct_change, mldata.quarterly[0], mldata.quarterly[1]);
+        }
+        else if (pct_change < -25) {
+            pct_change = Math.abs(pct_change)
+            txt += "<span style='color: #800'>- %s had a %u% decrease in traffic in the past quarter (%u emails compared to %u)</span><br/>".format(ml, pct_change, mldata.quarterly[0], mldata.quarterly[1]);
+        }
+    }
+    
+    // Bugzilla changes
+    let bz = data.bugzilla[project];
+    if (bz[0] || bz[1]) txt += "- %u BugZilla tickets opened and %u closed in the past quarter.".format(bz[0], bz[1]);
+    
+    // JIRA changes
+    let jira = data.jira[project];
+    if (jira[0] || jira[1]) txt += "- %u JIRA tickets opened and %u closed in the past quarter.".format(jira[0], jira[1]);
+    
+    return txt;
+}
+
 /******************************************
  Fetched from source/init.js
 ******************************************/
@@ -1211,6 +1241,18 @@ function build_steps(s, start) {
             } else {
                 text.value = '';
             }
+            
+            // tips??
+            let tip = document.getElementById('tips');
+            if (element.tipgenerator) {
+                let data = eval("%s(pdata);".format(element.tipgenerator));
+                if (data && data.length > 0) {
+                    tip.innerHTML = data;
+                    tip.style.display = 'block';
+                }
+            } else {
+                tip.style.display = 'none';
+            }
         }
     }
     
@@ -1245,7 +1287,7 @@ function compile_report() {
  Fetched from source/reportdate.js
 ******************************************/
 
-
+// Grabbed from old reporter.a.o
 
 // return all the Wednesdays in the month
 function getWednesdays(mo, y) {

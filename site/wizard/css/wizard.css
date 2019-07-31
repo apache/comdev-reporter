@@ -97,6 +97,16 @@
     margin-bottom: 10px !important;
 }
 
+.wizard-tip {
+    width: 720px;
+    border: 1.5px solid #3339;
+    background: #FEF;
+    border-radius: 10px;
+    margin: 10px auto;
+    padding: 10px;
+    font-size: 0.85rem;
+}
+
 
 .loader,
 .loader:before,

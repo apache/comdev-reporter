@@ -1,4 +1,4 @@
-
+// Grabbed from old reporter.a.o
 
 // return all the Wednesdays in the month
 function getWednesdays(mo, y) {
