@@ -19,7 +19,7 @@
 .wizard-step-wrapper {
     display: inline-block;
     color: #333;
-    width: 100px;
+    width: 110px;
     height: 120px;
 }
 
@@ -38,7 +38,7 @@
 
 .wizard-step-text {
     display: inline-block;
-    width: 100px;
+    width: 110px;
     height: 40px;
     font-size: 12px;
     line-height: 18px;
@@ -72,7 +72,7 @@
 
 
 #steps {
-    width: 680px;
+    width: 720px;
     border: 1.5px solid #3339;
     background: #EEE;
     border-radius: 10px;
@@ -83,7 +83,7 @@
 }
 
 #wizard-content {
-    width: 680px;
+    width: 720px;
     border: 1.5px solid #3339;
     background: #FFE;
     border-radius: 10px;
