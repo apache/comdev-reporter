@@ -240,6 +240,15 @@ if re.match(r"^[-a-zA-Z0-9_.]+$", user):
     if oproject and len(oproject) > 0 and isMember:
         groups = [oproject]
     groups.sort() # so tabs appear in order
+    
+    # Try cache first?
+    wanted_file = "/tmp/%s.json" % "-".join(groups)
+    if (os.path.exists(wanted_file) and os.path.getmtime(wanted_file) > (time.time() - 7200)):
+        dump = open(wanted_file, "r").read()
+        sys.stdout.write("Content-Type: application/json\r\nContent-Length: %u\r\n\r\n" % (len(dump)))
+        sys.stdout.write(dump)
+        sys.exit(0)
+    
     mlstats = {}
     ml = readJson(RAOHOME+"data/mailinglists.json")
     for entry in ml: # e.g. abdera.apache.org-commits, ws.apache.org-dev
@@ -371,6 +380,11 @@ if re.match(r"^[-a-zA-Z0-9_.]+$", user):
     dump = json.dumps(output, indent=1, sort_keys=True).replace('\n', '\r\n')
     sys.stdout.write("Content-Type: application/json\r\nContent-Length: %u\r\n\r\n" % (len(dump)))
     sys.stdout.write(dump)
+    
+    # Write dump to cache
+    with open(wanted_file, "w") as f:
+        f.write(dump)
+        f.close()
 else:
     sys.stdout.write("Content-Type: text/html\r\n\r\n")
     sys.stdout.write("Unknown or invalid user id presented")
