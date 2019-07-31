@@ -98,12 +98,16 @@ function health_tips(data) {
         let a = ml.split('-', 2);
         ml = "%s@%s.apache.org".format(a[1], a[0]);
         let pct_change =Math.floor( 100 * ( (mldata.quarterly[0] - mldata.quarterly[1]) / (mldata.quarterly[1]*1.0) ));
+        pct_change_txt = "%u%".format(pct_change);
+        if (isNaN(pct_change)) {
+            pct_change_txt = 'big';
+        }
         if (pct_change > 25 && mldata.quarterly[0] > 5) {
-            txt += "<span style='color: #080'>- %s had a %u% increase in traffic in the past quarter (%u emails compared to %u)</span><br/>".format(ml, pct_change, mldata.quarterly[0], mldata.quarterly[1]);
+            txt += "<span style='color: #080'>- %s had a %s increase in traffic in the past quarter (%u emails compared to %u)</span><br/>".format(ml, pct_change_txt, mldata.quarterly[0], mldata.quarterly[1]);
         }
         else if (pct_change < -25  && mldata.quarterly[1] > 5) {
             pct_change = Math.abs(pct_change)
-            txt += "<span style='color: #800'>- %s had a %u% decrease in traffic in the past quarter (%u emails compared to %u)</span><br/>".format(ml, pct_change, mldata.quarterly[0], mldata.quarterly[1]);
+            txt += "<span style='color: #800'>- %s had a %s decrease in traffic in the past quarter (%u emails compared to %u)</span><br/>".format(ml, pct_change_txt, mldata.quarterly[0], mldata.quarterly[1]);
         }
     }
     
