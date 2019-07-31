@@ -7,7 +7,7 @@
     data/JIRA/%.json - for each JIRA project
     
     Usage:
-        getjson.py[?only=pmcname|pmcname-to-include]
+        getjson.py[?only=pmcname|pmcname-to-include][&anon=yes]
     
     Reads the following:
         data/JIRA/jira_projects.json
@@ -27,6 +27,7 @@
     HTTP_X_AUTHENTICATED_USER - set by Apache webserver
     QUERY_STRING - additional group to include
     ONLY - equivalent to ?only CGI param
+    ANON - allows for anonymous (redacted) access by normal committers
 """
 
 import os, sys, re, json, subprocess, time
@@ -49,6 +50,7 @@ PROJECTS = 'https://whimsy.apache.org/public/public_ldap_projects.json'
 # Pick up environment settings
 form = cgi.FieldStorage();
 oproject = form['only'].value if ('only' in form and len(form['only'].value) > 0) else os.environ['ONLY'] if 'ONLY' in os.environ else None
+anon = form.getvalue('anon')
 
 user = os.environ['HTTP_X_AUTHENTICATED_USER'] if 'HTTP_X_AUTHENTICATED_USER' in os.environ else ""
 include = os.environ['QUERY_STRING'] if 'QUERY_STRING' in os.environ else None
@@ -237,9 +239,9 @@ if re.match(r"^[-a-zA-Z0-9_.]+$", user):
     isMember = isMember(user)
 
     groups = getPMCs(user)
-    if include and isMember and not include in groups and len(include) > 1:
+    if include and (isMember or anon) and not include in groups and len(include) > 1:
         groups.append(include)
-    if oproject and len(oproject) > 0 and isMember:
+    if oproject and len(oproject) > 0 and (isMember or anon):
         groups = [oproject]
     groups.sort() # so tabs appear in order
     
@@ -248,6 +250,8 @@ if re.match(r"^[-a-zA-Z0-9_.]+$", user):
     if (os.path.exists(wanted_file) and os.path.getmtime(wanted_file) > (time.time() - 7200)):
         dump = json.load(open(wanted_file, "r"))
         dump['you'] = committers[user]
+        if anon:
+            dump['mail'] = {}
         dump = json.dumps(dump)
         sys.stdout.write("Content-Type: application/json\r\nContent-Length: %u\r\n\r\n" % (len(dump)))
         sys.stdout.write(dump)
@@ -362,6 +366,8 @@ if re.match(r"^[-a-zA-Z0-9_.]+$", user):
             checker[group]['meta'] = meta
     if not isMember:
         allpmcs = []
+    if anon:
+        mlstats = {}
     output = {
         'count': count,
         'pmcs': groups,
