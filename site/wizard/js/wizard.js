@@ -1265,7 +1265,7 @@ if (project.length < 2) {
     console.log("Initializing escrow checks");
     window.setInterval(escrow_check, 250);
     
-    GET("/getjson.py?only=%s".format(project), prime_wizard, {});
+    GET("/getjson.py?only=%s&anon=true".format(project), prime_wizard, {});
 }
 
 /******************************************
