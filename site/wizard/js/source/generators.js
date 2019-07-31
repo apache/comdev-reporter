@@ -136,7 +136,9 @@ function splash(state, json, all) {
     tbl.inject(hdr);
     let keys = json.pdata;
     if (all) keys = cycles;
+    let found = 0;
     for (var key in keys) {
+        found++;
         if (pdata.pmcsummary[key]) {
             let tlpname = pdata.pmcsummary[key].name;
             let chair = pdata.pmcsummary[key].chair;
@@ -153,6 +155,10 @@ function splash(state, json, all) {
             tr.inject([title, cname, rd, link])
             tbl.inject(tr);
         }
+    }
+    if (!found) {
+        let tr = new HTML('tr', {}, new HTML('td', {colspan: 4}, "It doesn't look like you are on any PMCs"));
+        tbl.inject(tr);
     }
     html.inject(tbl);
     
