@@ -42,6 +42,10 @@ function build_steps(s, start) {
     if (!start && text && text.value.length > 0 && current_step < 5) {
         report[current_step] = text.value;
     }
+    if (!start && text && current_step > 0 && text.value.length == 0 && s > current_step) {
+        alert("Please write some text in the input field before continuing to the next step!");
+        return
+    }
     
     // Check that ALL fields are filled before preview
     if (s == 5) {
