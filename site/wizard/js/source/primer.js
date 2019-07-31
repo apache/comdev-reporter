@@ -105,6 +105,8 @@ function build_steps(s, start) {
                 if (data && data.length > 0) {
                     tip.innerHTML = data;
                     tip.style.display = 'block';
+                } else {
+                    tip.style.display = 'none';
                 }
             } else {
                 tip.style.display = 'none';
