@@ -205,7 +205,7 @@ function check_compile(data) {
         }
     }
     if (text.length > 0) {
-        text = "<h5>Errors found while compiling report:</h5>" + text + "<p><br/>Please correct these sections before compiling your final report!<br/>For now, you can save the data you have entered so far as a draft, and come back later to finish things up.</p>"
+        text = "<h5>Errors found while compiling report:</h5><ul>" + text + "</ul><p><br/>Please correct these sections before compiling your final report!<br/>For now, you can save the data you have entered so far as a draft, and come back later to finish things up.</p>"
         compile_okay = false;
     } else {
         text = "That's it, your board report compiled a-okay and is potentially ready for submission! If you'd like more time to work on it, you can save it as a draft, and return later to make some final edits. Or you can publish it to the agenda via Whimsy.";
