@@ -39,8 +39,19 @@ function build_steps(s, start) {
     s = s || 0;
     
     let text = document.getElementById('step_text');
-    if (!start && text && text.value.length > 0 && current_step < 4) {
+    if (!start && text && text.value.length > 0 && current_step < 5) {
         report[current_step] = text.value;
+    }
+    
+    // Check that ALL fields are filled before preview
+    if (s == 5) {
+        for (var i = 1; i < 5; i++) {
+            let step = step_json[i];
+            if (report[i] == null || report[i].length == 0) {
+                alert("Please fill out the \"%s\" section before you preview the report!".format(step.description));
+                return
+            }
+        }
     }
     text.innerText = '';
     current_step = s;
@@ -104,7 +115,7 @@ function build_steps(s, start) {
 
 function compile_report() {
     let rep = "## Board Report for %s ##\n".format(pdata.pdata[project].name);
-    for (var i = 0; i < 4; i++) {
+    for (var i = 1; i < 5; i++) {
         let step = step_json[i];
         rep += "\n## %s:\n".format(step.description);
         if (report[i] !== null) {
