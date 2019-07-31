@@ -362,6 +362,7 @@ if re.match(r"^[-a-zA-Z0-9_.]+$", user):
         'count': count,
         'pmcs': groups,
         'all': sorted(allpmcs),
+        'pmcsummary': pmcSummary,
         'mail': mlstats,
         'delivery': emails,
         'jira': jdata,
