@@ -246,7 +246,8 @@ if re.match(r"^[-a-zA-Z0-9_.]+$", user):
     # Try cache first?
     wanted_file = "/tmp/%s.json" % "-".join(groups)
     if (os.path.exists(wanted_file) and os.path.getmtime(wanted_file) > (time.time() - 7200)):
-        dump = open(wanted_file, "r").read()
+        dump = json.load(open(wanted_file, "r"))
+        dump['you'] = committers[user]
         sys.stdout.write("Content-Type: application/json\r\nContent-Length: %u\r\n\r\n" % (len(dump)))
         sys.stdout.write(dump)
         sys.exit(0)
