@@ -1,7 +1,52 @@
+// Least common multiple
+let lcm = (x, y) => (!x || !y) ? 0 : Math.abs((x * y) / gcd(x, y));
+
+// Greatest common divisor
+let gcd = (x,y) => {
+  x = Math.abs(x);
+  y = Math.abs(y);
+  while (y) {
+    let t = y;
+    y = x % y;
+    x = t;
+  }
+  return x;
+}
+
+
 function generate_pmc_roster(data) {
+    
+    // PMC age
+    let founded = moment(data.pmcdates[project].pmc[2] * 1000.0);
+    let age = founded.fromNow();
+    let txt = "%s was founded %s (%s)\n".format(data.pmcsummary[project].name, founded.format('YYYY-MM-DD'), age);
+    
+    // PMC and committer count
     let no_com = data.count[project][1];
     let no_pmc = data.count[project][0];
-    let txt = "There are currently %u committers and %u PMC members in this project.\n\n".format(no_com, no_pmc);
+    
+    let y1 = no_com;
+    let y2 = no_pmc;
+    while (y1 > 20) {
+        y1 = Math.round(y1/2)
+        y2 = Math.round(y2/2);
+    }
+    l = lcm(y1, y2);
+    x1 = l/y2;
+    x2 = l/y1;
+    while (x1 >= 8) {
+        x1 /= 2;
+        x2 /= 2;
+    }
+    x1 = Math.round(x1)
+    x2 = Math.round(x2)
+    while ((x1 > 1 && x1 == x2) || (Math.floor(x1) == Math.floor(x2*2) && x2 > 1)) {
+        x1 /= 2
+        x2 /= 2
+    }
+    txt += "There are currently %u committers and %u PMC members in this project (%u:%u committer-to-pmc ratio).\n\n".format(no_com, no_pmc, x1, x2);
+    
+    
     
     // Last PMC addition
     let changes = data.changes[project].pmc;
@@ -60,7 +105,10 @@ function generate_pmc_roster(data) {
 }
 
 function generate_meta(data) {
-    let txt = "<b>Chair:</b> %s<br/>".format(data.pdata[project].chair);
+    let founded = moment(data.pmcdates[project].pmc[2] * 1000.0);
+    let age = founded.fromNow();
+    let txt = "<b>Founded: </b>%s (%s)<br/>".format(founded.format('YYYY-MM-DD'), age);
+    txt += "<b>Chair: </b> %s<br/>".format(data.pdata[project].chair);
     txt += getReportDate(cycles, project);
     return txt;
 }
@@ -143,3 +191,44 @@ function health_tips(data) {
     if (txt.length > 0) txt = "<h5>Potentially useful observations for your community health section:</h5>" + txt;
     return txt;
 }
+
+let compile_okay = false;
+
+function check_compile(data) {
+
+    compile_okay = true;
+    let text = "";
+    for (var i = 1; i < 5; i++) {
+        if (report[i] == null || report[i].length == 0) {
+            text += "<li>You have not filled out the <kbd>%s</kbd> section yet.".format(step_json[i].description);
+            compile_okay = false;
+        }
+    }
+    if (text.length > 0) {
+        text = "<h5>Errors found while compiling report:</h5>" + text + "<p><br/>Please correct these sections before compiling your final report!<br/>For now, you can save the data you have entered so far as a draft, and come back later to finish things up.</p>"
+        compile_okay = false;
+    } else {
+        text = "That's it, your board report compiled a-okay and is potentially ready for submission! If you'd like more time to work on it, you can save it as a draft, and return later to make some final edits. Or you can publish it to the agenda via Whimsy.";
+    }
+    text += "<br/><button class='btn btn-warning'>Save as draft</button>"
+    if (compile_okay) text += " &nbsp; &nbsp; <button class='btn btn-success'>Publish via Whimsy</button>"
+    return text;
+}
+
+
+function compile_report(data, okay) {
+    if (!okay) return -1
+    let rep = "## Board Report for %s ##\n".format(pdata.pdata[project].name);
+    for (var i = 1; i < 5; i++) {
+        let step = step_json[i];
+        rep += "\n## %s:\n".format(step.description);
+        if (report[i] !== null) {
+            rep += report[i].replace(/(\r?\n)+$/, '');
+        } else {
+            rep += "Nothing to note...\n";
+        }
+        rep += "\n";
+    }
+    return rep;
+}
+

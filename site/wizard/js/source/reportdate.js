@@ -91,14 +91,9 @@ function getReportDate(json, pmc, dateOnly) {
 		nextdate = dates.shift();
 	}
 	if (dateOnly) return nextdate ? (nextdate.toDateString() + " ("  + moment(nextdate).fromNow() + ")"): "Unknown(?)";
-	
 	let txt = "";
 	txt += "<b>Reporting schedule:</b> " + (json[pmc] ? formatRm(json[pmc]) : "Unknown(?)") + "<br>"
 	txt += "<b>Next report date: " + (nextdate ? nextdate.toDateString() : "Unknown(?)") + "</b>"
-	if (nextdate) {
-		var link = "https://svn.apache.org/repos/private/foundation/board/board_agenda_" + nextdate.getFullYear() +
-			"_" + (nextdate.getMonth() < 9 ? "0" : "") + (nextdate.getMonth() + 1) + "_" + nextdate.getDate() + ".txt"
-		txt += "<br>File your report in <a href='" + link + "'>" + link + "</a> when it has been seeded."
-	}
+
 	return txt
 }

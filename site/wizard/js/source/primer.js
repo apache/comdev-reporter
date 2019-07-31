@@ -2,6 +2,7 @@ let pdata = {};
 let report = [null,null,null,null,null,null];
 let current_step = 0;
 let cycles = {};
+let draft_mode = false;
 
 function modal(txt) {
     document.getElementById('alert_text').innerText = txt;
@@ -28,7 +29,7 @@ function prime_wizard(state, json) {
 
 function prime_cycles(state, json) {
     cycles = json;
-    GET("steps.json", prime_steps, {});
+    GET("steps.json?" + Math.random(), prime_steps, {});
 }
 
 
@@ -47,21 +48,7 @@ function build_steps(s, start) {
     if (!start && text && text.value.length > 0 && current_step < 5) {
         report[current_step] = text.value;
     }
-    if (!start && text && current_step > 0 && text.value.length == 0 && s > current_step) {
-        modal("Please complete this report section before continuing to the next step.");
-        return
-    }
-    
-    // Check that ALL fields are filled before preview
-    if (s == 5) {
-        for (var i = 1; i < 5; i++) {
-            let step = step_json[i];
-            if (report[i] == null || report[i].length == 0) {
-                modal("Please fill out the \"%s\" section before you preview the report!".format(step.description));
-                return
-            }
-        }
-    }
+   
     text.innerText = '';
     current_step = s;
     
@@ -101,8 +88,9 @@ function build_steps(s, start) {
             else text.style.display = 'inline';
             text.style.height = (395 - hw.scrollHeight) + "px";
             if (element.generator && !(report[s] && report[s].length > 0)) {
-                let data = eval("%s(pdata);".format(element.generator));
-                text.value = data;
+                let data = eval("%s(pdata, compile_okay);".format(element.generator));
+                if (data === -1) text.style.display = 'none'; // hide if generator return -1
+                else text.value = data;
             }
             else if (report[s]) {
                 text.value = report[s];
@@ -131,21 +119,5 @@ function build_steps(s, start) {
     let bn = document.getElementById('step_next');
     if (s == step_json.length -1) bn.style.display = 'none';
     else bn.style.display = 'block';
-}
-
-
-function compile_report() {
-    let rep = "## Board Report for %s ##\n".format(pdata.pdata[project].name);
-    for (var i = 1; i < 5; i++) {
-        let step = step_json[i];
-        rep += "\n## %s:\n".format(step.description);
-        if (report[i] !== null) {
-            rep += report[i].replace(/(\r?\n)+$/, '');
-        } else {
-            rep += "Nothing to note...\n";
-        }
-        rep += "\n";
-    }
-    return rep;
 }
 

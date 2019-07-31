@@ -986,10 +986,53 @@ function showCalendarPicker(parent, seedDate) {
  Fetched from source/generators.js
 ******************************************/
 
+
+let lcm = (x, y) => (!x || !y) ? 0 : Math.abs((x * y) / gcd(x, y));
+let gcd = (x,y) => {
+  x = Math.abs(x);
+  y = Math.abs(y);
+  while(y) {
+    var t = y;
+    y = x % y;
+    x = t;
+  }
+  return x;
+}
+
+
 function generate_pmc_roster(data) {
+    
+    // PMC age
+    let founded = moment(data.pmcdates[project].pmc[2] * 1000.0);
+    let age = founded.fromNow();
+    let txt = "%s was founded %s (%s)\n".format(data.pmcsummary[project].name, founded.format('YYYY-MM-DD'), age);
+    
+    // PMC and committer count
     let no_com = data.count[project][1];
     let no_pmc = data.count[project][0];
-    let txt = "There are currently %u committers and %u PMC members in this project.\n\n".format(no_com, no_pmc);
+    
+    let y1 = no_com;
+    let y2 = no_pmc;
+    while (y1 > 20) {
+        y1 = Math.round(y1/2)
+        y2 = Math.round(y2/2);
+    }
+    l = lcm(y1, y2);
+    x1 = l/y2;
+    x2 = l/y1;
+    while (x1 >= 8) {
+        x1 /= 2;
+        x2 /= 2;
+    }
+    x1 = Math.round(x1)
+    x2 = Math.round(x2)
+    while ((x1 > 1 && x1 == x2) || (Math.floor(x1) == Math.floor(x2*2) && x2 > 1)) {
+        x1 /= 2
+        x2 /= 2
+    }
+    txt += "There are currently %u committers and %u PMC members in this project (%u:%u committer-to-pmc ratio).\n\n".format(no_com, no_pmc, x1, x2);
+    
+    
     
     // Last PMC addition
     let changes = data.changes[project].pmc;
@@ -1048,7 +1091,10 @@ function generate_pmc_roster(data) {
 }
 
 function generate_meta(data) {
-    let txt = "<b>Chair:</b> %s<br/>".format(data.pdata[project].chair);
+    let founded = moment(data.pmcdates[project].pmc[2] * 1000.0);
+    let age = founded.fromNow();
+    let txt = "<b>Founded: </b>%s (%s)<br/>".format(founded.format('YYYY-MM-DD'), age);
+    txt += "<b>Chair: </b> %s<br/>".format(data.pdata[project].chair);
     txt += getReportDate(cycles, project);
     return txt;
 }
@@ -1132,6 +1178,48 @@ function health_tips(data) {
     return txt;
 }
 
+let compile_okay = false;
+
+function check_compile(data) {
+
+    compile_okay = true;
+    let text = "";
+    for (var i = 1; i < 5; i++) {
+        if (report[i] == null || report[i].length == 0) {
+            text += "<li>You have not filled out the <kbd>%s</kbd> section yet.".format(step_json[i].description);
+            compile_okay = false;
+        }
+    }
+    if (text.length > 0) {
+        text = "<h5>Errors found while compiling report:</h5>" + text + "<p><br/>Please correct these sections before compiling your final report!<br/>For now, you can save the data you have entered so far as a draft, and come back later to finish things up.</p>"
+        compile_okay = false;
+    } else {
+        text = "That's it, your board report compiled a-okay and is potentially ready for submission! If you'd like more time to work on it, you can save it as a draft, and return later to make some final edits. Or you can publish it to the agenda via Whimsy.";
+    }
+    text += "<br/><button class='btn btn-warning'>Save as draft</button>"
+    if (compile_okay) text += " &nbsp; &nbsp; <button class='btn btn-success'>Publish via Whimsy</button>"
+    return text;
+}
+
+
+function compile_report(data, okay) {
+    if (!okay) return -1
+    let rep = "## Board Report for %s ##\n".format(pdata.pdata[project].name);
+    for (var i = 1; i < 5; i++) {
+        let step = step_json[i];
+        rep += "\n## %s:\n".format(step.description);
+        if (report[i] !== null) {
+            rep += report[i].replace(/(\r?\n)+$/, '');
+        } else {
+            rep += "Nothing to note...\n";
+        }
+        rep += "\n";
+    }
+    return rep;
+}
+
+
+
 /******************************************
  Fetched from source/init.js
 ******************************************/
@@ -1139,6 +1227,8 @@ function health_tips(data) {
 console.log("/******* ASF Board Report Wizard initializing ********/")
 // Adjust titles:
 let project = location.search.substr(1);
+let loaded_from_draft = false;
+
 if (project.length < 2) {
     GET("/reportingcycles.json", pre_splash, {});
 } else {
@@ -1163,6 +1253,7 @@ let pdata = {};
 let report = [null,null,null,null,null,null];
 let current_step = 0;
 let cycles = {};
+let draft_mode = false;
 
 function modal(txt) {
     document.getElementById('alert_text').innerText = txt;
@@ -1189,7 +1280,7 @@ function prime_wizard(state, json) {
 
 function prime_cycles(state, json) {
     cycles = json;
-    GET("steps.json", prime_steps, {});
+    GET("steps.json?" + Math.random(), prime_steps, {});
 }
 
 
@@ -1208,21 +1299,7 @@ function build_steps(s, start) {
     if (!start && text && text.value.length > 0 && current_step < 5) {
         report[current_step] = text.value;
     }
-    if (!start && text && current_step > 0 && text.value.length == 0 && s > current_step) {
-        modal("Please complete this report section before continuing to the next step.");
-        return
-    }
-    
-    // Check that ALL fields are filled before preview
-    if (s == 5) {
-        for (var i = 1; i < 5; i++) {
-            let step = step_json[i];
-            if (report[i] == null || report[i].length == 0) {
-                modal("Please fill out the \"%s\" section before you preview the report!".format(step.description));
-                return
-            }
-        }
-    }
+   
     text.innerText = '';
     current_step = s;
     
@@ -1262,8 +1339,9 @@ function build_steps(s, start) {
             else text.style.display = 'inline';
             text.style.height = (395 - hw.scrollHeight) + "px";
             if (element.generator && !(report[s] && report[s].length > 0)) {
-                let data = eval("%s(pdata);".format(element.generator));
-                text.value = data;
+                let data = eval("%s(pdata, compile_okay);".format(element.generator));
+                if (data === -1) text.style.display = 'none'; // hide if generator return -1
+                else text.value = data;
             }
             else if (report[s]) {
                 text.value = report[s];
@@ -1292,22 +1370,6 @@ function build_steps(s, start) {
     let bn = document.getElementById('step_next');
     if (s == step_json.length -1) bn.style.display = 'none';
     else bn.style.display = 'block';
-}
-
-
-function compile_report() {
-    let rep = "## Board Report for %s ##\n".format(pdata.pdata[project].name);
-    for (var i = 1; i < 5; i++) {
-        let step = step_json[i];
-        rep += "\n## %s:\n".format(step.description);
-        if (report[i] !== null) {
-            rep += report[i].replace(/(\r?\n)+$/, '');
-        } else {
-            rep += "Nothing to note...\n";
-        }
-        rep += "\n";
-    }
-    return rep;
 }
 
 
@@ -1409,15 +1471,10 @@ function getReportDate(json, pmc, dateOnly) {
 		nextdate = dates.shift();
 	}
 	if (dateOnly) return nextdate ? (nextdate.toDateString() + " ("  + moment(nextdate).fromNow() + ")"): "Unknown(?)";
-	
 	let txt = "";
 	txt += "<b>Reporting schedule:</b> " + (json[pmc] ? formatRm(json[pmc]) : "Unknown(?)") + "<br>"
 	txt += "<b>Next report date: " + (nextdate ? nextdate.toDateString() : "Unknown(?)") + "</b>"
-	if (nextdate) {
-		var link = "https://svn.apache.org/repos/private/foundation/board/board_agenda_" + nextdate.getFullYear() +
-			"_" + (nextdate.getMonth() < 9 ? "0" : "") + (nextdate.getMonth() + 1) + "_" + nextdate.getDate() + ".txt"
-		txt += "<br>File your report in <a href='" + link + "'>" + link + "</a> when it has been seeded."
-	}
+
 	return txt
 }
 
