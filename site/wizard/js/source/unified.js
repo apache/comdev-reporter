@@ -1,25 +1,33 @@
 
-function hilite_sections() {
-    if (highlighted) return;
+function hilite_sections(b) {
+    if (highlighted && !b) return;
     highlighted = true;
-    let hilites = [
-        {highlight: /^## [^\r\n]+:/mg, className: 'blue' },
-        {highlight: PLACEHOLDER, className: 'none' }
-                   ];
-    let hcolors = ['blue', 'green', 'red', 'yellow'];
-    for (var i = 1; i < step_json.length-1; i++) {
-        let step = step_json[i];
-        let tline = "## %s:".format(step.description);
-        console.log(step.description);
-        hilites.push({
-            highlight: tline,
-            className: hcolors[i%hcolors.length]
-            });
+    let hilites = [];
+    
+    
+    hilites.push({highlight: /^## [^\r\n]+:/mg, className: 'blue' });
+    hilites.push({highlight: PLACEHOLDER, className: 'none' });
+    
+    let x = $('#unified-report').selectionStart;
+    let y = $('#unified-report').selectionEnd;
         
+    if (b) {
+        $('#unified-report').highlightWithinTextarea('destroy');
+        hilites.push({
+            highlight: b,
+            className: 'green'
+            });
     }
+    
+    
     $('#unified-report').highlightWithinTextarea({
-        highlight: hilites
-    });
+            highlight: hilites
+        });
+    if (x == y) {
+        $('#unified-report').selectionStart = x;
+        $('#unified-report').selectionEnd = y;
+        $('#unified-report').focus();
+    }
 }
 
 
@@ -27,7 +35,7 @@ let report_unified = "";
 let report_changed = true;
 let highlighted = false;
 
-function find_section() {
+function find_section(e) {
     let tmp = document.getElementById('unified-report').value;
     report_changed = (report_unified == tmp) ? false : true;
     report_unified = tmp;
@@ -48,7 +56,7 @@ function find_section() {
     }
     
     if (at_step) {
-        build_steps(at_step, false, true);
+        build_steps(at_step, false, true, e);
         
     } else {
         helper.innerText = "";
@@ -62,5 +70,61 @@ function set_position(text) {
         editor.selectionStart = (pos + text.length + 2);
         editor.selectionEnd = (pos + text.length + 2);
         editor.focus();
+    }
+}
+
+// Parses a unified report into sections
+function parse_unified(quiet) {
+    let sections = [];
+    let sX = 0;
+    let tmp = document.getElementById('unified-report').value;
+    while (tmp.length > 0) {
+      let nextheader = tmp.match(/^## ([^\r\n]+)\r?\n/m);
+      if (nextheader) {
+        if (!quiet) console.log("Found report header: %s".format(nextheader[0]))
+        let title = nextheader[1];
+        let spos = tmp.indexOf(nextheader[0]);
+        if (spos != -1) {
+          sX += spos + nextheader[0].length;
+          sY = sX;
+          tmp = tmp.substr(spos + nextheader[0].length);
+          let epos = tmp.search(/^## [^\r\n]+/m);
+          epos = (epos == -1) ? tmp.length : epos;
+          let section = tmp.substr(0, epos);
+          if (title.length > 2) {
+            sections.push({
+              title: title.replace(/:.*$/, ''),
+              text: section,
+              start: sX,
+              end: sX + epos
+            });
+          }
+          if (!quiet) console.log("Section contains:");
+          if (!quiet) console.log(section)
+          tmp = tmp.substr(epos);
+        } else { break }
+      } else {
+        if (!quiet) console.log("No more report headers found.");
+      }
+      
+    }
+    return sections;
+}
+
+
+// Mark a section using the highlighter
+function mark_section(title) {
+    let sections = parse_unified(true);
+    let foundit = false;
+    for (var i = 0; i < sections.length; i++) {
+        if (sections[i].title == title && sections[i].text.indexOf(PLACEHOLDER) == -1 && sections[i].text.length > 4) {
+            //console.log("Marking entire %s section from %u to %u".format(title, sections[i].start, sections[i].end))
+            hilite_sections(sections[i].text);
+            foundit = true;
+            break
+        }
+    }
+    if (!foundit) {
+        hilite_sections("<-- EXTERMINATE -->");
     }
 }

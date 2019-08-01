@@ -285,8 +285,8 @@
 
 		getStringRanges: function(input, str) {
 			let ranges = [];
-			let inputLower = input.toLowerCase();
-			let strLower = str.toLowerCase();
+			let inputLower = input;//.toLowerCase();
+			let strLower = str;//.toLowerCase();
 			let index = 0;
 			while (index = inputLower.indexOf(strLower, index), index !== -1) {
 				ranges.push([index, index + strLower.length]);
@@ -390,6 +390,7 @@
 			input = input.replace(/\{\{hwt-mark-start\|(\d+)\}\}/g, function(match, submatch) {
 				var className = boundaries[+submatch].className;
 				if (className) {
+					if (className == 'green') return '<div class="green"><mark class="green">'
 					return '<mark class="' + className + '">';
 				} else {
 					return '<mark>';
@@ -397,7 +398,7 @@
 			});
 
 			// replace stop tokens with closing </mark> tags
-			input = input.replace(/\{\{hwt-mark-stop\}\}/g, '</mark>');
+			input = input.replace(/\{\{hwt-mark-stop\}\}/g, '</mark></div>');
 
 			this.$highlights.html(input);
 		},

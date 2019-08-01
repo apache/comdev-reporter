@@ -40,6 +40,7 @@
 	border-width: 1px;
 	border-style: solid;
 	background: none transparent !important;
+	caret-color: black;
 }
 
 .hwt-content mark {
@@ -60,11 +61,20 @@
     background-color: #ffec99;
 }
 
-.hwt-content mark.green {
-    background-color: #ecff99;
+.hwt-content div.green {
+    background-color: #efe;
+	width: 100%;
+	display: inline-block;
 }
 
+mark.green {
+	visibility: hidden;
+}
+
+
 .hwt-content mark.none {
+/*	color: red !important;*/
+	caret-color: red;
     background-color: #DDD;
 	border-radius: 2px;
 	border: 0.5px dashed red;

@@ -232,34 +232,7 @@ function check_compile(data) {
     let text = "";
     if (editor_type == 'unified') {
       let required_sections = [];
-      let sections = [];
-      let tmp = document.getElementById('unified-report').value;
-      while (tmp.length > 0) {
-        let nextheader = tmp.match(/^## ([^\r\n]+)\r?\n/m);
-        if (nextheader) {
-          console.log("Found report header: %s".format(nextheader[0]))
-          let title = nextheader[1];
-          let spos = tmp.indexOf(nextheader[0]);
-          if (spos != -1) {
-            tmp = tmp.substr(spos + nextheader[0].length);
-            let epos = tmp.search(/^## [^\r\n]+/m);
-            epos = (epos == -1) ? tmp.length : epos;
-            let section = tmp.substr(0, epos);
-            if (title.length > 2) {
-              sections.push({
-                title: title.replace(/:.*$/, ''),
-                text: section
-              });
-            }
-            console.log("Section contains:");
-            console.log(section)
-            tmp = tmp.substr(epos);
-          } else { break }
-        } else {
-          console.log("No more report headers found.");
-        }
-        
-      }
+      let sections = parse_unified();
       
       for (var i = 0; i < step_json.length; i++) {
         let step = step_json[i];

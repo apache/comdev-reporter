@@ -47,7 +47,9 @@ function prime_steps(state, json) {
     build_steps(0, true);
 }
 
-function build_steps(s, start, noclick) {
+let hilite_timer = null;
+
+function build_steps(s, start, noclick, e) {
     s = s || 0;
     
     let text = document.getElementById('step_text');
@@ -56,6 +58,7 @@ function build_steps(s, start, noclick) {
     }
    
     text.innerText = '';
+    let step_changed = (s == current_step) ? false : true;
     current_step = s;
     
     let stepParent = document.getElementById('steps');
@@ -172,7 +175,15 @@ function build_steps(s, start, noclick) {
             helper.innerHTML += data;
         }
         // If clicked to a section, move cursor
-        if (!noclick) set_position(step.description);
+        if (!noclick) {
+            set_position(step.description);
+        }
+        if (step_changed || !noclick)  mark_section(step.description);
+        else {
+            window.clearTimeout(hilite_timer);
+            if (event && event.keyCode == 13) mark_section(step.description);
+            else hilite_timer = window.setTimeout(() => { mark_section(step.description)}, 100);
+        }
     }
 }
 
