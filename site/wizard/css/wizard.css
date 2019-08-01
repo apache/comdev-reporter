@@ -285,3 +285,11 @@
 .unified #wizard-content {
  display: none;
 }
+
+
+@-moz-document url-prefix() {
+    .unified .wizard-line {
+        margin-left: -106px;
+        margin-top: 50px;
+    }
+}
