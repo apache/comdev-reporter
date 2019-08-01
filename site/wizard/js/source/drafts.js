@@ -79,6 +79,8 @@ function show_draft_list(state, json) {
     if (txt.length > 0) {
         tip.style.display = 'block';
         tip.innerHTML = txt;
+    } else {
+        tip.style.display = 'none';
     }
   } else {
     return txt;
