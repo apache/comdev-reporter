@@ -47,7 +47,7 @@ function generate_pmc_roster(data) {
         x2 /= k
     }
     
-    txt += "There are currently %u committers and %u PMC members in this project (%u:%u committer-to-pmc ratio).\n\n".format(no_com, no_pmc, x1, x2);
+    txt += "There are currently %u committers and %u PMC members in this project.\nThe Committer-to-PMC ratio is %u:%u.\n\n".format(no_com, no_pmc, x1, x2);
     
     
     
@@ -57,6 +57,7 @@ function generate_pmc_roster(data) {
     let three_months_ago = now.subtract(3, 'months');
     let no_added = 0;
     let last_added = null;
+    txt += "PMC changes, past quarter:\n";
     for (var availid in changes) {
         let change = changes[availid];
         let name = change[0];
@@ -79,6 +80,7 @@ function generate_pmc_roster(data) {
     
     // Last Committer addition
     txt += "\n"
+    txt += "Committership changes, past quarter:\n"
     changes = data.changes[project].committer;
     now = moment();
     three_months_ago = now.subtract(3, 'months');
