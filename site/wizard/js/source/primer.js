@@ -47,7 +47,7 @@ function prime_steps(state, json) {
     build_steps(0, true);
 }
 
-function build_steps(s, start) {
+function build_steps(s, start, noclick) {
     s = s || 0;
     
     let text = document.getElementById('step_text');
@@ -171,8 +171,8 @@ function build_steps(s, start) {
             let data = eval("%s(pdata);".format(step.tipgenerator));
             helper.innerHTML += data;
         }
-        
+        // If clicked to a section, move cursor
+        if (!noclick) set_position(step.description);
     }
-    
 }
 

@@ -44,9 +44,19 @@ function find_section() {
     }
     
     if (at_step) {
-        build_steps(at_step);
+        build_steps(at_step, false, true);
         
     } else {
         helper.innerText = "";
+    }
+}
+
+function set_position(text) {
+    let editor = document.getElementById('unified-report');
+    let pos = editor.value.search(text);
+    if (pos && pos > 0) {
+        editor.selectionStart = (pos + text.length + 2);
+        editor.selectionEnd = (pos + text.length + 2);
+        editor.focus();
     }
 }
