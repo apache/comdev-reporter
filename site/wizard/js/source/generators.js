@@ -120,8 +120,21 @@ function generate_meta(data) {
     let cdates = Object.keys(comments.comments);
     cdates.sort();
     if (comments && cdates.length > 0) {
+      let date = cdates[cdates.length-1];
+      let comment = comments.comments[date];
+      
+      // split and rejoin comments
+      let ntxt = "";
+      let a = comment.match(/([a-z0-9]+: [\s\S\r\n]+?)(?=([a-z0-9]+:|$))/gi);
+      if (a) {
+        for (var i = 0; i < a.length; i++) {
+          let cmt = a[i];
+          cmt = cmt.replace(/[\r\n]+/g, ' ').replace(/([a-z0-9]+:)/, (a) => "<kbd>"+a+"</kbd><br/>");
+          ntxt += cmt + "<hr/>";
+        }
+      }
       txt += "<hr/><h6>Last report comments from the board: </h6>";
-      txt += "<b>%s:</b><br/><pre>%s</pre>".format(cdates[cdates.length-1], comments.comments[cdates[cdates.length-1]]);
+      txt += "<b style='color: #369;'>%s:</b><br/><span style='white-space: wrap; font-size: 0.8rem;'>%s</span>".format(date, ntxt);
     }
     return txt;
 }
