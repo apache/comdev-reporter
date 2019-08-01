@@ -1105,7 +1105,7 @@ function generate_meta(data) {
     // Previous comments of note?
     let cdates = Object.keys(comments.comments);
     cdates.sort();
-    if (comments && cdates) {
+    if (comments && cdates.length > 0) {
       txt += "<hr/><h6>Last report comments from the board: </h6>";
       txt += "<b>%s:</b><br/><pre>%s</pre>".format(cdates[cdates.length-1], comments.comments[cdates[cdates.length-1]]);
     }
