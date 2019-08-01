@@ -1065,7 +1065,10 @@ function read_draft(state, json) {
 
 
 function list_drafts() {
-  if (!saved_drafts) GET('drafts.py?action=index&project=%s'.format(project), show_draft_list, {});
+  if (!saved_drafts) {
+    GET('drafts.py?action=index&project=%s'.format(project), show_draft_list, {});
+    return "";
+  }
   else {
     return show_draft_list();
   }
