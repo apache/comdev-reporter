@@ -3,6 +3,7 @@ let report = [null,null,null,null,null,null];
 let current_step = 0;
 let cycles = {};
 let draft_mode = false;
+let comments = {};
 
 function modal(txt) {
     document.getElementById('alert_text').innerText = txt;
@@ -24,6 +25,11 @@ function prime_wizard(state, json) {
     
     let xtitle = document.getElementById("pname");
     xtitle.innerText = document.title;
+    GET("comments.py?project=%s".format(project), prime_comments, {})
+}
+
+function prime_comments(state, json) {
+    comments = json;
     GET("/reportingcycles.json", prime_cycles, {})
 }
 

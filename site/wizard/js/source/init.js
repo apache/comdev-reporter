@@ -29,7 +29,6 @@ if (project.length < 2) {
         titles[i].innerText = document.title;
     }
     
-    
     console.log("Initializing escrow checks");
     window.setInterval(escrow_check, 250);
     

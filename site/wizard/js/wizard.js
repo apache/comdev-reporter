@@ -1101,6 +1101,14 @@ function generate_meta(data) {
     let txt = "<b>Founded: </b>%s (%s)<br/>".format(founded.format('YYYY-MM-DD'), age);
     txt += "<b>Chair: </b> %s<br/>".format(data.pdata[project].chair);
     txt += getReportDate(cycles, project);
+    
+    // Previous comments of note?
+    let cdates = Object.keys(comments.comments);
+    cdates.sort();
+    if (comments && cdates) {
+      txt += "<hr/><h6>Last report comments from the board: </h6>";
+      txt += "<b>%s:</b><br/><pre>%s</pre>".format(cdates[cdates.length-1], comments.comments[cdates[cdates.length-1]]);
+    }
     return txt;
 }
 
@@ -1270,7 +1278,6 @@ if (project.length < 2) {
         titles[i].innerText = document.title;
     }
     
-    
     console.log("Initializing escrow checks");
     window.setInterval(escrow_check, 250);
     
@@ -1286,6 +1293,7 @@ let report = [null,null,null,null,null,null];
 let current_step = 0;
 let cycles = {};
 let draft_mode = false;
+let comments = {};
 
 function modal(txt) {
     document.getElementById('alert_text').innerText = txt;
@@ -1307,6 +1315,11 @@ function prime_wizard(state, json) {
     
     let xtitle = document.getElementById("pname");
     xtitle.innerText = document.title;
+    GET("comments.py?project=%s".format(project), prime_comments, {})
+}
+
+function prime_comments(state, json) {
+    comments = json;
     GET("/reportingcycles.json", prime_cycles, {})
 }
 

@@ -113,6 +113,14 @@ function generate_meta(data) {
     let txt = "<b>Founded: </b>%s (%s)<br/>".format(founded.format('YYYY-MM-DD'), age);
     txt += "<b>Chair: </b> %s<br/>".format(data.pdata[project].chair);
     txt += getReportDate(cycles, project);
+    
+    // Previous comments of note?
+    let cdates = Object.keys(comments.comments);
+    cdates.sort();
+    if (comments && cdates) {
+      txt += "<hr/><h6>Last report comments from the board: </h6>";
+      txt += "<b>%s:</b><br/><pre>%s</pre>".format(cdates[cdates.length-1], comments.comments[cdates[cdates.length-1]]);
+    }
     return txt;
 }
 
