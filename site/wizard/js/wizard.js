@@ -1425,6 +1425,10 @@ if (project.length < 2) {
         titles[i].innerText = document.title;
     }
     
+    if (editor_type == 'unified') {
+        console.log("Using unified editor!");
+        document.getElementById('wrapper').setAttribute('class', 'unified');
+    }
     console.log("Initializing escrow checks");
     window.setInterval(escrow_check, 250);
     
@@ -1505,8 +1509,14 @@ function build_steps(s, start) {
         stepcircle.inject(stepicon);
         let steptext = new HTML('div', {class: 'wizard-step-text'}, element.description);
         wrapper.inject([stepcircle, steptext]);
-        if (s == i) stepcircle.setAttribute('class', 'wizard-step active');
-        if (i < s) stepcircle.setAttribute('class', 'wizard-step done');
+        if (s == i) {
+            stepcircle.setAttribute('class', 'wizard-step active');
+            steptext.setAttribute('class', 'wizard-step-text active');
+        }
+        if (i < s) {
+            stepcircle.setAttribute('class', 'wizard-step done');
+            steptext.setAttribute('class', 'wizard-step-text done');
+        }
         stepParent.inject(wrapper);
         if (i < step_json.length-1) {
             let line = new HTML('div', {class: 'wizard-line'});
@@ -1564,6 +1574,47 @@ function build_steps(s, start) {
     let bn = document.getElementById('step_next');
     if (s == step_json.length -1) bn.style.display = 'none';
     else bn.style.display = 'block';
+    
+    if (editor_type == 'unified') {
+        if (start) {
+            let template = "";
+            for (var i = 0; i < step_json.length; i++) {
+                let step = step_json[i];
+                if (!step.noinput) {
+                    template += "## %s:\n".format(step.description);
+                    if (step.generator) {
+                        let data = eval("%s(pdata);".format(step.generator));
+                        if (data && data.length > 0) template += data
+                    } else {
+                        template += "[Insert your own data here]";
+                    }
+                    template += "\n\n";
+                }
+            }
+            document.getElementById('unified-report').value = template;
+        }
+        if (report_changed) hilite_sections();
+        
+        let step = step_json[s];
+        let helper = document.getElementById('unified-helper');
+        
+        helper.innerHTML = "<h5>%s:</h5>".format(step.description);
+        // Add in help
+        if (step.helpgenerator) {
+            let data = eval("%s(pdata);".format(step.helpgenerator));
+            helper.innerHTML += data;
+        } else if (step.help) {
+            helper.innerHTML += step.help;
+        }
+        
+        // Add tips?
+        if (step.tipgenerator) {
+            let data = eval("%s(pdata);".format(step.tipgenerator));
+            helper.innerHTML += data;
+        }
+        
+    }
+    
 }
 
 
@@ -1809,4 +1860,62 @@ function toggleView(id) {
   if (obj) {
     obj.style.display = (obj.style.display == 'block') ? 'none' : 'block';
   }
+}
+
+
+/******************************************
+ Fetched from source/unified.js
+******************************************/
+
+
+function hilite_sections() {
+    if (highlighted) return;
+    highlighted = true;
+    let hilites = [
+        {highlight: '[Insert your own data here]', className: 'none' }
+                   ];
+    let hcolors = ['blue', 'green', 'red', 'yellow'];
+    for (var i = 1; i < step_json.length-1; i++) {
+        let step = step_json[i];
+        let tline = "## %s:".format(step.description);
+        console.log(step.description);
+        hilites.push({
+            highlight: tline,
+            className: hcolors[i%hcolors.length]
+            });
+        
+    }
+    $('#unified-report').highlightWithinTextarea({
+        highlight: hilites
+    });
+}
+
+
+let report_unified = "";
+let report_changed = true;
+let highlighted = false;
+
+function find_section() {
+    let tmp = document.getElementById('unified-report').value;
+    report_changed = (report_unified == tmp) ? false : true;
+    report_unified = tmp;
+    let spos = $('#unified-report').prop("selectionStart");
+    let helper = document.getElementById('unified-helper');
+    
+    let tprec = report_unified.substr(0, spos);
+    let at_step = 0;
+    for (var i = 1; i < step_json.length-1; i++) {
+        let step = step_json[i];
+        let tline = "## %s:".format(step.description);
+        if (tprec.search(tline) != -1) {
+            at_step = i;
+        }
+    }
+    
+    if (at_step) {
+        build_steps(at_step);
+        
+    } else {
+        helper.innerText = "";
+    }
 }

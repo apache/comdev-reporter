@@ -68,8 +68,14 @@ function build_steps(s, start) {
         stepcircle.inject(stepicon);
         let steptext = new HTML('div', {class: 'wizard-step-text'}, element.description);
         wrapper.inject([stepcircle, steptext]);
-        if (s == i) stepcircle.setAttribute('class', 'wizard-step active');
-        if (i < s) stepcircle.setAttribute('class', 'wizard-step done');
+        if (s == i) {
+            stepcircle.setAttribute('class', 'wizard-step active');
+            steptext.setAttribute('class', 'wizard-step-text active');
+        }
+        if (i < s) {
+            stepcircle.setAttribute('class', 'wizard-step done');
+            steptext.setAttribute('class', 'wizard-step-text done');
+        }
         stepParent.inject(wrapper);
         if (i < step_json.length-1) {
             let line = new HTML('div', {class: 'wizard-line'});
@@ -127,5 +133,46 @@ function build_steps(s, start) {
     let bn = document.getElementById('step_next');
     if (s == step_json.length -1) bn.style.display = 'none';
     else bn.style.display = 'block';
+    
+    if (editor_type == 'unified') {
+        if (start) {
+            let template = "";
+            for (var i = 0; i < step_json.length; i++) {
+                let step = step_json[i];
+                if (!step.noinput) {
+                    template += "## %s:\n".format(step.description);
+                    if (step.generator) {
+                        let data = eval("%s(pdata);".format(step.generator));
+                        if (data && data.length > 0) template += data
+                    } else {
+                        template += "[Insert your own data here]";
+                    }
+                    template += "\n\n";
+                }
+            }
+            document.getElementById('unified-report').value = template;
+        }
+        if (report_changed) hilite_sections();
+        
+        let step = step_json[s];
+        let helper = document.getElementById('unified-helper');
+        
+        helper.innerHTML = "<h5>%s:</h5>".format(step.description);
+        // Add in help
+        if (step.helpgenerator) {
+            let data = eval("%s(pdata);".format(step.helpgenerator));
+            helper.innerHTML += data;
+        } else if (step.help) {
+            helper.innerHTML += step.help;
+        }
+        
+        // Add tips?
+        if (step.tipgenerator) {
+            let data = eval("%s(pdata);".format(step.tipgenerator));
+            helper.innerHTML += data;
+        }
+        
+    }
+    
 }
 

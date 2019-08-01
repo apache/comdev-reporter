@@ -29,6 +29,10 @@ if (project.length < 2) {
         titles[i].innerText = document.title;
     }
     
+    if (editor_type == 'unified') {
+        console.log("Using unified editor!");
+        document.getElementById('wrapper').setAttribute('class', 'unified');
+    }
     console.log("Initializing escrow checks");
     window.setInterval(escrow_check, 250);
     

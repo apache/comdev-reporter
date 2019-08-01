@@ -1,3 +1,9 @@
+#wrapper.unified {
+    width: 1200px;
+    min-height: 630px;
+    margin: 0 auto;
+    /*border: 3px solid #333;*/
+}
 .wizard-step {
     width: 64px !important;
     height: 64px;
@@ -16,11 +22,19 @@
 }
 
 
+.unified .wizard-step {
+  margin-left: -10px;
+}
+
 .wizard-step-wrapper {
     display: inline-block;
     color: #333;
     width: 110px;
     height: 120px;
+}
+
+.unified .wizard-step-wrapper {
+  height: 96px;
 }
 
 .wizard-step-wrapper:hover > * {
@@ -44,6 +58,22 @@
     line-height: 18px;
     margin-left: 9px;
     text-align: center;
+    z-index: 4;
+    position: relative;
+}
+
+.unified .wizard-step-text {
+  margin-left: -10px;
+  margin-top: -3px;
+  height: 16px;
+  border-radius: 5px;
+  border: 2px solid #666;
+  background: #FFF;
+  height: 20px;
+}
+
+.unified .wizard-step-text .done {
+ color: #F00;
 }
 
 .wizard-step.active {
@@ -64,10 +94,22 @@
     position: relative;
 }
 
+.unified .wizard-line {
+    border: none;
+    border-right: 3px solid #666;
+    width: 48px;
+    display: inline-block;
+    margin-top: -24px;
+    margin-left: 4px;
+    height: 48px;
+    z-index: 0;
+    position: absolute;
+}
+
 
 .done {
-    color: #9BE;
-    border-color: #9BE;
+    color: #9BE !important;
+    border-color: #9BE !important;
 }
 
 
@@ -80,6 +122,19 @@
     padding: 10px;
     height: 110px;
     text-align: center;
+}
+
+.unified #steps {
+    width: 120px;
+    border: 1.5px solid #3339;
+    background: #EEE;
+    border-radius: 10px;
+    margin: 10px auto;
+    padding: 10px;
+    height: 600px;
+    text-align: center;
+    display: inline-block;
+    float: left;
 }
 
 #wizard-content {
@@ -181,3 +236,52 @@
         -o-transition: opacity 0.01s linear !important;
            transition: opacity 0.01s linear !important;
  }
+ 
+ 
+.unified textarea {
+ font-family: monospace;
+ font-size: 12px;
+}
+
+#unified-editor {
+ display: none;
+}
+
+.unified #unified-editor {
+  display: inline-block;
+  width: 560px;
+  height: 620px;
+  float: left;
+  margin: 16px;
+  
+}
+
+#unified-helper {
+ display: none;
+}
+
+.unified #unified-helper {
+  display: inline-block;
+  width: 400px;
+  height: 600px;
+  float: left;
+  margin: 10px;
+  border: 2px solid #666;
+  background: #FFE;
+  border-radius: 10px;
+  font-size: 0.8rem;
+}
+
+#unified-report {
+ width: 540px;
+ height: 590px;
+ font-size: 11px;
+}
+
+.unified #tips {
+ display: none !important;
+}
+
+.unified #wizard-content {
+ display: none;
+}

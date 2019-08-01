@@ -19,7 +19,7 @@
     {
         "id": "basic",
         "icon": "chart-bar",
-        "description": "Basic Information",
+        "description": "Membership Data",
         "help": "This is the basic project community data. You can usually leave this part as is, unless you wish to add additional information.",
         "generator": "generate_pmc_roster"
     },
