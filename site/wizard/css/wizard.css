@@ -89,7 +89,7 @@
     border-radius: 10px;
     margin: 10px auto;
     padding: 10px;
-    height: 480px;
+    min-height: 480px;
     font-size: 0.85rem;
 }
 
