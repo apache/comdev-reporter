@@ -214,20 +214,95 @@ function health_tips(data) {
 let compile_okay = false;
 
 function check_compile(data) {
-
+    
     compile_okay = true;
     let text = "";
-    for (var i = 1; i < 5; i++) {
-        if (report[i] == null || report[i].length == 0) {
-            text += "<li>You have not filled out the <kbd>%s</kbd> section yet.".format(step_json[i].description);
-            compile_okay = false;
+    if (editor_type == 'unified') {
+      let required_sections = [];
+      let sections = [];
+      let tmp = document.getElementById('unified-report').value;
+      while (tmp.length > 0) {
+        let nextheader = tmp.match(/^## ([^\r\n]+)\r?\n/m);
+        if (nextheader) {
+          console.log("Found report header: %s".format(nextheader[0]))
+          let title = nextheader[1];
+          let spos = tmp.indexOf(nextheader[0]);
+          if (spos != -1) {
+            tmp = tmp.substr(spos + nextheader[0].length);
+            let epos = tmp.search(/^## [^\r\n]+/m);
+            epos = (epos == -1) ? tmp.length : epos;
+            let section = tmp.substr(0, epos);
+            if (title.length > 2) {
+              sections.push({
+                title: title.replace(/:.*$/, ''),
+                text: section
+              });
+            }
+            console.log("Section contains:");
+            console.log(section)
+            tmp = tmp.substr(epos);
+          } else { break }
+        } else {
+          console.log("No more report headers found.");
         }
+        
+      }
+      
+      for (var i = 0; i < step_json.length; i++) {
+        let step = step_json[i];
+        if (!step.noinput) {
+          let found = false;
+          required_sections.push(step.description);
+          for (var n = 0; n < sections.length; n++) {
+            if (sections[n].title == step.description) {
+              found = true;
+              if (sections[n].text.indexOf(PLACEHOLDER) != -1) {
+                console.log("Found placeholder text: " + PLACEHOLDER)
+                text += "<li><span style='display: inline-block; width: 20px; font-size: 18px; color: red;'>&#xF7;</span> <kbd>%s</kbd> contains placeholder text!</li>".format(step.description);
+                compile_okay = false;
+              } else if (sections[n].text.length < 20) {
+                text += "<li><span style='display: inline-block; width: 20px; font-size: 18px; color: pink;'>&#8253;</span> <kbd>%s</kbd> seems a tad short?</li>".format(step.description);
+              } else {
+                text += "<li><span style='display: inline-block; width: 20px; font-size: 18px; color: green;'>&#x2713;</span> <kbd>%s</kbd> seems alright</li>".format(step.description);
+                
+              }
+              break;
+            }
+          }
+          if (!found) {
+            compile_okay = false;
+            text += "<li><span style='display: inline-block; width: 20px; font-size: 18px; color: red;'>&#xF7;</span> <kbd>%s</kbd> is missing from the report!</li>".format(step.description);
+          }
+        }
+        
+      }
+      
+      // Remark on additional sections not required
+      for (var n = 0; n < sections.length; n++) {
+          if (!required_sections.has(sections[n].title)) {
+            text += "<li><span style='display: inline-block; width: 20px; font-size: 18px; color: pink;'>&#8253;</span> Found unknown section <kbd>%s</kbd></li>".format(sections[n].title);
+          }
+      }
+      
+      
     }
+    else {
+      for (var i = 1; i < 5; i++) {
+          if (report[i] == null || report[i].length == 0) {
+              text += "<li>You have not filled out the <kbd>%s</kbd> section yet.".format(step_json[i].description);
+              compile_okay = false;
+          }
+      }
+    }
+    
     if (text.length > 0) {
-        text = "<h5>Errors found while compiling report:</h5><ul>" + text + "</ul><p><br/>Please correct these sections before compiling your final report!<br/>For now, you can save the data you have entered so far as a draft, and come back later to finish things up.</p>"
-        compile_okay = false;
-    } else {
-        text = "That's it, your board report compiled a-okay and is potentially ready for submission! If you'd like more time to work on it, you can save it as a draft, and return later to make some final edits. Or you can publish it to the agenda via Whimsy.";
+        text = "<h5>Report review results:</h5>The following remarks were logged by the report compiler:<br/><ul>" + text + "</ul>";
+    }
+    if (!compile_okay) {
+      text += "Your report could possibly use some more work, and that's okay! You can always save your current report as a draft and return later to work more on it. Drafts are saved for up to two months.";
+    }
+    else {
+        text += "That's it, your board report compiled a-okay and is potentially ready for submission! If you'd like more time to work on it, you can save it as a draft, and return later to make some final edits. Or you can publish it to the agenda via Whimsy.";
     }
     text += "<br/><button class='btn btn-warning' onclick='save_draft();'>Save as draft</button>"
     if (compile_okay) text += " &nbsp; &nbsp; <button class='btn btn-success'>Publish via Whimsy</button>"
@@ -237,6 +312,9 @@ function check_compile(data) {
 
 function compile_report(data, okay, force) {
     if (!okay && !force) return -1
+    if (editor_type == 'unified') {
+      return document.getElementById('unified-report').value;
+    }
     let rep = "## Board Report for %s ##\n".format(pdata.pdata[project].name);
     for (var i = 1; i < 5; i++) {
         let step = step_json[i];

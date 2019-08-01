@@ -6,6 +6,7 @@ function save_draft() {
     js = {
         'project': project,
         'action': 'save',
+        'type': editor_type,
         'report': JSON.stringify(report),
         'report_compiled': compile_report(null, true, true)
     }
@@ -34,13 +35,19 @@ function draft_saved(state, json) {
 
 
 function load_draft(filename) {
-    GET('drafts.py?action=fetch&project=%s&filename=%s'.format(project, filename), read_draft, {});
+    GET('drafts.py?action=fetch&project=%s&filename=%s&type=%s'.format(project, filename, editor_type), read_draft, {});
 }
 
 function read_draft(state, json) {
     if (json.report) {
-        report = json.report;
-        build_steps(0, true);
+        
+        if (editor_type == 'unified') {
+          document.getElementById('unified-report').value = json.report;
+          window.setTimeout(() => { $('#unified-report').highlightWithinTextarea('update'); }, 250);
+        } else {
+            report = json.report;
+        }
+        build_steps(0, true, true);
         modal("Draft was successfully loaded and is ready.");
     } else {
         modal("Could not load report draft :/");
@@ -51,7 +58,7 @@ function read_draft(state, json) {
 
 function list_drafts() {
   if (!saved_drafts) {
-    GET('drafts.py?action=index&project=%s'.format(project), show_draft_list, {});
+    GET('drafts.py?action=index&project=%s&type=%s'.format(project, editor_type), show_draft_list, {});
     return "";
   }
   else {
@@ -84,6 +91,10 @@ function show_draft_list(state, json) {
         tip.innerHTML = txt;
     } else {
         tip.style.display = 'none';
+    }
+    if (editor_type == 'unified') {
+        let tip = document.getElementById('unified-helper');
+        tip.innerHTML += txt;
     }
   } else {
     return txt;

@@ -1021,6 +1021,7 @@ function save_draft() {
     js = {
         'project': project,
         'action': 'save',
+        'type': editor_type,
         'report': JSON.stringify(report),
         'report_compiled': compile_report(null, true, true)
     }
@@ -1049,13 +1050,19 @@ function draft_saved(state, json) {
 
 
 function load_draft(filename) {
-    GET('drafts.py?action=fetch&project=%s&filename=%s'.format(project, filename), read_draft, {});
+    GET('drafts.py?action=fetch&project=%s&filename=%s&type=%s'.format(project, filename, editor_type), read_draft, {});
 }
 
 function read_draft(state, json) {
     if (json.report) {
-        report = json.report;
-        build_steps(0, true);
+        
+        if (editor_type == 'unified') {
+          document.getElementById('unified-report').value = json.report;
+          window.setTimeout(() => { $('#unified-report').highlightWithinTextarea('update'); }, 250);
+        } else {
+            report = json.report;
+        }
+        build_steps(0, true, true);
         modal("Draft was successfully loaded and is ready.");
     } else {
         modal("Could not load report draft :/");
@@ -1066,7 +1073,7 @@ function read_draft(state, json) {
 
 function list_drafts() {
   if (!saved_drafts) {
-    GET('drafts.py?action=index&project=%s'.format(project), show_draft_list, {});
+    GET('drafts.py?action=index&project=%s&type=%s'.format(project, editor_type), show_draft_list, {});
     return "";
   }
   else {
@@ -1099,6 +1106,10 @@ function show_draft_list(state, json) {
         tip.innerHTML = txt;
     } else {
         tip.style.display = 'none';
+    }
+    if (editor_type == 'unified') {
+        let tip = document.getElementById('unified-helper');
+        tip.innerHTML += txt;
     }
   } else {
     return txt;
@@ -1350,20 +1361,95 @@ function health_tips(data) {
 let compile_okay = false;
 
 function check_compile(data) {
-
+    
     compile_okay = true;
     let text = "";
-    for (var i = 1; i < 5; i++) {
-        if (report[i] == null || report[i].length == 0) {
-            text += "<li>You have not filled out the <kbd>%s</kbd> section yet.".format(step_json[i].description);
-            compile_okay = false;
+    if (editor_type == 'unified') {
+      let required_sections = [];
+      let sections = [];
+      let tmp = document.getElementById('unified-report').value;
+      while (tmp.length > 0) {
+        let nextheader = tmp.match(/^## ([^\r\n]+)\r?\n/m);
+        if (nextheader) {
+          console.log("Found report header: %s".format(nextheader[0]))
+          let title = nextheader[1];
+          let spos = tmp.indexOf(nextheader[0]);
+          if (spos != -1) {
+            tmp = tmp.substr(spos + nextheader[0].length);
+            let epos = tmp.search(/^## [^\r\n]+/m);
+            epos = (epos == -1) ? tmp.length : epos;
+            let section = tmp.substr(0, epos);
+            if (title.length > 2) {
+              sections.push({
+                title: title.replace(/:.*$/, ''),
+                text: section
+              });
+            }
+            console.log("Section contains:");
+            console.log(section)
+            tmp = tmp.substr(epos);
+          } else { break }
+        } else {
+          console.log("No more report headers found.");
         }
+        
+      }
+      
+      for (var i = 0; i < step_json.length; i++) {
+        let step = step_json[i];
+        if (!step.noinput) {
+          let found = false;
+          required_sections.push(step.description);
+          for (var n = 0; n < sections.length; n++) {
+            if (sections[n].title == step.description) {
+              found = true;
+              if (sections[n].text.indexOf(PLACEHOLDER) != -1) {
+                console.log("Found placeholder text: " + PLACEHOLDER)
+                text += "<li><span style='display: inline-block; width: 20px; font-size: 18px; color: red;'>&#xF7;</span> <kbd>%s</kbd> contains placeholder text!</li>".format(step.description);
+                compile_okay = false;
+              } else if (sections[n].text.length < 20) {
+                text += "<li><span style='display: inline-block; width: 20px; font-size: 18px; color: pink;'>&#8253;</span> <kbd>%s</kbd> seems a tad short?</li>".format(step.description);
+              } else {
+                text += "<li><span style='display: inline-block; width: 20px; font-size: 18px; color: green;'>&#x2713;</span> <kbd>%s</kbd> seems alright</li>".format(step.description);
+                
+              }
+              break;
+            }
+          }
+          if (!found) {
+            compile_okay = false;
+            text += "<li><span style='display: inline-block; width: 20px; font-size: 18px; color: red;'>&#xF7;</span> <kbd>%s</kbd> is missing from the report!</li>".format(step.description);
+          }
+        }
+        
+      }
+      
+      // Remark on additional sections not required
+      for (var n = 0; n < sections.length; n++) {
+          if (!required_sections.has(sections[n].title)) {
+            text += "<li><span style='display: inline-block; width: 20px; font-size: 18px; color: pink;'>&#8253;</span> Found unknown section <kbd>%s</kbd></li>".format(sections[n].title);
+          }
+      }
+      
+      
     }
+    else {
+      for (var i = 1; i < 5; i++) {
+          if (report[i] == null || report[i].length == 0) {
+              text += "<li>You have not filled out the <kbd>%s</kbd> section yet.".format(step_json[i].description);
+              compile_okay = false;
+          }
+      }
+    }
+    
     if (text.length > 0) {
-        text = "<h5>Errors found while compiling report:</h5><ul>" + text + "</ul><p><br/>Please correct these sections before compiling your final report!<br/>For now, you can save the data you have entered so far as a draft, and come back later to finish things up.</p>"
-        compile_okay = false;
-    } else {
-        text = "That's it, your board report compiled a-okay and is potentially ready for submission! If you'd like more time to work on it, you can save it as a draft, and return later to make some final edits. Or you can publish it to the agenda via Whimsy.";
+        text = "<h5>Report review results:</h5>The following remarks were logged by the report compiler:<br/><ul>" + text + "</ul>";
+    }
+    if (!compile_okay) {
+      text += "Your report could possibly use some more work, and that's okay! You can always save your current report as a draft and return later to work more on it. Drafts are saved for up to two months.";
+    }
+    else {
+        text += "That's it, your board report compiled a-okay and is potentially ready for submission! If you'd like more time to work on it, you can save it as a draft, and return later to make some final edits. Or you can publish it to the agenda via Whimsy.";
     }
     text += "<br/><button class='btn btn-warning' onclick='save_draft();'>Save as draft</button>"
     if (compile_okay) text += " &nbsp; &nbsp; <button class='btn btn-success'>Publish via Whimsy</button>"
@@ -1373,6 +1459,9 @@ function check_compile(data) {
 
 function compile_report(data, okay, force) {
     if (!okay && !force) return -1
+    if (editor_type == 'unified') {
+      return document.getElementById('unified-report').value;
+    }
     let rep = "## Board Report for %s ##\n".format(pdata.pdata[project].name);
     for (var i = 1; i < 5; i++) {
         let step = step_json[i];
@@ -1420,6 +1509,7 @@ console.log("/******* ASF Board Report Wizard initializing ********/")
 // Adjust titles:
 let project = location.search.substr(1);
 let loaded_from_draft = false;
+let PLACEHOLDER = '[Insert your own data here]';
 
 if (project.length < 2) {
     GET("/reportingcycles.json", pre_splash, {});
@@ -1591,7 +1681,7 @@ function build_steps(s, start, noclick) {
                         let data = eval("%s(pdata);".format(step.generator));
                         if (data && data.length > 0) template += data
                     } else {
-                        template += "[Insert your own data here]";
+                        template += PLACEHOLDER;
                     }
                     template += "\n\n";
                 }
@@ -1877,7 +1967,8 @@ function hilite_sections() {
     if (highlighted) return;
     highlighted = true;
     let hilites = [
-        {highlight: '[Insert your own data here]', className: 'none' }
+        {highlight: /^## [^\r\n]+:/mg, className: 'blue' },
+        {highlight: PLACEHOLDER, className: 'none' }
                    ];
     let hcolors = ['blue', 'green', 'red', 'yellow'];
     for (var i = 1; i < step_json.length-1; i++) {
@@ -1907,12 +1998,15 @@ function find_section() {
     let spos = $('#unified-report').prop("selectionStart");
     let helper = document.getElementById('unified-helper');
     
+    // Hop to next newline, so marking the title will jump to the right section
+    while (report_unified[spos] != "\n" && spos < report_unified.length) spos++;
+    
     let tprec = report_unified.substr(0, spos);
     let at_step = 0;
     for (var i = 1; i < step_json.length-1; i++) {
         let step = step_json[i];
         let tline = "## %s:".format(step.description);
-        if (tprec.search(tline) != -1) {
+        if (tprec.indexOf(tline) != -1) {
             at_step = i;
         }
     }

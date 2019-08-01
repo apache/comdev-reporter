@@ -3,7 +3,8 @@ function hilite_sections() {
     if (highlighted) return;
     highlighted = true;
     let hilites = [
-        {highlight: '[Insert your own data here]', className: 'none' }
+        {highlight: /^## [^\r\n]+:/mg, className: 'blue' },
+        {highlight: PLACEHOLDER, className: 'none' }
                    ];
     let hcolors = ['blue', 'green', 'red', 'yellow'];
     for (var i = 1; i < step_json.length-1; i++) {
@@ -33,12 +34,15 @@ function find_section() {
     let spos = $('#unified-report').prop("selectionStart");
     let helper = document.getElementById('unified-helper');
     
+    // Hop to next newline, so marking the title will jump to the right section
+    while (report_unified[spos] != "\n" && spos < report_unified.length) spos++;
+    
     let tprec = report_unified.substr(0, spos);
     let at_step = 0;
     for (var i = 1; i < step_json.length-1; i++) {
         let step = step_json[i];
         let tline = "## %s:".format(step.description);
-        if (tprec.search(tline) != -1) {
+        if (tprec.indexOf(tline) != -1) {
             at_step = i;
         }
     }

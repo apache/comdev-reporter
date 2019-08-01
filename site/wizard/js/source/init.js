@@ -19,6 +19,7 @@ console.log("/******* ASF Board Report Wizard initializing ********/")
 // Adjust titles:
 let project = location.search.substr(1);
 let loaded_from_draft = false;
+let PLACEHOLDER = '[Insert your own data here]';
 
 if (project.length < 2) {
     GET("/reportingcycles.json", pre_splash, {});

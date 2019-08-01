@@ -145,7 +145,7 @@ function build_steps(s, start, noclick) {
                         let data = eval("%s(pdata);".format(step.generator));
                         if (data && data.length > 0) template += data
                     } else {
-                        template += "[Insert your own data here]";
+                        template += PLACEHOLDER;
                     }
                     template += "\n\n";
                 }
