@@ -72,17 +72,19 @@ function show_draft_list(state, json) {
   let txt = "";
   let filenames = Object.keys(saved_drafts);
   if (filenames.length > 0) {
-    txt += "<h5>Found the following saved drafts for %s:</h5>".format(project);
-    txt += "<ul>"
+    txt += "<h6>Found the following saved drafts for %s:</h6>".format(project);
+    txt += "<small style='font-size: 0.75rem;'><ul style='margin: 0px; padding: 10px;'>"
     filenames.sort();
     for (var i = filenames.length -1; i >= 0; i--) {
         let ts = filenames[i];
         let del = ''
         if (saved_drafts[ts].yours) {
-             del = "<button class='btn btn-danger btn-sm' style='margin-left: 16px;' onclick='javascript:delete_draft(\"%s\");'>Delete draft</button>".format(saved_drafts[ts].filename);
+             del = "<button class='btn btn-danger btn-sm' style='margin-left: 8px;' onclick='javascript:delete_draft(\"%s\");'>Delete</button>".format(saved_drafts[ts].filename);
         }
-        txt += "<li>%s saved %s - <button class='btn btn-info btn-sm' onclick='javascript:load_draft(\"%s\");'>Load</button> %s</li>".format(saved_drafts[ts].filename, moment(parseInt(ts)*1000.0).fromNow(), saved_drafts[ts].filename, del);
+        let shortname = saved_drafts[ts].filename.replace(/[^-]+-[^-]+-/, '').replace('.json', ''); // don't need to show the full filename really
+        txt += "<li>%s saved %s<button class='btn btn-info btn-sm' style='margin-left: 6px;' onclick='javascript:load_draft(\"%s\");'>Load</button> %s</li>".format(shortname, moment(parseInt(ts)*1000.0).fromNow(), saved_drafts[ts].filename, del);
     }
+    txt += "</ul></small>"
   }
   if (json) {
     let tip = document.getElementById('tips');
