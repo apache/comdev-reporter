@@ -1,0 +1,110 @@
+// Draft saving/loading features
+
+let saved_drafts = null;
+
+function save_draft() {
+    js = {
+        'project': project,
+        'action': 'save',
+        'report': JSON.stringify(report),
+        'report_compiled': compile_report(null, true, true)
+    }
+    
+    let formdata = $.param(js);
+    
+    // Enable spinner, hide main wrapper
+    document.getElementById('loader_text').innerText = "Saving draft...";
+    document.getElementById('wizard_spinner').style.display = 'block';
+    document.getElementById('wrapper').style.display = 'none';
+    
+    POST('drafts.py', draft_saved, {}, formdata);
+}
+
+function draft_saved(state, json) {
+    // Disengage spinner
+    document.getElementById('wizard_spinner').style.display = 'none';
+    document.getElementById('wrapper').style.display = 'block';
+    
+    if (json.filename) {
+        modal("Draft was saved in the reporter database as <kbd>%s</kbd>. You can revisit this draft at any time by loading it from the base data tab. Drafts are kept for up to two months.".format(json.filename));
+    } else {
+        modal("Could not save draft: %s".format(json.error || "Unspecified error"));
+    }
+}
+
+
+function load_draft(filename) {
+    GET('drafts.py?action=fetch&project=%s&filename=%s'.format(project, filename), read_draft, {});
+}
+
+function read_draft(state, json) {
+    if (json.report) {
+        report = json.report;
+        build_steps(0, true);
+        modal("Draft was successfully loaded and is ready.");
+    } else {
+        modal("Could not load report draft :/");
+    }
+}
+
+
+
+function list_drafts() {
+  if (!saved_drafts) GET('drafts.py?action=index&project=%s'.format(project), show_draft_list, {});
+  else {
+    return show_draft_list();
+  }
+}
+
+function show_draft_list(state, json) {
+  if (json && json) { saved_drafts = json.drafts || {}; }
+  
+  let txt = "";
+  let filenames = Object.keys(saved_drafts);
+  if (filenames.length > 0) {
+    txt += "<h5>Found the following saved drafts for %s:</h5>".format(project);
+    txt += "<ul>"
+    filenames.sort();
+    for (var i = filenames.length -1; i >= 0; i--) {
+        let ts = filenames[i];
+        let del = ''
+        if (saved_drafts[ts].yours) {
+             del = "<button class='btn btn-danger btn-sm' style='margin-left: 16px;' onclick='javascript:delete_draft(\"%s\");'>Delete draft</button>".format(saved_drafts[ts].filename);
+        }
+        txt += "<li>%s saved %s - <button class='btn btn-info btn-sm' onclick='javascript:load_draft(\"%s\");'>Load</button> %s</li>".format(saved_drafts[ts].filename, moment(parseInt(ts)*1000.0).fromNow(), saved_drafts[ts].filename, del);
+    }
+  }
+  if (json) {
+    let tip = document.getElementById('tips');
+    if (txt.length > 0) {
+        tip.style.display = 'block';
+        tip.innerHTML = txt;
+    }
+  } else {
+    return txt;
+  }
+}
+
+
+
+function delete_draft(filename) {
+    GET('drafts.py?action=delete&project=%s&filename=%s'.format(project, filename), deleted_draft, {filename: filename});
+}
+
+function deleted_draft(state, json) {
+    if (json.message) {
+        modal("Draft was successfully removed.");
+        let filenames = Object.keys(saved_drafts);
+        for (var i = 0; i < filenames.length; i++) {
+            let ts = filenames[i];
+            let fn = saved_drafts[ts].filename;
+            if (fn == state.filename) {
+                delete saved_drafts[ts];
+                break
+            }
+        }
+        show_draft_list({}, {drafts: saved_drafts});
+    } else {
+        modal("Could not remove report draft :/");
+    }
+}

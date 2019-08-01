@@ -6,7 +6,7 @@ let draft_mode = false;
 let comments = {};
 
 function modal(txt) {
-    document.getElementById('alert_text').innerText = txt;
+    document.getElementById('alert_text').innerHTML = txt;
     $("#alert").modal();
 }
 

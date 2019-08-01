@@ -74,7 +74,8 @@ async function async_snap(error) {
 
 
 // Asynchronous GET call
-async function GET(url, callback, state) {
+async function GET(url, callback, state, snap, method, body) {
+    method = method || 'get'
     console.log("Fetching JSON resource at %s".format(url))
     let pkey = "GET-%s-%s".format(callback, url);
     let res = undefined;
@@ -87,10 +88,15 @@ async function GET(url, callback, state) {
     }
     else {
         try {
+            let meta = {method: method, credentials: 'include', referrerPolicy: 'unsafe-url', headers: {'x-original-referral': document.referrer}};
+            if (body) {
+                meta.body = body;
+                meta.headers['Content-Type'] = 'application/x-www-form-urlencoded; charset=UTF-8';
+            }
             console.log("putting %s in escrow...".format(url));
             async_escrow[pkey] = new Date(); // Log start of request in escrow dict
-            const rv = await fetch(url, {credentials: 'same-origin'}); // Wait for resource...
-            
+            const rv = await fetch(url, meta); // Wait for resource...
+
             // Since this is an async request, the request may have been canceled
             // by the time we get a response. Only do callback if not.
             if (async_escrow[pkey] !== undefined) {
@@ -101,7 +107,10 @@ async function GET(url, callback, state) {
         catch (e) {
             delete async_escrow[pkey]; // move out of escrow if failed
             console.log("The URL %s could not be fetched: %s".format(url, e));
-            modal("An error occured", "An error occured while trying to fetch %s:\n%s".format(url, e), "error");
+            if (snap) snap({}, {reason: e});
+            else {
+                modal("An error occured", "An error occured while trying to fetch %s:\n%s".format(url, e), "error");
+            }
         }
     }
     if (res !== undefined || res_json !== undefined) {
@@ -121,10 +130,28 @@ async function GET(url, callback, state) {
             }
         } else {
             console.log("URL %s returned HTTP code %u, snapping!".format(url, res.status));
-            async_snap(res);
+            try {
+                js = await res.json();
+                snap(state, js);
+                return;
+            } catch (e) {}
+            if (snap) snap(res);
+            else modal(res);
         }
     }
 }
+
+
+// DELETE wrapper
+async function DELETE(url, callback, state, snap) {
+    return GET(url, callback, state, snap, 'delete');
+}
+
+// POST wrapper
+async function POST(url, callback, state, formdata) {
+    return GET(url, callback, state, null, 'post', formdata);
+}
+
 
 
 /******************************************
@@ -983,6 +1010,122 @@ function showCalendarPicker(parent, seedDate) {
 }
 
 /******************************************
+ Fetched from source/drafts.js
+******************************************/
+
+// Draft saving/loading features
+
+let saved_drafts = null;
+
+function save_draft() {
+    js = {
+        'project': project,
+        'action': 'save',
+        'report': JSON.stringify(report),
+        'report_compiled': compile_report(null, true, true)
+    }
+    
+    let formdata = $.param(js);
+    
+    // Enable spinner, hide main wrapper
+    document.getElementById('loader_text').innerText = "Saving draft...";
+    document.getElementById('wizard_spinner').style.display = 'block';
+    document.getElementById('wrapper').style.display = 'none';
+    
+    POST('drafts.py', draft_saved, {}, formdata);
+}
+
+function draft_saved(state, json) {
+    // Disengage spinner
+    document.getElementById('wizard_spinner').style.display = 'none';
+    document.getElementById('wrapper').style.display = 'block';
+    
+    if (json.filename) {
+        modal("Draft was saved in the reporter database as <kbd>%s</kbd>. You can revisit this draft at any time by loading it from the base data tab. Drafts are kept for up to two months.".format(json.filename));
+    } else {
+        modal("Could not save draft: %s".format(json.error || "Unspecified error"));
+    }
+}
+
+
+function load_draft(filename) {
+    GET('drafts.py?action=fetch&project=%s&filename=%s'.format(project, filename), read_draft, {});
+}
+
+function read_draft(state, json) {
+    if (json.report) {
+        report = json.report;
+        build_steps(0, true);
+        modal("Draft was successfully loaded and is ready.");
+    } else {
+        modal("Could not load report draft :/");
+    }
+}
+
+
+
+function list_drafts() {
+  if (!saved_drafts) GET('drafts.py?action=index&project=%s'.format(project), show_draft_list, {});
+  else {
+    return show_draft_list();
+  }
+}
+
+function show_draft_list(state, json) {
+  if (json && json) { saved_drafts = json.drafts || {}; }
+  
+  let txt = "";
+  let filenames = Object.keys(saved_drafts);
+  if (filenames.length > 0) {
+    txt += "<h5>Found the following saved drafts for %s:</h5>".format(project);
+    txt += "<ul>"
+    filenames.sort();
+    for (var i = filenames.length -1; i >= 0; i--) {
+        let ts = filenames[i];
+        let del = ''
+        if (saved_drafts[ts].yours) {
+             del = "<button class='btn btn-danger btn-sm' style='margin-left: 16px;' onclick='javascript:delete_draft(\"%s\");'>Delete draft</button>".format(saved_drafts[ts].filename);
+        }
+        txt += "<li>%s saved %s - <button class='btn btn-info btn-sm' onclick='javascript:load_draft(\"%s\");'>Load</button> %s</li>".format(saved_drafts[ts].filename, moment(parseInt(ts)*1000.0).fromNow(), saved_drafts[ts].filename, del);
+    }
+  }
+  if (json) {
+    let tip = document.getElementById('tips');
+    if (txt.length > 0) {
+        tip.style.display = 'block';
+        tip.innerHTML = txt;
+    }
+  } else {
+    return txt;
+  }
+}
+
+
+
+function delete_draft(filename) {
+    GET('drafts.py?action=delete&project=%s&filename=%s'.format(project, filename), deleted_draft, {filename: filename});
+}
+
+function deleted_draft(state, json) {
+    if (json.message) {
+        modal("Draft was successfully removed.");
+        let filenames = Object.keys(saved_drafts);
+        for (var i = 0; i < filenames.length; i++) {
+            let ts = filenames[i];
+            let fn = saved_drafts[ts].filename;
+            if (fn == state.filename) {
+                delete saved_drafts[ts];
+                break
+            }
+        }
+        show_draft_list({}, {drafts: saved_drafts});
+    } else {
+        modal("Could not remove report draft :/");
+    }
+}
+
+
+/******************************************
  Fetched from source/generators.js
 ******************************************/
 
@@ -1215,14 +1358,14 @@ function check_compile(data) {
     } else {
         text = "That's it, your board report compiled a-okay and is potentially ready for submission! If you'd like more time to work on it, you can save it as a draft, and return later to make some final edits. Or you can publish it to the agenda via Whimsy.";
     }
-    text += "<br/><button class='btn btn-warning'>Save as draft</button>"
+    text += "<br/><button class='btn btn-warning' onclick='save_draft();'>Save as draft</button>"
     if (compile_okay) text += " &nbsp; &nbsp; <button class='btn btn-success'>Publish via Whimsy</button>"
     return text;
 }
 
 
-function compile_report(data, okay) {
-    if (!okay) return -1
+function compile_report(data, okay, force) {
+    if (!okay && !force) return -1
     let rep = "## Board Report for %s ##\n".format(pdata.pdata[project].name);
     for (var i = 1; i < 5; i++) {
         let step = step_json[i];
@@ -1230,7 +1373,7 @@ function compile_report(data, okay) {
         if (report[i] !== null) {
             rep += report[i].replace(/(\r?\n)+$/, '');
         } else {
-            rep += "Nothing to note...\n";
+            rep += "Nothing entered yet...\n";
         }
         rep += "\n";
     }
@@ -1259,6 +1402,8 @@ function activity_tips(data) {
     if (txt) txt = "<h5>Potentially useful data I found:</h5>" + txt
     return txt;
 }
+
+
 
 /******************************************
  Fetched from source/init.js
@@ -1296,7 +1441,7 @@ let draft_mode = false;
 let comments = {};
 
 function modal(txt) {
-    document.getElementById('alert_text').innerText = txt;
+    document.getElementById('alert_text').innerHTML = txt;
     $("#alert").modal();
 }
 

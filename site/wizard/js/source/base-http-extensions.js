@@ -68,7 +68,8 @@ async function async_snap(error) {
 
 
 // Asynchronous GET call
-async function GET(url, callback, state) {
+async function GET(url, callback, state, snap, method, body) {
+    method = method || 'get'
     console.log("Fetching JSON resource at %s".format(url))
     let pkey = "GET-%s-%s".format(callback, url);
     let res = undefined;
@@ -81,10 +82,15 @@ async function GET(url, callback, state) {
     }
     else {
         try {
+            let meta = {method: method, credentials: 'include', referrerPolicy: 'unsafe-url', headers: {'x-original-referral': document.referrer}};
+            if (body) {
+                meta.body = body;
+                meta.headers['Content-Type'] = 'application/x-www-form-urlencoded; charset=UTF-8';
+            }
             console.log("putting %s in escrow...".format(url));
             async_escrow[pkey] = new Date(); // Log start of request in escrow dict
-            const rv = await fetch(url, {credentials: 'same-origin'}); // Wait for resource...
-            
+            const rv = await fetch(url, meta); // Wait for resource...
+
             // Since this is an async request, the request may have been canceled
             // by the time we get a response. Only do callback if not.
             if (async_escrow[pkey] !== undefined) {
@@ -95,7 +101,10 @@ async function GET(url, callback, state) {
         catch (e) {
             delete async_escrow[pkey]; // move out of escrow if failed
             console.log("The URL %s could not be fetched: %s".format(url, e));
-            modal("An error occured", "An error occured while trying to fetch %s:\n%s".format(url, e), "error");
+            if (snap) snap({}, {reason: e});
+            else {
+                modal("An error occured", "An error occured while trying to fetch %s:\n%s".format(url, e), "error");
+            }
         }
     }
     if (res !== undefined || res_json !== undefined) {
@@ -115,7 +124,25 @@ async function GET(url, callback, state) {
             }
         } else {
             console.log("URL %s returned HTTP code %u, snapping!".format(url, res.status));
-            async_snap(res);
+            try {
+                js = await res.json();
+                snap(state, js);
+                return;
+            } catch (e) {}
+            if (snap) snap(res);
+            else modal(res);
         }
     }
 }
+
+
+// DELETE wrapper
+async function DELETE(url, callback, state, snap) {
+    return GET(url, callback, state, snap, 'delete');
+}
+
+// POST wrapper
+async function POST(url, callback, state, formdata) {
+    return GET(url, callback, state, null, 'post', formdata);
+}
+

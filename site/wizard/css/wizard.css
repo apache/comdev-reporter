@@ -107,6 +107,10 @@
     margin-bottom: 10px !important;
 }
 
+.btn-sm {
+  padding: 0px 3px 0px 3px !important;
+  line-height: 1.25 !important;
+}
 
 .loader,
 .loader:before,

@@ -6,7 +6,8 @@
         "description": "Base Data",
         "noinput": true,
         "help": "Bla bla",
-        "helpgenerator": "generate_meta"
+        "helpgenerator": "generate_meta",
+        "tipgenerator": "list_drafts"
     },
     {
         "id": "issues",

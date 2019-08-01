@@ -227,14 +227,14 @@ function check_compile(data) {
     } else {
         text = "That's it, your board report compiled a-okay and is potentially ready for submission! If you'd like more time to work on it, you can save it as a draft, and return later to make some final edits. Or you can publish it to the agenda via Whimsy.";
     }
-    text += "<br/><button class='btn btn-warning'>Save as draft</button>"
+    text += "<br/><button class='btn btn-warning' onclick='save_draft();'>Save as draft</button>"
     if (compile_okay) text += " &nbsp; &nbsp; <button class='btn btn-success'>Publish via Whimsy</button>"
     return text;
 }
 
 
-function compile_report(data, okay) {
-    if (!okay) return -1
+function compile_report(data, okay, force) {
+    if (!okay && !force) return -1
     let rep = "## Board Report for %s ##\n".format(pdata.pdata[project].name);
     for (var i = 1; i < 5; i++) {
         let step = step_json[i];
@@ -242,7 +242,7 @@ function compile_report(data, okay) {
         if (report[i] !== null) {
             rep += report[i].replace(/(\r?\n)+$/, '');
         } else {
-            rep += "Nothing to note...\n";
+            rep += "Nothing entered yet...\n";
         }
         rep += "\n";
     }
@@ -271,3 +271,4 @@ function activity_tips(data) {
     if (txt) txt = "<h5>Potentially useful data I found:</h5>" + txt
     return txt;
 }
+
