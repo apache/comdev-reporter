@@ -19,6 +19,7 @@ PROJECTS = 'https://whimsy.apache.org/public/public_ldap_projects.json'
 MEMBER_INFO = 'https://whimsy.apache.org/public/member-info.json'
 BASIC_AUTH = os.environ['HTTP_X_WHIMSY_AUTH'] if 'HTTP_X_WHIMSY_AUTH' in os.environ else ""
 USER = os.environ['HTTP_X_AUTHENTICATED_USER'] if 'HTTP_X_AUTHENTICATED_USER' in os.environ else ""
+EDITORS = ['default', 'unified']
 
 def isMember(uid):
     """ Return true if ASF member, otherwise false """
@@ -49,6 +50,9 @@ def main():
     pmcSummary = committee_info.PMCsummary()
     project = form.getvalue('project')
     action = form.getvalue('action')
+    etype = form.getvalue('type') # default and unified don't work together yet
+    if not etype or etype not in EDITORS:
+        etype = 'default'
     
     # Figure out our permissions
     member = isMember(USER)
@@ -68,7 +72,7 @@ def main():
             'report': report,
             'report_compiled': report_compiled,
         }
-        report_filename = "%s-%u-%s.json" % (project, time.time(), USER)
+        report_filename = "%s-%s-%u-%s.json" % (etype, project, time.time(), USER)
         with open("%s/drafts/%s" % (RAO_HOME, report_filename), "w") as f:
             f.write(json.dumps(js))
             f.close()
@@ -80,7 +84,7 @@ def main():
         drafts = {}
         draft_files = [x for x in os.listdir("%s/drafts" % RAO_HOME) if x.endswith('.json')]
         for filename in draft_files:
-            p, t, u = filename.split('-', 2)
+            e, p, t, u = filename.split('-', 3)
             
             # If a file is way old, try deleting it.
             if t < whence:
@@ -90,7 +94,7 @@ def main():
                     pass
             
             # Else if for this project, add to the list
-            elif p == project:
+            elif p == project and e == etype:
                 u = u.replace('.json', '')
                 drafts[t] = {'filename': filename, 'creator': u, 'yours': USER == u}
         
@@ -100,14 +104,14 @@ def main():
     
     elif action == 'fetch':
         filename = form.getvalue('filename')
-        p, t, u = filename.split('-', 2)
+        e, p, t, u = filename.split('-', 3)
         if p == project and not re.search(r"[^-_.a-z0-9]", filename):
             draft = json.load(open("%s/drafts/%s" % (RAO_HOME, filename), "r"))
             dump = json.dumps(draft)
     
     elif action == 'delete':
         filename = form.getvalue('filename')
-        p, t, u = filename.split('-', 2)
+        e, p, t, u = filename.split('-', 3)
         dump = json.dumps({'message': "Could not remove draft: permission denied."})
         if p == project and not re.search(r"[^-_.a-z0-9]", filename):
             u = u.replace('.json', '')
