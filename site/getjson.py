@@ -46,6 +46,7 @@ RAOHOME = '../'
 COMMITTER_INFO = 'https://whimsy.apache.org/public/public_ldap_people.json'
 MEMBER_INFO = 'https://whimsy.apache.org/public/member-info.json'
 PROJECTS = 'https://whimsy.apache.org/public/public_ldap_projects.json'
+DESCRIPTIONS = 'https://projects.apache.org/json/foundation/committees.json'
 
 # Pick up environment settings
 form = cgi.FieldStorage();
@@ -102,6 +103,7 @@ def loadJson(url):
 projects = loadJson(PROJECTS)['projects']
 members = loadJson(MEMBER_INFO)['members']
 committers = loadJson(COMMITTER_INFO)['people']
+charters = loadJson(DESCRIPTIONS)
 
 def getPMCs(uid):
     """Returns the array of LDAP committee groups to which the uid belongs. Excludes incubator"""
@@ -223,6 +225,9 @@ def getProjectData(project):
         for entry in dataHealth:
             if entry['group'] == project:
                 z = entry
+        for xtlp in charters:
+            if xtlp.get('id') == project:
+                x['charter'] = xtlp.get('charter', '')
         return x, y, z;
 
 def getReleaseData(project):
