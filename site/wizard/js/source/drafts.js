@@ -81,7 +81,7 @@ function show_draft_list(state, json) {
     }
     txt += "</ul></small>"
   }
-  if (json && current_step == 0) {
+  if (json && state.stepper.step == 0) {
     let tip = document.getElementById('unified-helper');
     tip.innerHTML += txt;
   } else {
