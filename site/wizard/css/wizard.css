@@ -275,9 +275,17 @@
  font-size: 0.9rem !important;
 }
 
+#unified-reflow {
+ width: 540px;
+ height: 20px;
+ font-size: 11px;
+ 
+}
+
+
 #unified-report {
  width: 540px;
- height: 590px;
+ height: 570px;
  font-size: 11px;
 }
 

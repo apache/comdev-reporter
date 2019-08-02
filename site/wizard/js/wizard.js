@@ -1416,8 +1416,8 @@ function activity_tips(data) {
 }
 
 function reflow(txt, chars) {
-  chars = chars || 70;
-  let words = txt.match(/([\S+?]+\s+?)/mg);
+  chars = chars || 78;
+  let words = txt.match(/([\S+?]+\s*)/mg);
   if (!words) return txt;
   let x = 0;
   let output = "";
@@ -1920,12 +1920,35 @@ function UnifiedEditor_highlight_sections(additional_text) {
     // If additional text is marked for highlighting, we'll have to
     // first destroy any original highlighting, as it's params changed!
     if (additional_text) {
+        let color = 'green'
+        
+        // Check for overflow, offer reflowing
+        let reflower = document.getElementById('unified-reflow');
+        if (reflower) {
+            let stripped = additional_text.replace(/(^\s+|\s+$)/, '')
+            if (reflow(stripped) != stripped) {
+                color = 'red';
+                reflower.innerHTML = "SECTION IS OVERFLOWING 80 CHARACTERS!";
+                let btn = new HTML('button', {class: 'btn btn-success btn-sm'}, "Reflow section");
+                btn.addEventListener('click', () => {
+                    this.object.value = this.object.value.replace(additional_text, reflow(additional_text));
+                    $(this.object).prop( {
+                        'selectionStart': x,
+                        'selectionEnd': y}
+                        );
+                    this.find_section();
+                    });
+                reflower.inject(btn);
+            } else {
+                reflower.innerHTML = "";
+            }
+        }
         $('#unified-report').highlightWithinTextarea('destroy');
         
         // Sections are marked light green
         hilites.push({
             highlight: additional_text,
-            className: 'green'
+            className: color
             });
     }
     
