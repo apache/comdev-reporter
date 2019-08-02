@@ -51,7 +51,7 @@ function ReportStepper(div, editor, layout, helper) {
                 steptext.setAttribute('class', 'wizard-step-text done');
             }
             this.object.inject(wrapper);
-            if (i < step_json.length-1) {
+            if (i < this.layout.length-1) {
                 let line = new HTML('div', {class: 'wizard-line'});
                 if (i < s) line.setAttribute('class', 'wizard-line done');
                 this.object.inject(line);
