@@ -29,7 +29,7 @@ def main():
          'agenda': agenda,
          'project': project,
          'report': report,
-         'message': "Publishing %s report via reporter.a.o",
+         'message': "Publishing %s report via reporter.a.o" % project,
         }
         try:
             rv = requests.post(WHIMSY_URL, headers = {'Authorization': BASIC_AUTH, "Content-Type": "application/json"}, json = js)
