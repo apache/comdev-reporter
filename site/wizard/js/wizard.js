@@ -1101,7 +1101,7 @@ function show_draft_list(state, json) {
     }
     txt += "</ul></small>"
   }
-  if (json) {
+  if (json && current_step == 0) {
     let tip = document.getElementById('tips');
     if (txt.length > 0) {
         tip.style.display = 'block';
@@ -1352,24 +1352,24 @@ function health_tips(data) {
             pct_change_txt = 'big';
         }
         if (pct_change > 25 && mldata.quarterly[0] > 5) {
-            txt += "<span style='color: #080'>- %s had a %s increase in traffic in the past quarter (%u emails compared to %u)</span><br/>".format(ml, pct_change_txt, mldata.quarterly[0], mldata.quarterly[1]);
+            txt += "<li style='color: #080'>%s had a %s increase in traffic in the past quarter (%u emails compared to %u)</li>".format(ml, pct_change_txt, mldata.quarterly[0], mldata.quarterly[1]);
         }
         else if (pct_change < -25  && mldata.quarterly[1] > 5) {
             pct_change = Math.abs(pct_change)
-            txt += "<span style='color: #800'>- %s had a %s decrease in traffic in the past quarter (%u emails compared to %u)</span><br/>".format(ml, pct_change_txt, mldata.quarterly[0], mldata.quarterly[1]);
+            txt += "<li style='color: #800'>%s had a %s decrease in traffic in the past quarter (%u emails compared to %u)</li>".format(ml, pct_change_txt, mldata.quarterly[0], mldata.quarterly[1]);
         }
     }
     
     // Bugzilla changes
     let bz = data.bugzilla[project];
-    if (bz[0] || bz[1]) txt += "- %u BugZilla tickets opened and %u closed in the past quarter.".format(bz[0], bz[1]);
+    if (bz[0] || bz[1]) txt += "<li>%u BugZilla tickets opened and %u closed in the past quarter.</li>".format(bz[0], bz[1]);
     
     // JIRA changes
     let jira = data.jira[project];
-    if (jira[0] || jira[1]) txt += "- %u JIRA tickets opened and %u closed in the past quarter.".format(jira[0], jira[1]);
+    if (jira[0] || jira[1]) txt += "<li>%u JIRA tickets opened and %u closed in the past quarter.</li>".format(jira[0], jira[1]);
     
     // Append header IF there is data, otherwise nah.
-    if (txt.length > 0) txt = "<h5>Potentially useful observations for your community health section:</h5>" + txt;
+    if (txt.length > 0) txt = "<hr/><big>Potentially useful observations on community health:</big><ul>" + txt + "</ul>";
     return txt;
 }
 
@@ -1706,7 +1706,7 @@ function build_steps(s, start, noclick, e) {
         else {
             window.clearTimeout(hilite_timer);
             if (event && event.keyCode == 13) mark_section(step.description);
-            else hilite_timer = window.setTimeout(() => { mark_section(step.description)}, 100);
+            else hilite_timer = window.setTimeout(() => { mark_section(step.description)}, 200);
         }
     }
 }

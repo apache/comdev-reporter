@@ -86,7 +86,7 @@ function show_draft_list(state, json) {
     }
     txt += "</ul></small>"
   }
-  if (json) {
+  if (json && current_step == 0) {
     let tip = document.getElementById('tips');
     if (txt.length > 0) {
         tip.style.display = 'block';

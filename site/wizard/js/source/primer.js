@@ -182,7 +182,7 @@ function build_steps(s, start, noclick, e) {
         else {
             window.clearTimeout(hilite_timer);
             if (event && event.keyCode == 13) mark_section(step.description);
-            else hilite_timer = window.setTimeout(() => { mark_section(step.description)}, 100);
+            else hilite_timer = window.setTimeout(() => { mark_section(step.description)}, 200);
         }
     }
 }
