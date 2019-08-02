@@ -1,4 +1,3 @@
-
 #!/usr/bin/env python
 """ script for publishing a report to whimsy """
 import os
