@@ -115,6 +115,7 @@ function UnifiedEditor_parse_report(quiet) {
         } else { break; }
       } else {
         if (!quiet) console.log("No more report headers found.");
+        break
       }
       
     }
