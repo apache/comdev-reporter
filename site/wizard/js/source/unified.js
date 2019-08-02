@@ -225,7 +225,7 @@ function UnifiedEditor_compile() {
         text += "That's it, your board report compiled a-okay and is potentially ready for submission! If you'd like more time to work on it, you can save it as a draft, and return later to make some final edits. Or you can publish it to the agenda via Whimsy.";
     }
     text += "<br/><button class='btn btn-warning' onclick='save_draft();'>Save as draft</button>"
-    if (this.compiles) text += " &nbsp; &nbsp; <button class='btn btn-success'>Publish via Whimsy</button>"
+    if (this.compiles) text += " &nbsp; &nbsp; <button onclick='publish_report();' class='btn btn-success'>Publish via Whimsy</button>"
     return text;
 }
 

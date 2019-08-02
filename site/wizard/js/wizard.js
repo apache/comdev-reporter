@@ -1057,6 +1057,7 @@ function load_draft(filename) {
 function read_draft(state, json) {
     if (json.report) {
         draft_stepper.editor.object.value = json.report;
+        draft_stepper.editor.report = json.report;
         window.setTimeout(() => { draft_stepper.editor.highlight() }, 250);
         draft_stepper.build(0, false, false);
         modal("Draft was successfully loaded and is ready.");
@@ -1128,6 +1129,39 @@ function deleted_draft(state, json) {
     }
 }
 
+
+function publish_report() {
+    let agendafile = getReportDate(cycles, project, false, true);
+    if (!window.confirm("This will publish your report to %s - are you sure?".format(agendafile))) {
+      return;
+    }
+    let js = {
+        'project': project,
+        'agenda': agendafile,
+        'report': draft_stepper.editor.report
+    };
+    
+    let formdata = $.param(js);
+    
+    // Enable spinner, hide main wrapper
+    document.getElementById('loader_text').innerText = "Publishing report, hang on...";
+    document.getElementById('wizard_spinner').style.display = 'block';
+    document.getElementById('wrapper').style.display = 'none';
+    
+    POST('whimsy.py', report_published, {}, formdata);
+}
+
+function report_published(state, json) {
+  // Disengage spinner
+  document.getElementById('wizard_spinner').style.display = 'none';
+  document.getElementById('wrapper').style.display = 'block';
+  
+  if (json && json.okay) {
+    modal("Your report was successfully posted to the board agenda!");
+  } else {
+    modal("Something went wrong, and we couldn't publish your report.<br/>Please check with the Whimsy tool to see if there is already a report posted!");
+  }
+}
 
 /******************************************
  Fetched from source/generators.js
@@ -1556,7 +1590,7 @@ function formatRm(array) {
 
 // Called by: GetAsyncJSON("reportingcycles.json?" + Math.random(), [pmc, reportdate, json.pdata[pmc].name], setReportDate) 
 
-function getReportDate(json, pmc, dateOnly) {
+function getReportDate(json, pmc, dateOnly, agenda) {
 	var today = new Date()
 
 	var dates = [] // the entries must be in date order
@@ -1600,6 +1634,7 @@ function getReportDate(json, pmc, dateOnly) {
 	while (nextdate < today && dates.length > 0) {
 		nextdate = dates.shift();
 	}
+	if (agenda) return "board_agenda_%s.txt".format(moment(nextdate).format('YYYY_MM_DD'));
 	if (dateOnly) return nextdate ? (nextdate.toDateString() + " ("  + moment(nextdate).fromNow() + ")"): "Unknown(?)";
 	let txt = "";
 	txt += "<b>Reporting schedule:</b> " + (json[pmc] ? formatRm(json[pmc]) : "Unknown(?)") + "<br>"
@@ -2090,7 +2125,7 @@ function UnifiedEditor_compile() {
         text += "That's it, your board report compiled a-okay and is potentially ready for submission! If you'd like more time to work on it, you can save it as a draft, and return later to make some final edits. Or you can publish it to the agenda via Whimsy.";
     }
     text += "<br/><button class='btn btn-warning' onclick='save_draft();'>Save as draft</button>"
-    if (this.compiles) text += " &nbsp; &nbsp; <button class='btn btn-success'>Publish via Whimsy</button>"
+    if (this.compiles) text += " &nbsp; &nbsp; <button onclick='publish_report();' class='btn btn-success'>Publish via Whimsy</button>"
     return text;
 }
 

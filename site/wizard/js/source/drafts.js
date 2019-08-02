@@ -42,6 +42,7 @@ function load_draft(filename) {
 function read_draft(state, json) {
     if (json.report) {
         draft_stepper.editor.object.value = json.report;
+        draft_stepper.editor.report = json.report;
         window.setTimeout(() => { draft_stepper.editor.highlight() }, 250);
         draft_stepper.build(0, false, false);
         modal("Draft was successfully loaded and is ready.");
@@ -111,4 +112,38 @@ function deleted_draft(state, json) {
     } else {
         modal("Could not remove report draft :/");
     }
+}
+
+
+function publish_report() {
+    let agendafile = getReportDate(cycles, project, false, true);
+    if (!window.confirm("This will publish your report to %s - are you sure?".format(agendafile))) {
+      return;
+    }
+    let js = {
+        'project': project,
+        'agenda': agendafile,
+        'report': draft_stepper.editor.report
+    };
+    
+    let formdata = $.param(js);
+    
+    // Enable spinner, hide main wrapper
+    document.getElementById('loader_text').innerText = "Publishing report, hang on...";
+    document.getElementById('wizard_spinner').style.display = 'block';
+    document.getElementById('wrapper').style.display = 'none';
+    
+    POST('whimsy.py', report_published, {}, formdata);
+}
+
+function report_published(state, json) {
+  // Disengage spinner
+  document.getElementById('wizard_spinner').style.display = 'none';
+  document.getElementById('wrapper').style.display = 'block';
+  
+  if (json && json.okay) {
+    modal("Your report was successfully posted to the board agenda!");
+  } else {
+    modal("Something went wrong, and we couldn't publish your report.<br/>Please check with the Whimsy tool to see if there is already a report posted!");
+  }
 }

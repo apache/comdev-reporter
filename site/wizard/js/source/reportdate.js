@@ -46,7 +46,7 @@ function formatRm(array) {
 
 // Called by: GetAsyncJSON("reportingcycles.json?" + Math.random(), [pmc, reportdate, json.pdata[pmc].name], setReportDate) 
 
-function getReportDate(json, pmc, dateOnly) {
+function getReportDate(json, pmc, dateOnly, agenda) {
 	var today = new Date()
 
 	var dates = [] // the entries must be in date order
@@ -90,6 +90,7 @@ function getReportDate(json, pmc, dateOnly) {
 	while (nextdate < today && dates.length > 0) {
 		nextdate = dates.shift();
 	}
+	if (agenda) return "board_agenda_%s.txt".format(moment(nextdate).format('YYYY_MM_DD'));
 	if (dateOnly) return nextdate ? (nextdate.toDateString() + " ("  + moment(nextdate).fromNow() + ")"): "Unknown(?)";
 	let txt = "";
 	txt += "<b>Reporting schedule:</b> " + (json[pmc] ? formatRm(json[pmc]) : "Unknown(?)") + "<br>"
