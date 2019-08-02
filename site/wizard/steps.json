@@ -30,7 +30,8 @@
         "description": "Project Activity",
         "help": "Please write a few lines (or more!) about the recent activity in the project and the community. This could be new software releases, new features, or community activity such as conferences and meetups.",
         "placeholder": "Example activity entries:\n\n- Apache Foo 1.2.3 Was released on 2019-04-05\n- Project members attended FooCon, it was a resounding success!\n- Added support for FooLib 2 and Async Gnoming.",
-        "tipgenerator": "activity_tips"
+        "tipgenerator": "activity_tips",
+        "minchars": 50
     },
     {
         "id": "health",
@@ -38,7 +39,8 @@
         "description": "Community Health",
         "help": "Tell us how your community is doing. Is there an influx of new contributors, is there a good flow of email on the mailing lists, or are things in decline? Are there any community metrics you'd like to showcase or make note of?",
         "placeholder": "Example health entries: \n\nWe had 25 contributors this quarter - including several new ones - in addition\nto the existing PMC and committers, and more activity on our issue tracker.\nNotably, there have been very promising contributions from some new developers\nto help with technical debt, particularly to remove uses of an internal\npackage that makes it impossible to use Apache Foo in an Splorg environment with\nnewer versions of Gson.\n\nHealth of the community remains strong with many active release lines,\nfeature development, active user and developer base including new\nparticipants and continued participants.",
-        "tipgenerator": "health_tips"
+        "tipgenerator": "health_tips",
+        "minchars": 80
     },
     {
         "id": "review",

@@ -187,7 +187,10 @@ function UnifiedEditor_compile() {
                 console.log("Found placeholder text: " + PLACEHOLDER)
                 text += "<li><span style='display: inline-block; width: 20px; font-size: 18px; color: red;'>&#xF7;</span> <kbd>%s</kbd> contains placeholder text!</li>".format(this.sections[n].title);
                 this.compiles = false;
-              } else if (this.sections[n].text.length < 20) {
+              } else if (step.minchars && this.sections[n].text.length < step.minchars) {
+                text += "<li><span style='display: inline-block; width: 20px; font-size: 18px; color: red;'>&#xF7;</span> <kbd>%s</kbd> MUST contain more information!</li>".format(this.sections[n].title);
+              }
+              else if (this.sections[n].text.length < 20) {
                 text += "<li><span style='display: inline-block; width: 20px; font-size: 18px; color: pink;'>&#8253;</span> <kbd>%s</kbd> seems a tad short?</li>".format(this.sections[n].title);
               } else {
                 text += "<li><span style='display: inline-block; width: 20px; font-size: 18px; color: green;'>&#x2713;</span> <kbd>%s</kbd> seems alright</li>".format(this.sections[n].title);

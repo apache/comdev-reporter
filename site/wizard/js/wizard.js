@@ -1824,6 +1824,21 @@ function ReportStepper(div, editor, layout, helper) {
             } else if (step.help) {
                 this.helper.innerHTML += step.help + "<hr/>";
             }
+            // If minimum char size is required for a section, note it here
+            if (step.minchars)  {
+                this.editor.parse(true);
+                let chars_remain = step.minchars;
+                for (var n = 0; n < this.editor.sections.length; n++ ) {
+                    let sct = this.editor.sections[n];
+                    if (sct.title == (step.rawname||step.description) && sct.text.indexOf(PLACEHOLDER) == -1) {
+                        chars_remain = step.minchars - sct.text.length;
+                        break;
+                    }
+                }
+                if (chars_remain > 0) {
+                    this.helper.innerHTML += "<p style='color: red;'>This section needs at least %u more characters.</p>".format(chars_remain);
+                }
+            }
             // Add tips?
             if (step.tipgenerator) {
                 let f = Function('a', 'b', "return %s(a,b);".format(step.tipgenerator));
@@ -2037,7 +2052,10 @@ function UnifiedEditor_compile() {
                 console.log("Found placeholder text: " + PLACEHOLDER)
                 text += "<li><span style='display: inline-block; width: 20px; font-size: 18px; color: red;'>&#xF7;</span> <kbd>%s</kbd> contains placeholder text!</li>".format(this.sections[n].title);
                 this.compiles = false;
-              } else if (this.sections[n].text.length < 20) {
+              } else if (step.minchars && this.sections[n].text.length < step.minchars) {
+                text += "<li><span style='display: inline-block; width: 20px; font-size: 18px; color: red;'>&#xF7;</span> <kbd>%s</kbd> MUST contain more information!</li>".format(this.sections[n].title);
+              }
+              else if (this.sections[n].text.length < 20) {
                 text += "<li><span style='display: inline-block; width: 20px; font-size: 18px; color: pink;'>&#8253;</span> <kbd>%s</kbd> seems a tad short?</li>".format(this.sections[n].title);
               } else {
                 text += "<li><span style='display: inline-block; width: 20px; font-size: 18px; color: green;'>&#x2713;</span> <kbd>%s</kbd> seems alright</li>".format(this.sections[n].title);
