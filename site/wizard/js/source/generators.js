@@ -238,18 +238,18 @@ function check_compile(data) {
         let step = step_json[i];
         if (!step.noinput) {
           let found = false;
-          required_sections.push(step.description);
+          required_sections.push(step.rawname||step.description);
           for (var n = 0; n < sections.length; n++) {
-            if (sections[n].title == step.description) {
+            if (sections[n].title == (step.rawname||step.description)) {
               found = true;
               if (sections[n].text.indexOf(PLACEHOLDER) != -1) {
                 console.log("Found placeholder text: " + PLACEHOLDER)
-                text += "<li><span style='display: inline-block; width: 20px; font-size: 18px; color: red;'>&#xF7;</span> <kbd>%s</kbd> contains placeholder text!</li>".format(step.description);
+                text += "<li><span style='display: inline-block; width: 20px; font-size: 18px; color: red;'>&#xF7;</span> <kbd>%s</kbd> contains placeholder text!</li>".format(sections[n].title);
                 compile_okay = false;
               } else if (sections[n].text.length < 20) {
-                text += "<li><span style='display: inline-block; width: 20px; font-size: 18px; color: pink;'>&#8253;</span> <kbd>%s</kbd> seems a tad short?</li>".format(step.description);
+                text += "<li><span style='display: inline-block; width: 20px; font-size: 18px; color: pink;'>&#8253;</span> <kbd>%s</kbd> seems a tad short?</li>".format(sections[n].title);
               } else {
-                text += "<li><span style='display: inline-block; width: 20px; font-size: 18px; color: green;'>&#x2713;</span> <kbd>%s</kbd> seems alright</li>".format(step.description);
+                text += "<li><span style='display: inline-block; width: 20px; font-size: 18px; color: green;'>&#x2713;</span> <kbd>%s</kbd> seems alright</li>".format(sections[n].title);
                 
               }
               break;
@@ -338,3 +338,31 @@ function activity_tips(data) {
     return txt;
 }
 
+function reflow(txt, chars) {
+  chars = chars || 70;
+  let words = txt.match(/([\S+?]+\s+?)/mg);
+  if (!words) return txt;
+  let x = 0;
+  let output = "";
+  for (var i = 0; i < words.length; i++) {
+    let word = words[i];
+    x += word.length;
+    if (x >= chars) {
+        output += (x == 0 ? "" : "\n") + word;
+        x = word.length;
+    } else if (word[word.length-1] == '\n') {
+      x = 0;
+      output += word;
+    } else {
+      output += word;
+    }
+  }
+  return output;
+}
+
+function get_charter(data) {
+  let charter = data.pdata[project].charter;
+  
+  let txt = reflow(charter);
+  return txt;
+}

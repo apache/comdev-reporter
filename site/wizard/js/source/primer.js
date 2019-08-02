@@ -142,8 +142,8 @@ function build_steps(s, start, noclick, e) {
             let template = "";
             for (var i = 0; i < step_json.length; i++) {
                 let step = step_json[i];
-                if (!step.noinput) {
-                    template += "## %s:\n".format(step.description);
+                if (!step.noinput || step.rawname) {
+                    template += "## %s:\n".format(step.rawname || step.description);
                     if (step.generator) {
                         let data = eval("%s(pdata);".format(step.generator));
                         if (data && data.length > 0) template += data
@@ -178,11 +178,11 @@ function build_steps(s, start, noclick, e) {
         if (!noclick) {
             set_position(step.description);
         }
-        if (step_changed || !noclick)  mark_section(step.description);
+        if (step_changed || !noclick)  mark_section(step.rawname||step.description);
         else {
             window.clearTimeout(hilite_timer);
-            if (event && event.keyCode == 13) mark_section(step.description);
-            else hilite_timer = window.setTimeout(() => { mark_section(step.description)}, 200);
+            if (event && event.keyCode == 13) mark_section(step.rawname||step.description);
+            else hilite_timer = window.setTimeout(() => { mark_section(step.rawname||step.description)}, 200);
         }
     }
 }

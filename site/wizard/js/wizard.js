@@ -1387,18 +1387,18 @@ function check_compile(data) {
         let step = step_json[i];
         if (!step.noinput) {
           let found = false;
-          required_sections.push(step.description);
+          required_sections.push(step.rawname||step.description);
           for (var n = 0; n < sections.length; n++) {
-            if (sections[n].title == step.description) {
+            if (sections[n].title == (step.rawname||step.description)) {
               found = true;
               if (sections[n].text.indexOf(PLACEHOLDER) != -1) {
                 console.log("Found placeholder text: " + PLACEHOLDER)
-                text += "<li><span style='display: inline-block; width: 20px; font-size: 18px; color: red;'>&#xF7;</span> <kbd>%s</kbd> contains placeholder text!</li>".format(step.description);
+                text += "<li><span style='display: inline-block; width: 20px; font-size: 18px; color: red;'>&#xF7;</span> <kbd>%s</kbd> contains placeholder text!</li>".format(sections[n].title);
                 compile_okay = false;
               } else if (sections[n].text.length < 20) {
-                text += "<li><span style='display: inline-block; width: 20px; font-size: 18px; color: pink;'>&#8253;</span> <kbd>%s</kbd> seems a tad short?</li>".format(step.description);
+                text += "<li><span style='display: inline-block; width: 20px; font-size: 18px; color: pink;'>&#8253;</span> <kbd>%s</kbd> seems a tad short?</li>".format(sections[n].title);
               } else {
-                text += "<li><span style='display: inline-block; width: 20px; font-size: 18px; color: green;'>&#x2713;</span> <kbd>%s</kbd> seems alright</li>".format(step.description);
+                text += "<li><span style='display: inline-block; width: 20px; font-size: 18px; color: green;'>&#x2713;</span> <kbd>%s</kbd> seems alright</li>".format(sections[n].title);
                 
               }
               break;
@@ -1487,7 +1487,34 @@ function activity_tips(data) {
     return txt;
 }
 
+function reflow(txt, chars) {
+  chars = chars || 70;
+  let words = txt.match(/([\S+?]+\s+?)/mg);
+  if (!words) return txt;
+  let x = 0;
+  let output = "";
+  for (var i = 0; i < words.length; i++) {
+    let word = words[i];
+    x += word.length;
+    if (x >= chars) {
+        output += (x == 0 ? "" : "\n") + word;
+        x = word.length;
+    } else if (word[word.length-1] == '\n') {
+      x = 0;
+      output += word;
+    } else {
+      output += word;
+    }
+  }
+  return output;
+}
 
+function get_charter(data) {
+  let charter = data.pdata[project].charter;
+  
+  let txt = reflow(charter);
+  return txt;
+}
 
 /******************************************
  Fetched from source/init.js
@@ -1666,8 +1693,8 @@ function build_steps(s, start, noclick, e) {
             let template = "";
             for (var i = 0; i < step_json.length; i++) {
                 let step = step_json[i];
-                if (!step.noinput) {
-                    template += "## %s:\n".format(step.description);
+                if (!step.noinput || step.rawname) {
+                    template += "## %s:\n".format(step.rawname || step.description);
                     if (step.generator) {
                         let data = eval("%s(pdata);".format(step.generator));
                         if (data && data.length > 0) template += data
@@ -1702,11 +1729,11 @@ function build_steps(s, start, noclick, e) {
         if (!noclick) {
             set_position(step.description);
         }
-        if (step_changed || !noclick)  mark_section(step.description);
+        if (step_changed || !noclick)  mark_section(step.rawname||step.description);
         else {
             window.clearTimeout(hilite_timer);
-            if (event && event.keyCode == 13) mark_section(step.description);
-            else hilite_timer = window.setTimeout(() => { mark_section(step.description)}, 200);
+            if (event && event.keyCode == 13) mark_section(step.rawname||step.description);
+            else hilite_timer = window.setTimeout(() => { mark_section(step.rawname||step.description)}, 200);
         }
     }
 }
@@ -2009,16 +2036,16 @@ function find_section(e) {
     while (report_unified[spos] != "\n" && spos < report_unified.length) spos++;
     
     let tprec = report_unified.substr(0, spos);
-    let at_step = 0;
-    for (var i = 1; i < step_json.length-1; i++) {
+    let at_step = -1;
+    for (var i = 0; i < step_json.length; i++) {
         let step = step_json[i];
-        let tline = "## %s:".format(step.description);
+        let tline = "## %s:".format(step.rawname || step.description);
         if (tprec.indexOf(tline) != -1) {
             at_step = i;
         }
     }
     
-    if (at_step) {
+    if (at_step != -1) {
         build_steps(at_step, false, true, e);
         
     } else {

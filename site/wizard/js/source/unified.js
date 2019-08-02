@@ -46,16 +46,16 @@ function find_section(e) {
     while (report_unified[spos] != "\n" && spos < report_unified.length) spos++;
     
     let tprec = report_unified.substr(0, spos);
-    let at_step = 0;
-    for (var i = 1; i < step_json.length-1; i++) {
+    let at_step = -1;
+    for (var i = 0; i < step_json.length; i++) {
         let step = step_json[i];
-        let tline = "## %s:".format(step.description);
+        let tline = "## %s:".format(step.rawname || step.description);
         if (tprec.indexOf(tline) != -1) {
             at_step = i;
         }
     }
     
-    if (at_step) {
+    if (at_step != -1) {
         build_steps(at_step, false, true, e);
         
     } else {
