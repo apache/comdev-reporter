@@ -78,7 +78,9 @@ def main():
         # Figure out how we're able to access this data
         member = isMember(USER)
         pmc = project in getPMCs(USER)
-        pname = pmcSummary[project]['name'].replace('Apache ', '')
+        pname = project
+        if project in pmcSummary:
+            pname = pmcSummary[project]['name'].replace('Apache ', '')
         cmt = {}
         
         # If we can access, fetch comments
