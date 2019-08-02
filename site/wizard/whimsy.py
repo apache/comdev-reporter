@@ -8,7 +8,7 @@ import json
 import requests
 import re
 
-WHIMSY_URL = 'http://whimsy.local/board/agenda/json/post'
+WHIMSY_URL = 'http://whimsy.apache.org/board/agenda/json/post'
 BASIC_AUTH = os.environ['HTTP_X_WHIMSY_AUTH'] if 'HTTP_X_WHIMSY_AUTH' in os.environ else ""
 USER = os.environ['HTTP_X_AUTHENTICATED_USER'] if 'HTTP_X_AUTHENTICATED_USER' in os.environ else ""
 
