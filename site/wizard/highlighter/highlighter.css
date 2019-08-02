@@ -22,7 +22,7 @@
 	height: auto !important;
 	margin: 0 !important;
 	border-color: transparent !important;
-	white-space: pre !important;
+	white-space: pre-wrap !important;
 	word-wrap: break-word !important;
 	color: transparent !important;
 	overflow: hidden !important;
