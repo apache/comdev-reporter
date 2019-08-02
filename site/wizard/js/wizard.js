@@ -1832,7 +1832,7 @@ function ReportStepper(div, editor, layout, helper) {
             }
             // If clicked to a section, move cursor
             if (!noclick) {
-                this.editor.set_position(step.description);
+                this.editor.set_position(step.rawname||step.description);
             }
             if (this.changed || !noclick)  this.editor.mark_section(step.rawname||step.description);
             else {
