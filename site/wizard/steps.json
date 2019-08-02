@@ -4,7 +4,8 @@
         "id": "meta",
         "icon": "home",
         "description": "Base Data",
-        "noinput": true,
+        "rawname": "Description",
+        "generator": "get_charter",
         "help": "Bla bla",
         "helpgenerator": "generate_meta",
         "tipgenerator": "list_drafts"
