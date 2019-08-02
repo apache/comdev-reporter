@@ -113,18 +113,8 @@
 }
 
 
-#steps {
-    width: 720px;
-    border: 1.5px solid #3339;
-    background: #EEE;
-    border-radius: 10px;
-    margin: 10px auto;
-    padding: 10px;
-    height: 110px;
-    text-align: center;
-}
 
-.unified #steps {
+#unified-steps {
     width: 120px;
     border: 1.5px solid #3339;
     background: #EEE;
@@ -257,10 +247,6 @@
 }
 
 #unified-helper {
- display: none;
-}
-
-.unified #unified-helper {
   display: inline-block;
   width: 400px;
   height: 600px;

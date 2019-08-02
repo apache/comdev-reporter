@@ -14,16 +14,15 @@ let gcd = (x,y) => {
 }
 
 
-function generate_pmc_roster(data) {
-    
+function generate_pmc_roster(pdata) {
     // PMC age
-    let founded = moment(data.pmcdates[project].pmc[2] * 1000.0);
+    let founded = moment(pdata.pmcdates[project].pmc[2] * 1000.0);
     let age = founded.fromNow();
-    let txt = "%s was founded %s (%s)\n".format(data.pmcsummary[project].name, founded.format('YYYY-MM-DD'), age);
+    let txt = "%s was founded %s (%s)\n".format(pdata.pmcsummary[project].name, founded.format('YYYY-MM-DD'), age);
     
     // PMC and committer count
-    let no_com = data.count[project][1];
-    let no_pmc = data.count[project][0];
+    let no_com = pdata.count[project][1];
+    let no_pmc = pdata.count[project][0];
     
     let y1 = no_com;
     let y2 = no_pmc;
@@ -52,7 +51,7 @@ function generate_pmc_roster(data) {
     
     
     // Last PMC addition
-    let changes = data.changes[project].pmc;
+    let changes = pdata.changes[project].pmc;
     let now = moment();
     let three_months_ago = now.subtract(3, 'months');
     let no_added = 0;
@@ -81,7 +80,7 @@ function generate_pmc_roster(data) {
     // Last Committer addition
     txt += "\n"
     txt += "Committership changes, past quarter:\n"
-    changes = data.changes[project].committer;
+    changes = pdata.changes[project].committer;
     now = moment();
     three_months_ago = now.subtract(3, 'months');
     no_added = 0;
@@ -224,97 +223,6 @@ function health_tips(data) {
     return txt;
 }
 
-let compile_okay = false;
-
-function check_compile(data) {
-    
-    compile_okay = true;
-    let text = "";
-    if (editor_type == 'unified') {
-      let required_sections = [];
-      let sections = parse_unified();
-      
-      for (var i = 0; i < step_json.length; i++) {
-        let step = step_json[i];
-        if (!step.noinput) {
-          let found = false;
-          required_sections.push(step.rawname||step.description);
-          for (var n = 0; n < sections.length; n++) {
-            if (sections[n].title == (step.rawname||step.description)) {
-              found = true;
-              if (sections[n].text.indexOf(PLACEHOLDER) != -1) {
-                console.log("Found placeholder text: " + PLACEHOLDER)
-                text += "<li><span style='display: inline-block; width: 20px; font-size: 18px; color: red;'>&#xF7;</span> <kbd>%s</kbd> contains placeholder text!</li>".format(sections[n].title);
-                compile_okay = false;
-              } else if (sections[n].text.length < 20) {
-                text += "<li><span style='display: inline-block; width: 20px; font-size: 18px; color: pink;'>&#8253;</span> <kbd>%s</kbd> seems a tad short?</li>".format(sections[n].title);
-              } else {
-                text += "<li><span style='display: inline-block; width: 20px; font-size: 18px; color: green;'>&#x2713;</span> <kbd>%s</kbd> seems alright</li>".format(sections[n].title);
-                
-              }
-              break;
-            }
-          }
-          if (!found) {
-            compile_okay = false;
-            text += "<li><span style='display: inline-block; width: 20px; font-size: 18px; color: red;'>&#xF7;</span> <kbd>%s</kbd> is missing from the report!</li>".format(step.description);
-          }
-        }
-        
-      }
-      
-      // Remark on additional sections not required
-      for (var n = 0; n < sections.length; n++) {
-          if (!required_sections.has(sections[n].title)) {
-            text += "<li><span style='display: inline-block; width: 20px; font-size: 18px; color: pink;'>&#8253;</span> Found unknown section <kbd>%s</kbd></li>".format(sections[n].title);
-          }
-      }
-      
-      
-    }
-    else {
-      for (var i = 1; i < 5; i++) {
-          if (report[i] == null || report[i].length == 0) {
-              text += "<li>You have not filled out the <kbd>%s</kbd> section yet.".format(step_json[i].description);
-              compile_okay = false;
-          }
-      }
-    }
-    
-    if (text.length > 0) {
-        text = "<h5>Report review results:</h5>The following remarks were logged by the report compiler:<br/><ul>" + text + "</ul>";
-    }
-    if (!compile_okay) {
-      text += "Your report could possibly use some more work, and that's okay! You can always save your current report as a draft and return later to work more on it. Drafts are saved for up to two months.";
-    }
-    else {
-        text += "That's it, your board report compiled a-okay and is potentially ready for submission! If you'd like more time to work on it, you can save it as a draft, and return later to make some final edits. Or you can publish it to the agenda via Whimsy.";
-    }
-    text += "<br/><button class='btn btn-warning' onclick='save_draft();'>Save as draft</button>"
-    if (compile_okay) text += " &nbsp; &nbsp; <button class='btn btn-success'>Publish via Whimsy</button>"
-    return text;
-}
-
-
-function compile_report(data, okay, force) {
-    if (!okay && !force) return -1
-    if (editor_type == 'unified') {
-      return document.getElementById('unified-report').value;
-    }
-    let rep = "## Board Report for %s ##\n".format(pdata.pdata[project].name);
-    for (var i = 1; i < 5; i++) {
-        let step = step_json[i];
-        rep += "\n## %s:\n".format(step.description);
-        if (report[i] !== null) {
-            rep += report[i].replace(/(\r?\n)+$/, '');
-        } else {
-            rep += "Nothing entered yet...\n";
-        }
-        rep += "\n";
-    }
-    return rep;
-}
-
 function activity_tips(data) {
     let three_months_ago = moment().subtract(3, 'months');
     let txt = "";
@@ -360,9 +268,13 @@ function reflow(txt, chars) {
   return output;
 }
 
-function get_charter(data) {
-  let charter = data.pdata[project].charter;
+function get_charter(pdata) {
+  let charter = pdata.pdata[project].charter;
   
   let txt = reflow(charter);
   return txt;
+}
+
+function compile_check(pdata, editor) {
+  return editor.compile();
 }

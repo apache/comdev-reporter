@@ -16,8 +16,8 @@ let editor_type = 'unified';
 </script>
 
 <title>ASF Board Report Wizard</title>
-<link rel="stylesheet" href="css/wizard.css?foo2"/>
-<link rel="stylesheet" href="highlighter/highlighter.css"/>
+<link rel="stylesheet" href="css/wizard.css?newstuff"/>
+<link rel="stylesheet" href="highlighter/highlighter.css?newstuff"/>
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 </head>
 <body>
@@ -26,37 +26,18 @@ let editor_type = 'unified';
   <div class="loader"></div>
  </div>
  
-   <div id="wrapper" style="display: none;">
+   <div id="wrapper" style="display: none;" class="unified">
     <h2 id="pname" style="text-align: center;">Board Report Wizard</h2>
-    <div id="steps">
+    <div id="unified-steps">
      
-      
+     
      </div>
     
     <div id="unified-editor">
-     <textarea id="unified-report" onmouseup="find_section();" onkeyup="find_section(event);"></textarea>
+     <textarea id="unified-report"></textarea>
     </div>
     <div id="unified-helper"></div>
     
-    <div id="wizard-content">
-     <div id="help_wrapper">
-     <h3 id="step_title">Project Activity:</h3>
-     <p id="step_help">
-      
-     </p>
-     </div>
-     <p style="text-align: center; width: 100%; height: 100%;">
-     <textarea id="step_text" style="width: 90%; height: 60%; margin: 0 auto;"
-placeholder="Example activity:
-- This quarter, we attended FooCon - it was a sounding success!
-- Apache Foo 1.2.3 was released on August 4th, 2019."></textarea><br/>
-<button id="step_prev" onclick="build_steps(current_step-1);" class="btn btn-info" style="float: left;">&#x2039;&#x2039; Previous step</button>
-<button id="step_next" onclick="build_steps(current_step+1);" class="btn btn-success" style="float: right;">&#x203A;&#x203A; Next step</button>
-</p>
-    </div>
-    
-    <div id="tips" class="wizard-tip"></div>
-    </div>
    
    <!-- Modal for notices -->
   <div class="modal fade" id="alert" role="dialog">
@@ -79,7 +60,7 @@ placeholder="Example activity:
   </div>
    
    <footer style="text-align: center; font-size: 0.8rem; clear: both;">
-    Powered by the <a href='?'>ASF Board Report Wizard</a>. Copyright&copy; 2019 <a href='https://community.apache.org'>Apache Community Development</a>.<br/>
+    Powered by the <a href='./'>ASF Board Report Wizard</a>. Copyright&copy; 2019 <a href='https://community.apache.org'>Apache Community Development</a>.<br/>
     Queries or other feedback should go to our mailing list: dev@community.apache.org
    </footer>
    
@@ -91,8 +72,8 @@ placeholder="Example activity:
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
-<script src="highlighter/highlighter.js" type="text/javascript"></script>
-<script src="js/wizard.js" type="text/javascript"></script>
+<script src="highlighter/highlighter.js?newstuff" type="text/javascript"></script>
+<script src="js/wizard.js?newstuff" type="text/javascript"></script>
 </body>
 </html>
 

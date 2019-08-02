@@ -1,14 +1,15 @@
 // Draft saving/loading features
 
 let saved_drafts = null;
+let draft_stepper = null;
 
 function save_draft() {
     js = {
         'project': project,
         'action': 'save',
-        'type': editor_type,
-        'report': JSON.stringify(report),
-        'report_compiled': compile_report(null, true, true)
+        'type': 'unified',
+        'report': JSON.stringify(draft_stepper.editor.report),
+        'report_compiled': draft_stepper.editor.report
     }
     
     let formdata = $.param(js);
@@ -40,14 +41,9 @@ function load_draft(filename) {
 
 function read_draft(state, json) {
     if (json.report) {
-        
-        if (editor_type == 'unified') {
-          document.getElementById('unified-report').value = json.report;
-          window.setTimeout(() => { $('#unified-report').highlightWithinTextarea('update'); }, 250);
-        } else {
-            report = json.report;
-        }
-        build_steps(0, true, true);
+        draft_stepper.editor.object.value = json.report;
+        window.setTimeout(() => { draft_stepper.editor.highlight() }, 250);
+        draft_stepper.build(0, false, false);
         modal("Draft was successfully loaded and is ready.");
     } else {
         modal("Could not load report draft :/");
@@ -55,20 +51,19 @@ function read_draft(state, json) {
 }
 
 
-
-function list_drafts() {
+function list_drafts(pdata, editor) {
   if (!saved_drafts) {
-    GET('drafts.py?action=index&project=%s&type=%s'.format(project, editor_type), show_draft_list, {});
+    GET('drafts.py?action=index&project=%s&type=%s'.format(project, editor_type), show_draft_list, {stepper:editor.stepper});
     return "";
   }
   else {
-    return show_draft_list();
+    return show_draft_list({stepper: editor.stepper});
   }
 }
 
 function show_draft_list(state, json) {
   if (json && json) { saved_drafts = json.drafts || {}; }
-  
+  draft_stepper = state.stepper; // hackish for now!
   let txt = "";
   let filenames = Object.keys(saved_drafts);
   if (filenames.length > 0) {
@@ -87,17 +82,8 @@ function show_draft_list(state, json) {
     txt += "</ul></small>"
   }
   if (json && current_step == 0) {
-    let tip = document.getElementById('tips');
-    if (txt.length > 0) {
-        tip.style.display = 'block';
-        tip.innerHTML = txt;
-    } else {
-        tip.style.display = 'none';
-    }
-    if (editor_type == 'unified') {
-        let tip = document.getElementById('unified-helper');
-        tip.innerHTML += txt;
-    }
+    let tip = document.getElementById('unified-helper');
+    tip.innerHTML += txt;
   } else {
     return txt;
   }

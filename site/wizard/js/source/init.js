@@ -21,6 +21,9 @@ let project = location.search.substr(1);
 let loaded_from_draft = false;
 let PLACEHOLDER = '[Insert your own data here]';
 
+let editor = null;
+let stepper = null;
+
 if (project.length < 2) {
     GET("/reportingcycles.json", pre_splash, {});
 } else {
