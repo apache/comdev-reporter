@@ -12,8 +12,9 @@ function UnifiedEditor_highlight_sections(additional_text) {
     hilites.push({highlight: PLACEHOLDER, className: 'none' });
     
     // Capture text cursor position(s) before we continue.
-    let x = $('#unified-report').selectionStart;
-    let y = $('#unified-report').selectionEnd;
+    let x = $('#unified-report').prop('selectionStart');
+    let y = $('#unified-report').prop('selectionEnd');
+    let sx = this.object.scrollX, sy = this.object.scrollY;
     
     // If additional text is marked for highlighting, we'll have to
     // first destroy any original highlighting, as it's params changed!
@@ -34,9 +35,11 @@ function UnifiedEditor_highlight_sections(additional_text) {
     
     // If x == y (cursor is present and not marking characters),
     // We'll force focus on ourselves as highlighting loses it.
-    if (x == y) {
-        $(this.object).selectionStart = x;
-        $(this.object).selectionEnd = y;
+    if (x == y || true) {
+        $(this.object).prop( {
+            'selectionStart': x,
+            'selectionEnd': y}
+            );
         $(this.object).focus();
     }
 }
