@@ -3,7 +3,8 @@
 function UnifiedEditor_highlight_sections(additional_text) {
     // Don't highlight unless we haven't before or new text is noted
     if (this.have_highligted && !additional_text) return;
-    
+    if (this.previous_addl == additional_text) return;
+    this.previous_addl = additional_text;
     // Set which sections  highlight
     let hilites = [];
       // Headers are blue
