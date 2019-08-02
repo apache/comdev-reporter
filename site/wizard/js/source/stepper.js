@@ -61,14 +61,14 @@ function ReportStepper(div, editor, layout, helper) {
         let step = this.layout[s];
         // If helper exists, show useful data
         if (this.helper) {
-            this.helper.innerHTML = "<h5>%s:</h5>".format(step.description);
+            this.helper.innerHTML = "<h4>%s:</h4>".format(step.description);
             // Add in help
             if (step.helpgenerator) {
                 let f = Function('a', 'b', "return %s(a, b);".format(step.helpgenerator));
                 data = f(this.pdata, this.editor)
-                this.helper.innerHTML += data;
+                this.helper.innerHTML += data + "<hr/>";
             } else if (step.help) {
-                this.helper.innerHTML += step.help;
+                this.helper.innerHTML += step.help + "<hr/>";
             }
             // Add tips?
             if (step.tipgenerator) {

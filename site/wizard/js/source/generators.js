@@ -129,11 +129,11 @@ function generate_meta(data) {
         for (var i = 0; i < a.length; i++) {
           let cmt = a[i];
           cmt = cmt.replace(/[\r\n]+/g, ' ').replace(/([a-z0-9]+:)/, (a) => "<kbd>"+a+"</kbd><br/>");
-          ntxt += cmt + "<hr/>";
+          ntxt += cmt + "<br/>";
         }
       }
       txt += "<hr/><h6>Last report comments from the board: </h6>";
-      txt += "<b style='color: #369;'>%s:</b><br/><span style='white-space: wrap; font-size: 0.8rem;'>%s</span>".format(date, ntxt);
+      txt += "<b style='color: #369;'>%s:</b><br/><span style='white-space: wrap; font-size: 0.75rem;'>%s</span>".format(date, ntxt);
     }
     return txt;
 }
@@ -219,7 +219,7 @@ function health_tips(data) {
     if (jira[0] || jira[1]) txt += "<li>%u JIRA tickets opened and %u closed in the past quarter.</li>".format(jira[0], jira[1]);
     
     // Append header IF there is data, otherwise nah.
-    if (txt.length > 0) txt = "<hr/><big>Potentially useful observations on community health:</big><ul>" + txt + "</ul>";
+    if (txt.length > 0) txt = "<h5>Potentially useful observations on community health:</h5><ul>" + txt + "</ul>";
     return txt;
 }
 
@@ -236,7 +236,7 @@ function activity_tips(data) {
         }
     }
     if (rtxt != '') {
-        rtxt = "<h6>Releases this quarter: </h6><ul>" + rtxt + "</ul>";
+        rtxt = "<h6>Releases this quarter: </h6><ul>" + rtxt + "</ul><hr/>";
     }
     
     
