@@ -59,6 +59,7 @@ def main():
             cached = True
         else:
             try:
+                orv = json.load(open(wanted_file, "r"))
                 rv = requests.get(COMMENTS, headers = {'Authorization': BASIC_AUTH}).json()
             except:
                 dump = json.dumps({
@@ -67,8 +68,11 @@ def main():
                 sys.stdout.write("Content-Type: application/json\r\nContent-Length: %u\r\n\r\n" % (len(dump)))
                 sys.stdout.write(dump)
                 return
+            # interleave new within old
+            for project in rv:
+                orv[project] = rv[project]
             with open(wanted_file, "w") as f:
-                f.write(json.dumps(rv))
+                f.write(json.dumps(orv))
             cached = False
         
         # Figure out how we're able to access this data
