@@ -140,9 +140,10 @@ def main():
         with open(cache_file, 'w') as f:
             f.write(output)
             f.close()
-            
-    print("Status: 200 Okay")
-    print("Content-Type: application/json\r\n")
+    
+    if 'SCRIPT_NAME' in os.environ:
+        print("Status: 200 Okay")
+        print("Content-Type: application/json\r\n")
     print(output)
     
 if __name__ == '__main__':
