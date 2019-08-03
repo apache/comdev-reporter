@@ -183,7 +183,7 @@ function UnifiedEditor_reset() {
             } else {
                 this.report += PLACEHOLDER;
             }
-            this.report += "\n\n";
+            this.report += this.report[this.report.length-1] == '\n' ? '\n' : "\n\n";
         }
     }
     this.object.value = this.report;
