@@ -375,12 +375,14 @@ if re.match(r"^[-a-zA-Z0-9_.]+$", user):
         mlstats = {}
     
     # Add in kibble data if called with only= ...
+    kibble = None
     if oproject:
         try:
             txt = subprocess.check_output(('%s/site/wizard/kibble.py', oproject))
             kibble = json.loads(txt)
         except:
             pass
+    
     output = {
         'count': count,
         'pmcs': groups,
