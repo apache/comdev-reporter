@@ -69,8 +69,8 @@ def main():
                 sys.stdout.write(dump)
                 return
             # interleave new within old
-            for project in rv:
-                orv[project] = rv[project]
+            for xproject in rv:
+                orv[xproject] = rv[xproject]
             with open(wanted_file, "w") as f:
                 f.write(json.dumps(orv))
             cached = False
