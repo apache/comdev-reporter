@@ -45,7 +45,7 @@
     {
         "id": "review",
         "icon": "microscope",
-        "description": "Review Report",
+        "description": "Review and Publish",
         "help": "That's it, we've compiled your report for you. Please review it. When it is time to file your report, you can submit it via the <a href='https://whimsy.apache.org/board/agenda/'>Whimsy Agenda Tool</a>.",
         "generator": "compile_report",
         "helpgenerator": "compile_check",
