@@ -222,6 +222,64 @@ function health_tips(data) {
     let jira = data.jira[project];
     if (jira[0] || jira[1]) txt += "<li>%u JIRA tickets opened and %u closed in the past quarter.</li>".format(jira[0], jira[1]);
     
+    // Commits and contributors
+    if (data.kibble) {
+      let color = 'black';
+      let ctxt = data.kibble.commits.change.commits
+      let pct = parseInt(ctxt);
+      if (pct > 0) {
+        if (pct > 10) color = 'green';
+        ctxt += ' increase';
+      } else if (pct < 0) {
+        if (pct < -10) color = 'maroon';
+        ctxt += ' decrease';
+      }
+      txt += "<li style='color: %s;'>%u commits in the past quarter (%s)</li>".format(color, data.kibble.commits.after.commits, ctxt);
+    }
+    
+    if (data.kibble) {
+      let color = 'black';
+      let ctxt = data.kibble.commits.change.authors
+      let pct = parseInt(ctxt);
+      if (pct > 0) {
+        if (pct > 10) color = 'green';
+        ctxt += ' increase';
+      } else if (pct < 0) {
+        if (pct < -10) color = 'maroon';
+        ctxt += ' decrease';
+      }
+      txt += "<li style='color: %s;'>%u code contributors in the past quarter (%s)</li>".format(color, data.kibble.commits.after.authors, ctxt);
+    }
+    
+    // GitHub: PRs
+    if (data.kibble) {
+      let color = 'black';
+      let ctxt = data.kibble.prs.change.opened
+      let pct = parseInt(ctxt);
+      if (pct > 0) {
+        if (pct > 10) color = 'green';
+        ctxt += ' increase';
+      } else if (pct < 0) {
+        if (pct < -10) color = 'maroon';
+        ctxt += ' decrease';
+      }
+      txt += "<li style='color: %s;'>%u PRs opened on GitHub (%s)</li>".format(color, data.kibble.prs.after.opened, ctxt);
+    }
+    
+    if (data.kibble) {
+      let color = 'black';
+      let ctxt = data.kibble.prs.change.closed
+      let pct = parseInt(ctxt);
+      if (pct > 0) {
+        if (pct > 10) color = 'green';
+        ctxt += ' increase';
+      } else if (pct < 0) {
+        if (pct < -10) color = 'maroon';
+        ctxt += ' decrease';
+      }
+      txt += "<li style='color: %s;'>%u PRs closed on GitHub (%s)</li>".format(color, data.kibble.prs.after.closed, ctxt);
+    }
+    
     // Append header IF there is data, otherwise nah.
     if (txt.length > 0) txt = "<h5>Potentially useful observations on community health:</h5><ul>" + txt + "</ul>";
     return txt;
