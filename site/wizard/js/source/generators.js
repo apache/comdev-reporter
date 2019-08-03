@@ -129,7 +129,7 @@ function generate_meta(data) {
       
       // split and rejoin comments
       let ntxt = "";
-      let a = comment.match(/([a-z0-9]+: [\s\S\r\n]+?)(?=([a-z0-9]+:|$))/gi);
+      let a = comment.match(/^([a-z0-9]+: [\s\S\r\n]+?)(?=([a-z0-9]+:|$))/gi);
       if (a) {
         for (var i = 0; i < a.length; i++) {
           let cmt = a[i];
@@ -236,7 +236,8 @@ function health_tips(data) {
       } else {
         ctxt = 'no change';
       }
-      txt += "<li style='color: %s;'>%u commits in the past quarter (%s)</li>".format(color, data.kibble.commits.after.commits, ctxt);
+      let s = data.kibble.commits.after.commits == 1 ? '' : 's';
+      txt += "<li style='color: %s;'>%u commit%s in the past quarter (%s)</li>".format(color, data.kibble.commits.after.commits, s, ctxt);
     }
     
     if (data.kibble) {
@@ -252,7 +253,8 @@ function health_tips(data) {
       } else {
         ctxt = 'no change';
       }
-      txt += "<li style='color: %s;'>%u code contributors in the past quarter (%s)</li>".format(color, data.kibble.commits.after.authors, ctxt);
+      let s = data.kibble.commits.after.authors == 1 ? '' : 's';
+      txt += "<li style='color: %s;'>%u code contributor%s in the past quarter (%s)</li>".format(color, data.kibble.commits.after.authors, s, ctxt);
     }
     
     // GitHub: PRs
@@ -269,7 +271,8 @@ function health_tips(data) {
       } else {
         ctxt = 'no change';
       }
-      txt += "<li style='color: %s;'>%u PRs opened on GitHub, past quarter (%s)</li>".format(color, data.kibble.prs.after.opened, ctxt);
+      let s = data.kibble.prs.after.opened == 1 ? '' : 's';
+      txt += "<li style='color: %s;'>%u PR%s opened on GitHub, past quarter (%s)</li>".format(color, data.kibble.prs.after.opened, s, ctxt);
     }
     
     if (data.kibble) {
@@ -285,7 +288,8 @@ function health_tips(data) {
       } else {
         ctxt = 'no change';
       }
-      txt += "<li style='color: %s;'>%u PRs closed on GitHub, past quarter (%s)</li>".format(color, data.kibble.prs.after.closed, ctxt);
+      let s = data.kibble.prs.after.closed == 1 ? '' : 's';
+      txt += "<li style='color: %s;'>%u PR%s closed on GitHub, past quarter (%s)</li>".format(color, data.kibble.prs.after.closed, s, ctxt);
     }
     
     // Append header IF there is data, otherwise nah.
