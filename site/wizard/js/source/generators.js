@@ -313,7 +313,7 @@ function activity_tips(data) {
         ages.push(reldate.unix());
     }
     ages.sort().reverse();
-    ages = ages.splice(0,6);
+    ages = ages.splice(0,3);
     console.log(ages)
     let releases_shown = 0;
     for (var rel in data.releases[project]) {
