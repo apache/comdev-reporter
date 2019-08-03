@@ -258,8 +258,8 @@ function reflow(txt, chars) {
     if (x > chars) {
         output += (x == 0 ? "" : "\n") + word;
         x = word.length;
-    } else if (word[word.length-1] == '\n') {
-      x = 0;
+    } else if (word.indexOf('\n') != -1) {
+      x = word.length - word.indexOf('\n') - 1;
       output += word;
     } else {
       output += word;
