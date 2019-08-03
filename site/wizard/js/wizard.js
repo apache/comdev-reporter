@@ -1185,7 +1185,7 @@ let gcd = (x,y) => {
 
 function generate_pmc_roster(pdata) {
     // PMC age
-    let founded = moment(pdata.pmcdates[project].pmc[1] * 1000.0);
+    let founded = moment((pdata.pmcdates[project].pmc[2]||pdata.pmcdates[project].pmc[1]) * 1000.0);
     let age = founded.fromNow();
     let txt = "%s was founded %s (%s)\n".format(pdata.pmcsummary[project].name, founded.format('YYYY-MM-DD'), age);
     
@@ -1278,7 +1278,7 @@ function generate_pmc_roster(pdata) {
 }
 
 function generate_meta(data) {
-    let founded = moment(data.pmcdates[project].pmc[2] * 1000.0);
+    let founded = moment((data.pmcdates[project].pmc[2]||data.pmcdates[project].pmc[1]) * 1000.0);
     let age = founded.fromNow();
     let txt = "<b>Founded: </b>%s (%s)<br/>".format(founded.format('YYYY-MM-DD'), age);
     txt += "<b>Chair: </b> %s<br/>".format(data.pdata[project].chair);
