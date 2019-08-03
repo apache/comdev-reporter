@@ -2158,6 +2158,7 @@ function UnifiedEditor_compile() {
     }
     text += "<br/><button class='btn btn-warning' onclick='save_draft();'>Save as draft</button>"
     if (this.compiles) text += " &nbsp; &nbsp; <button onclick='publish_report();' class='btn btn-success'>Publish via Whimsy</button>"
+    else text += " &nbsp; &nbsp; <button class='btn btn-secondary' disabled title='Please fix the above issues before you can publish'>Publish via Whimsy</button>"
     return text;
 }
 
