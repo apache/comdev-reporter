@@ -1079,7 +1079,7 @@ function list_drafts(pdata, editor) {
 
 function show_draft_list(state, json) {
   if (json && json) { saved_drafts = json.drafts || {}; }
-  draft_stepper = state.stepper; // hackish for now!
+  draft_stepper = state.stepper||drafts_stepper; // hackish for now!
   let txt = "";
   let filenames = Object.keys(saved_drafts);
   if (filenames.length > 0) {
@@ -1123,7 +1123,7 @@ function deleted_draft(state, json) {
                 break
             }
         }
-        show_draft_list({}, {drafts: saved_drafts});
+        draft_stepper.build(0, false);
     } else {
         modal("Could not remove report draft :/");
     }
