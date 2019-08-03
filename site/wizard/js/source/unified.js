@@ -24,8 +24,7 @@ function UnifiedEditor_highlight_sections(additional_text) {
         // Check for overflow, offer reflowing
         let reflower = document.getElementById('unified-reflow');
         if (reflower) {
-            let stripped = additional_text.replace(/(^\s+|\s+$)/, '')
-            if (reflow(stripped) != stripped) {
+            if (should_reflow(additional_text)) {
                 color = 'red';
                 reflower.innerHTML = "SECTION IS OVERFLOWING 80 CHARACTERS!";
                 let btn = new HTML('button', {class: 'btn btn-success btn-sm'}, "Reflow section");

@@ -1415,6 +1415,17 @@ function activity_tips(data) {
     return txt;
 }
 
+
+// Quick check for reflow needs
+function should_reflow(txt, chars) {
+  chars = chars || 80;
+  let lines = txt.split(/[\r\n]+/g);
+  for (var i = 0; i < lines.length; i++) {
+    if (lines[i].length > chars && lines[i].match(/\s/)) return true;
+  }
+  return false;
+}
+
 function reflow(txt, chars) {
   chars = chars || 80;
   let words = txt.match(/([\S+?]+\s*)/mg);
@@ -1924,8 +1935,7 @@ function UnifiedEditor_highlight_sections(additional_text) {
         // Check for overflow, offer reflowing
         let reflower = document.getElementById('unified-reflow');
         if (reflower) {
-            let stripped = additional_text.replace(/(^\s+|\s+$)/, '')
-            if (reflow(stripped) != stripped) {
+            if (should_reflow(additional_text)) {
                 color = 'red';
                 reflower.innerHTML = "SECTION IS OVERFLOWING 80 CHARACTERS!";
                 let btn = new HTML('button', {class: 'btn btn-success btn-sm'}, "Reflow section");

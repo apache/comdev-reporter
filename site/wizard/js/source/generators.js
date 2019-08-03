@@ -246,6 +246,17 @@ function activity_tips(data) {
     return txt;
 }
 
+
+// Quick check for reflow needs
+function should_reflow(txt, chars) {
+  chars = chars || 80;
+  let lines = txt.split(/[\r\n]+/g);
+  for (var i = 0; i < lines.length; i++) {
+    if (lines[i].length > chars && lines[i].match(/\s/)) return true;
+  }
+  return false;
+}
+
 function reflow(txt, chars) {
   chars = chars || 80;
   let words = txt.match(/([\S+?]+\s*)/mg);
