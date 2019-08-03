@@ -1017,6 +1017,7 @@ function showCalendarPicker(parent, seedDate) {
 
 let saved_drafts = null;
 let draft_stepper = null;
+let editor_type = 'unified';
 
 function save_draft() {
     js = {
@@ -2025,8 +2026,9 @@ function UnifiedEditor_highlight_sections(additional_text) {
         if (reflower) {
             if (should_reflow(additional_text)) {
                 color = 'red';
+                reflower.style.visibility = 'visible';
                 reflower.innerHTML = "SECTION IS OVERFLOWING 80 CHARACTERS!";
-                let btn = new HTML('button', {class: 'btn btn-success btn-sm'}, "Reflow section");
+                let btn = new HTML('button', {style: {marginLeft: '8px'}, class: 'btn btn-success btn-sm'}, "Reflow section");
                 btn.addEventListener('click', () => {
                     this.object.value = this.object.value.replace(additional_text, Flow.text(additional_text));
                     $(this.object).prop( {
@@ -2037,7 +2039,7 @@ function UnifiedEditor_highlight_sections(additional_text) {
                     });
                 reflower.inject(btn);
             } else {
-                reflower.innerHTML = "";
+                reflower.style.visibility = 'hidden';
             }
         }
         $('#unified-report').highlightWithinTextarea('destroy');

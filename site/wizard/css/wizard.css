@@ -1,40 +1,43 @@
-#wrapper.unified {
-    width: 1200px;
-    min-height: 630px;
-    margin: 0 auto;
-    /*border: 3px solid #333;*/
+html, body { height: 100%; width: 100%; margin: 0;}
+
+body {
+ font-family: SelawikRegular, sans-serif;
 }
+#wrapper {
+    width: 95%;
+    min-width: 985px;
+    height: calc(100% - 120px);
+    min-height: 652px;
+    margin: 0 auto;
+    border: 0.75px solid #333;
+    border-radius: 5px;
+    vertical-align:top;
+}
+
 .wizard-step {
     width: 64px !important;
     height: 64px;
     font-size: 36px !important;
     border-radius: 50%;
-    border: 3px solid #666;
+    border: 2px solid #369;
     display: inline-block;
-    color: #666;
+    color: #369;
     text-align: center;
-    margin-left: 18px;
+    
     margin-top: 0px;
-    padding-top: 3px;
+    padding-top: 4px;
+    text-indent: -0.5px;
     position: relative;
     z-index: 3;
     background: #FFF;
 }
 
 
-.unified .wizard-step {
-  margin-left: -10px;
-}
 
 .wizard-step-wrapper {
-    display: inline-block;
-    color: #333;
-    width: 110px;
-    height: 120px;
-}
-
-.unified .wizard-step-wrapper {
-  height: 96px;
+  height: 108px;
+  width: 128px;
+  margin: 0 auto;
 }
 
 .wizard-step-wrapper:hover > * {
@@ -43,64 +46,41 @@
     border-color: #090 !important;
     
 }
-.wizard-step-wrapper:hover .wizard-step {
-    background-color: #090;
-    color: #EEE !important;
+.wizard-step-wrapper:hover > * {
+    background: #090 !important;
+    color: #FFF !important;
     position: relative;
     z-index: 3;
 }
 
 .wizard-step-text {
-    display: inline-block;
-    width: 110px;
-    height: 40px;
-    font-size: 12px;
+  
+  margin-top: -2px;
+  height: 16px;
+  border-radius: 5px;
+  border: 2px solid #369;
+  background: #FFF;
+  height: 20px;
+  font-size: 12px;
     line-height: 18px;
-    margin-left: 9px;
     text-align: center;
     z-index: 4;
     position: relative;
 }
 
-.unified .wizard-step-text {
-  margin-left: -10px;
-  margin-top: -3px;
-  height: 16px;
-  border-radius: 5px;
-  border: 2px solid #666;
-  background: #FFF;
-  height: 20px;
-}
-
-.unified .wizard-step-text .done {
- color: #F00;
-}
-
-.wizard-step.active {
+.wizard-step.active,.wizard-step-text.active {
     color: #EEE;
     background: #369;
     border-color: #369;
 }
 
 .wizard-line {
-    border-top: 3px solid #666;
-    width: 48px;
-    display: inline-block;
-    height: 88px;
-    margin-bottom: -40px;
-    margin-left: -14px;
-    margin-right: -32px;
-    z-index: 0;
-    position: relative;
-}
-
-.unified .wizard-line {
     border: none;
-    border-right: 3px solid #666;
+    border-right: 3px solid #369;
     width: 48px;
     display: inline-block;
-    margin-top: -24px;
-    margin-left: 4px;
+    margin-top: -28px;
+    margin-left: -47px;
     height: 48px;
     z-index: 0;
     position: absolute;
@@ -112,45 +92,6 @@
     border-color: #9BE !important;
 }
 
-
-
-#unified-steps {
-    width: 120px;
-    border: 1.5px solid #3339;
-    background: #EEE;
-    border-radius: 10px;
-    margin: 10px auto;
-    padding: 10px;
-    height: 600px;
-    text-align: center;
-    display: inline-block;
-    float: left;
-}
-
-#wizard-content {
-    width: 720px;
-    border: 1.5px solid #3339;
-    background: #FFE;
-    border-radius: 10px;
-    margin: 10px auto;
-    padding: 10px;
-    min-height: 480px;
-    font-size: 0.85rem;
-}
-
-.wizard-tip {
-    width: 720px;
-    border: 1.5px solid #3339;
-    background: #FEF;
-    border-radius: 10px;
-    margin: 10px auto;
-    padding: 10px;
-    font-size: 0.85rem;
-}
-
-#step_text {
-    margin-bottom: 10px !important;
-}
 
 .btn-sm {
   padding: 0px 3px 0px 3px !important;
@@ -227,44 +168,27 @@
            transition: opacity 0.01s linear !important;
  }
  
- 
-.unified textarea {
- font-family: monospace;
- font-size: 12px;
-}
-
-#unified-editor {
- display: none;
-}
-
-.unified #unified-editor {
-  display: inline-block;
-  width: 560px;
-  height: 620px;
-  float: left;
-  margin: 16px;
-  
-}
 
 #unified-helper {
+  border-top-right-radius: 5px;
+  border-bottom-right-radius: 5px;
   display: inline-block;
-  width: 400px;
-  height: 600px;
-  float: left;
-  margin: 10px;
-  border: 2px solid #666;
-  background: #FFE;
-  border-radius: 10px;
-  font-size: 0.9rem;
-  padding: 4px;
+  width: calc(100% - 680px);
+  min-width: 300px;
+  height: 100%;
+  min-height: 600px;
+  border-left: 1.25px solid #666;
+  background: #F5F5F5;
+  font-size: 0.925rem !important;
+  padding: 8px;
+  margin: 0px;
   overflow-y: auto;
-  font-weight: 380;
-  font-family: roboto, montserrat, sans-serif;
-  line-height: 1.1rem;
+  font-family: SelawikRegular, sans-serif;
+  line-height: 1rem;
 }
 
 #unified-helper ul {
- font-size: 0.8rem;
+ font-size: 0.85rem;
 }
 
 #unified-helper > h5 {
@@ -276,34 +200,56 @@
 }
 
 #unified-reflow {
- width: 540px;
- height: 20px;
- font-size: 11px;
- 
+ width: 100%;
+ height: 24px;
+ font-size: 12px;
+ background: #ED8;
+ visibility: hidden;
+ text-align: center;
+ vertical-align:middle;
+ padding-top: 2px;
 }
 
+
+#unified-steps {
+    width: 140px;
+    height: 100%;
+    min-height: 650px;
+    border-right: 1.25px solid #3339;
+    background: #F5F5F5;
+    padding-top: 20px;
+    
+    margin: 0px;
+    text-align: center;
+    display: inline-block;
+    vertical-align:top;
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+}
+
+
+#unified-editor {
+  display: inline-block;
+  width: 540px;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  vertical-align: top;
+  border: 1px inset #ECAD;
+}
 
 #unified-report {
- width: 540px;
- height: 570px;
+ width: 100%;
+ height: calc(100% - 24px);
  font-size: 11px;
- white-space: pre;
- 
- overflow-x: auto !important;
-}
-
-.unified #tips {
- display: none !important;
-}
-
-.unified #wizard-content {
- display: none;
-}
-
-
-@-moz-document url-prefix() {
-    .unified .wizard-line {
-        margin-left: -106px;
-        margin-top: 50px;
-    }
+ white-space: pre-wrap;
+ overflow-wrap: normal;
+ overflow-x: auto;
+ font-family: monospace;
+ font-size: 11px;
+ padding: 4px;
+ margin: 0px;
+ border: none;
+ resize: none;
+ outline: none;
 }

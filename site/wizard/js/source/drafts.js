@@ -2,6 +2,7 @@
 
 let saved_drafts = null;
 let draft_stepper = null;
+let editor_type = 'unified';
 
 function save_draft() {
     js = {
