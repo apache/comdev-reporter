@@ -373,6 +373,14 @@ if re.match(r"^[-a-zA-Z0-9_.]+$", user):
         allpmcs = []
     if anon:
         mlstats = {}
+    
+    # Add in kibble data if called with only= ...
+    if oproject:
+        try:
+            txt = subprocess.check_output(('%s/site/wizard/kibble.py', oproject))
+            kibble = json.loads(txt)
+        except:
+            pass
     output = {
         'count': count,
         'pmcs': groups,
@@ -390,6 +398,7 @@ if re.match(r"^[-a-zA-Z0-9_.]+$", user):
         'health': health,
         'checker': checker,
         'you': committers[user],
+        'kibble': kibble,
     }
 
     # AFAICT dumps always uses \n for EOL
