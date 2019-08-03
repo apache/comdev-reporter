@@ -40,11 +40,10 @@ function generate_pmc_roster(pdata) {
     x1 = Math.round(x1)
     x2 = Math.round(x2)
     
-    while ((x1/x2) == Math.floor(x1/x2) && x2 > 1) {
-        let k = (x1/x2)
-        x1 /= k
-        x2 /= k
-    }
+    let k = gcd(x1, x2);
+    x1 /= k;
+    x2 /= k;
+    
     
     txt += "There are currently %u committers and %u PMC members in this project.\nThe Committer-to-PMC ratio is %u:%u.\n\n".format(no_com, no_pmc, x1, x2);
     
