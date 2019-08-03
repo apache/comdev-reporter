@@ -1468,7 +1468,7 @@ function activity_tips(data) {
         }
     }
     let releases_shown = 0;
-    for (var rel in data.releases[project]) {
+    for (var rel in data.releases[project].reverse()) {
         let reldate = moment(data.releases[project][rel] * 1000.0);
         if (reldate > three_months_ago || (new_releases < 3 && releases_shown < 3)) {
             rtxt += "<li>%s was released on %s.</li>".format(rel, reldate.format('YYYY-MM-DD'));
