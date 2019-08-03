@@ -83,7 +83,7 @@ def main():
         
         
         # Committers
-        authors = requests.post('https://demo.kibble.apache.org/api/code/committers',
+        authors_b = requests.post('https://demo.kibble.apache.org/api/code/committers',
                   headers = {
                     'Content-Type': 'application/json',
                     'Kibble-Token': TOKEN,
@@ -91,12 +91,28 @@ def main():
                   json = {
                     "page":"issues",
                     "quick":True,
-                    "interval": "week",
+                    "from": int(BEFORE - (90*86400)),
+                    "to": BEFORE,
+                    "interval": "99999d",
+                    "subfilter":"/" + project,
+                    }
+                 ).json()
+        authors_a = requests.post('https://demo.kibble.apache.org/api/code/committers',
+                  headers = {
+                    'Content-Type': 'application/json',
+                    'Kibble-Token': TOKEN,
+                  },
+                  json = {
+                    "page":"issues",
+                    "quick":True,
+                    "from": BEFORE,
+                    "to": int(time.time()),
+                    "interval": "99999d",
                     "subfilter":"/" + project,
                     }
                  ).json();
-        after = [x for x in authors['timeseries'] if x['date'] > BEFORE]
-        before = [x for x in authors['timeseries'] if x['date'] <= BEFORE]
+        after = authors_a['timeseries']
+        before = authors_b['timeseries']
         cmtp_before = 0
         for month in before:
             cmtp_before += month.get('authors', 0)
