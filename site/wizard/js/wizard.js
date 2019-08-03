@@ -1416,7 +1416,7 @@ function activity_tips(data) {
 }
 
 function reflow(txt, chars) {
-  chars = chars || 78;
+  chars = chars || 80;
   let words = txt.match(/([\S+?]+\s*)/mg);
   if (!words) return txt;
   let x = 0;
@@ -1921,7 +1921,6 @@ function UnifiedEditor_highlight_sections(additional_text) {
     // first destroy any original highlighting, as it's params changed!
     if (additional_text) {
         let color = 'green'
-        
         // Check for overflow, offer reflowing
         let reflower = document.getElementById('unified-reflow');
         if (reflower) {

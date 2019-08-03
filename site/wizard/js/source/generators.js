@@ -247,7 +247,7 @@ function activity_tips(data) {
 }
 
 function reflow(txt, chars) {
-  chars = chars || 78;
+  chars = chars || 80;
   let words = txt.match(/([\S+?]+\s*)/mg);
   if (!words) return txt;
   let x = 0;
