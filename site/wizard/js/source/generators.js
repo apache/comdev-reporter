@@ -255,7 +255,7 @@ function reflow(txt, chars) {
   for (var i = 0; i < words.length; i++) {
     let word = words[i];
     x += word.length;
-    if (x >= chars) {
+    if (x > chars) {
         output += (x == 0 ? "" : "\n") + word;
         x = word.length;
     } else if (word[word.length-1] == '\n') {

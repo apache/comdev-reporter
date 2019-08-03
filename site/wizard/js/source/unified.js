@@ -31,7 +31,7 @@ function UnifiedEditor_highlight_sections(additional_text) {
                 reflower.innerHTML = "SECTION IS OVERFLOWING 80 CHARACTERS!";
                 let btn = new HTML('button', {class: 'btn btn-success btn-sm'}, "Reflow section");
                 btn.addEventListener('click', () => {
-                    this.object.value = this.object.value.replace(additional_text, reflow(additional_text));
+                    this.object.value = this.object.value.replace(additional_text, Flow.text(additional_text));
                     $(this.object).prop( {
                         'selectionStart': x,
                         'selectionEnd': y}
