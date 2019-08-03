@@ -378,7 +378,7 @@ if re.match(r"^[-a-zA-Z0-9_.]+$", user):
     kibble = None
     if oproject:
         try:
-            txt = subprocess.check_output(('%s/site/wizard/kibble.py', oproject))
+            txt = subprocess.check_output(('%s/site/wizard/kibble.py' % RAO_HOME, oproject))
             kibble = json.loads(txt)
         except:
             pass
