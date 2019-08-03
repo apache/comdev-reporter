@@ -42,6 +42,7 @@ uc = UrlCache(interval=1800, silent=True)
 
 # Relative path to home directory from here (site)
 RAOHOME = '../'
+RAOHOME_FULL = '/var/www/reporter.apache.org'
 
 COMMITTER_INFO = 'https://whimsy.apache.org/public/public_ldap_people.json'
 MEMBER_INFO = 'https://whimsy.apache.org/public/member-info.json'
@@ -378,7 +379,7 @@ if re.match(r"^[-a-zA-Z0-9_.]+$", user):
     kibble = None
     if oproject:
         try:
-            txt = subprocess.check_output(('%wizard/kibble.py' % RAOHOME, oproject))
+            txt = subprocess.check_output(('%/site/wizard/kibble.py' % RAOHOME_FULL, oproject))
             kibble = json.loads(txt)
         except:
             pass
