@@ -1148,6 +1148,7 @@ function publish_report() {
     document.getElementById('loader_text').innerText = "Publishing report, hang on...";
     document.getElementById('wizard_spinner').style.display = 'block';
     document.getElementById('wrapper').style.display = 'none';
+    document.getElementById("pname").style.display = 'none';
     
     POST('whimsy.py', report_published, {}, formdata);
 }
@@ -1156,6 +1157,7 @@ function report_published(state, json) {
   // Disengage spinner
   document.getElementById('wizard_spinner').style.display = 'none';
   document.getElementById('wrapper').style.display = 'block';
+  document.getElementById("pname").style.display = 'block';
   
   if (json && json.okay) {
     modal("Your report was successfully posted to the board agenda!");
@@ -1633,7 +1635,8 @@ function prime_steps(state, json) {
     let stepper = new ReportStepper('unified-steps', editor, json.steps, 'unified-helper');
     editor.stepper = stepper;
     stepper.pdata = pdata;
-    stepper.build(0, true);    
+    stepper.build(0, true);
+    document.getElementById("pname").style.display = 'block';
 }
 
 

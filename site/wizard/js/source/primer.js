@@ -47,6 +47,7 @@ function prime_steps(state, json) {
     let stepper = new ReportStepper('unified-steps', editor, json.steps, 'unified-helper');
     editor.stepper = stepper;
     stepper.pdata = pdata;
-    stepper.build(0, true);    
+    stepper.build(0, true);
+    document.getElementById("pname").style.display = 'block';
 }
 
