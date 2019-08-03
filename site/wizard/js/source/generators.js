@@ -129,7 +129,7 @@ function generate_meta(data) {
       
       // split and rejoin comments
       let ntxt = "";
-      let a = comment.match(/^([a-z0-9]+: [\s\S\r\n]+?)(?=([a-z0-9]+:|$))/gi);
+      let a = comment.match(/(?:^|\n)([a-z0-9]+: [\s\S\r\n]+?)(?=([a-z0-9]+:|$))/gi);
       if (a) {
         for (var i = 0; i < a.length; i++) {
           let cmt = a[i];
