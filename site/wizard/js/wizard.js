@@ -1167,9 +1167,6 @@ function report_published(state, json) {
  Fetched from source/generators.js
 ******************************************/
 
-// Least common multiple
-let lcm = (x, y) => (!x || !y) ? 0 : Math.abs((x * y) / gcd(x, y));
-
 // Greatest common divisor
 let gcd = (x,y) => {
   x = Math.abs(x);
@@ -1195,26 +1192,35 @@ function generate_pmc_roster(pdata) {
     
     let y1 = no_com;
     let y2 = no_pmc;
-    while (y1 > 20) {
-        y1 = Math.round(y1/2)
-        y2 = Math.round(y2/2);
+    let cpr = "";
+    
+    // See if we can get a clean ratio
+    let k = gcd(y1, y2);
+    y1 /= k;
+    y2 /= k;
+    if (y1 < 10 && y2 < 10) cpr = "%u:%u".format(y1,y2);
+    
+    // Nope, let's rough it up a bit.
+    else {
+      // While >= 10 committers, halven both committers and pmc
+      // to get a simpler number to "mathify".
+      while (y1 >= 10) {
+          y1 = Math.round(y1/2)
+          y2 = Math.round(y2/2);
+      }
+      // round up/down
+      y1 = Math.round(y1);
+      y2 = Math.round(y2);
+      
+      // find greatest common divisor and make the final fraction
+      let k = gcd(y1, y2);
+      y1 /= k;
+      y2 /= k;
+      cpr = "roughly %u:%u".format(y1,y2);
     }
-    l = lcm(y1, y2);
-    x1 = l/y2;
-    x2 = l/y1;
-    while (x1 >= 10) {
-        x1 /= 1.25;
-        x2 /= 1.25;
-    }
-    x1 = Math.round(x1)
-    x2 = Math.round(x2)
-    
-    let k = gcd(x1, x2);
-    x1 /= k;
-    x2 /= k;
     
     
-    txt += "There are currently %u committers and %u PMC members in this project.\nThe Committer-to-PMC ratio is %u:%u.\n\n".format(no_com, no_pmc, x1, x2);
+    txt += "There are currently %u committers and %u PMC members in this project.\nThe Committer-to-PMC ratio is %s.\n\n".format(no_com, no_pmc, cpr);
     
     
     
