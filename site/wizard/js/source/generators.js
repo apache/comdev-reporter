@@ -233,6 +233,8 @@ function health_tips(data) {
       } else if (pct < 0) {
         if (pct < -10) color = 'maroon';
         ctxt += ' decrease';
+      } else {
+        ctxt = 'no change';
       }
       txt += "<li style='color: %s;'>%u commits in the past quarter (%s)</li>".format(color, data.kibble.commits.after.commits, ctxt);
     }
@@ -247,6 +249,8 @@ function health_tips(data) {
       } else if (pct < 0) {
         if (pct < -10) color = 'maroon';
         ctxt += ' decrease';
+      } else {
+        ctxt = 'no change';
       }
       txt += "<li style='color: %s;'>%u code contributors in the past quarter (%s)</li>".format(color, data.kibble.commits.after.authors, ctxt);
     }
@@ -262,6 +266,8 @@ function health_tips(data) {
       } else if (pct < 0) {
         if (pct < -10) color = 'maroon';
         ctxt += ' decrease';
+      } else {
+        ctxt = 'no change';
       }
       txt += "<li style='color: %s;'>%u PRs opened on GitHub, past quarter (%s)</li>".format(color, data.kibble.prs.after.opened, ctxt);
     }
@@ -276,6 +282,8 @@ function health_tips(data) {
       } else if (pct < 0) {
         if (pct < -10) color = 'maroon';
         ctxt += ' decrease';
+      } else {
+        ctxt = 'no change';
       }
       txt += "<li style='color: %s;'>%u PRs closed on GitHub, past quarter (%s)</li>".format(color, data.kibble.prs.after.closed, ctxt);
     }
