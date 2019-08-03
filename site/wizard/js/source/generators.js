@@ -291,14 +291,23 @@ function activity_tips(data) {
     
     // Releases
     let rtxt = "";
+    let new_releases = 0;
     for (var rel in data.releases[project]) {
         let reldate = moment(data.releases[project][rel] * 1000.0);
         if (reldate > three_months_ago) {
+          new_releases++;
+        }
+    }
+    let releases_shown = 0;
+    for (var rel in data.releases[project]) {
+        let reldate = moment(data.releases[project][rel] * 1000.0);
+        if (reldate > three_months_ago || (new_releases < 3 && releases_shown < 3)) {
             rtxt += "<li>%s was released on %s.</li>".format(rel, reldate.format('YYYY-MM-DD'));
+            releases_shown++;
         }
     }
     if (rtxt != '') {
-        rtxt = "<h6>Releases this quarter: </h6><ul>" + rtxt + "</ul><hr/>";
+        rtxt = "<h6>Recent releases: </h6><ul>" + rtxt + "</ul><hr/>";
     }
     
     
