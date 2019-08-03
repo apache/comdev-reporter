@@ -1432,7 +1432,7 @@ function health_tips(data) {
         if (pct < -10) color = 'maroon';
         ctxt += ' decrease';
       }
-      txt += "<li style='color: %s;'>%u PRs opened on GitHub (%s)</li>".format(color, data.kibble.prs.after.opened, ctxt);
+      txt += "<li style='color: %s;'>%u PRs opened on GitHub, past quarter (%s)</li>".format(color, data.kibble.prs.after.opened, ctxt);
     }
     
     if (data.kibble) {
@@ -1446,7 +1446,7 @@ function health_tips(data) {
         if (pct < -10) color = 'maroon';
         ctxt += ' decrease';
       }
-      txt += "<li style='color: %s;'>%u PRs closed on GitHub (%s)</li>".format(color, data.kibble.prs.after.closed, ctxt);
+      txt += "<li style='color: %s;'>%u PRs closed on GitHub, past quarter (%s)</li>".format(color, data.kibble.prs.after.closed, ctxt);
     }
     
     // Append header IF there is data, otherwise nah.
