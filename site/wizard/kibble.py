@@ -136,7 +136,7 @@ def main():
                 }
             }
         }
-        outpout = json.dumps(js, indent = 2)
+        output = json.dumps(js, indent = 2)
         with open(cache_file, 'w') as f:
             f.write(output)
             f.close()
