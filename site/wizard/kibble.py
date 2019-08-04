@@ -68,8 +68,8 @@ def main():
         for month in after:
             iso_after += month.get('issues opened', 0)
             isc_after += month.get('issues closed', 0)
-        iso_change = '%u%%' % int((iso_after - pro_before) / (iso_before or 1) * 100)
-        isc_change = '%u%%' % int((isc_after - prc_before) / (isc_before or 1) * 100)
+        iso_change = '%u%%' % int((iso_after - iso_before) / (iso_before or 1) * 100)
+        isc_change = '%u%%' % int((isc_after - isc_before) / (isc_before or 1) * 100)
         
         
         # Commits
