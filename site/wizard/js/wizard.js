@@ -1401,8 +1401,23 @@ function health_tips(data) {
     if (bz[0] || bz[1]) txt += "<li>%u BugZilla tickets opened and %u closed in the past quarter.</li>".format(bz[0], bz[1]);
     
     // JIRA changes
-    let jira = data.jira[project];
-    if (jira[0] || jira[1]) txt += "<li>%u JIRA tickets opened and %u closed in the past quarter.</li>".format(jira[0], jira[1]);
+    if (data.kibble) {
+      let color = 'black';
+      let ctxt = data.kibble.jira.change.opened;
+      let pct = parseInt(ctxt);
+      if (pct > 0) {
+        if (pct > 10) color = 'green';
+        ctxt += ' increase';
+      } else if (pct < 0) {
+        if (pct < -10) color = 'maroon';
+        ctxt += ' decrease';
+      } else {
+        ctxt = 'no change';
+      }
+      let s = data.kibble.jira.after.opened == 1 ? '' : 's';
+      txt += "<li style='color: %s;'>%u issue%s opened in JIRA, past quarter (%s)</li>".format(color, data.kibble.jira.after.opened, s, ctxt);
+    }
+    
     
     // Commits and contributors
     if (data.kibble) {
