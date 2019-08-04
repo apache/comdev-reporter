@@ -1417,6 +1417,22 @@ function health_tips(data) {
       let s = data.kibble.jira.after.opened == 1 ? '' : 's';
       txt += "<li style='color: %s;'>%u issue%s opened in JIRA, past quarter (%s)</li>".format(color, data.kibble.jira.after.opened, s, ctxt);
     }
+    if (data.kibble) {
+      let color = 'black';
+      let ctxt = data.kibble.jira.change.closed;
+      let pct = parseInt(ctxt);
+      if (pct > 0) {
+        if (pct > 10) color = 'green';
+        ctxt += ' increase';
+      } else if (pct < 0) {
+        if (pct < -10) color = 'maroon';
+        ctxt += ' decrease';
+      } else {
+        ctxt = 'no change';
+      }
+      let s = data.kibble.jira.after.closed == 1 ? '' : 's';
+      txt += "<li style='color: %s;'>%u issue%s closed in JIRA, past quarter (%s)</li>".format(color, data.kibble.jira.after.closed, s, ctxt);
+    }
     
     
     // Commits and contributors
