@@ -58,6 +58,20 @@ def main():
         prc_change = '%u%%' % int((prc_after - prc_before) / (prc_before or 1) * 100)
         
         
+        iso_before = 0
+        isc_before = 0
+        for month in before:
+            iso_before += month.get('issues opened', 0)
+            isc_before += month.get('issues closed', 0)
+        iso_after = 0
+        isc_after = 0
+        for month in after:
+            iso_after += month.get('issues opened', 0)
+            isc_after += month.get('issues closed', 0)
+        iso_change = '%u%%' % int((iso_after - pro_before) / (iso_before or 1) * 100)
+        isc_change = '%u%%' % int((isc_after - prc_before) / (isc_before or 1) * 100)
+        
+        
         # Commits
         commits = requests.post('https://demo.kibble.apache.org/api/code/commits',
                   headers = {
@@ -135,6 +149,20 @@ def main():
                 'change': {
                     'opened': pro_change,
                     'closed': prc_change,
+                }
+            },
+            'issues': {
+                'before': {
+                    'opened': iso_before,
+                    'closed': isc_before,
+                },
+                'after': {
+                    'opened': iso_after,
+                    'closed': isc_after,
+                },
+                'change': {
+                    'opened': iso_change,
+                    'closed': isc_change,
                 }
             },
             'commits' : {
