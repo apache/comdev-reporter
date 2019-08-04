@@ -81,15 +81,28 @@ function UnifiedEditor_find_section(e) {
     
     let tprec = this.report.substr(0, spos);
     let at_step = -1;
-    for (var i = 0; i < this.layout.length; i++) {
-        let step = this.layout[i];
-        let tline = "## %s:".format(step.rawname || step.description);
-        if (tprec.indexOf(tline) != -1) {
-            at_step = i;
+    
+    let nextheader = tprec.match(/^## ([^\r\n]+)/mg);
+    if (nextheader) {
+        let title = nextheader[nextheader.length-1].replace(/:[\s\S]*?$/, '').replace(/^##\s+/, '');
+        custom_step.description = title;
+        for (var i = 0; i < this.layout.length; i++) {
+            let step = this.layout[i];
+            if (title == (step.rawname || step.description)) {
+                at_step = i;
+            }
+        }
+    } else {
+        for (var i = 0; i < this.layout.length; i++) {
+            let step = this.layout[i];
+            let tline = "## %s:".format(step.rawname || step.description);
+            if (tprec.indexOf(tline) != -1) {
+                at_step = i;
+            }
         }
     }
     
-    if (at_step != -1 && this.stepper) {
+    if (this.stepper) {
         this.stepper.build(at_step, false, true, e);
     } 
 }

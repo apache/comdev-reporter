@@ -1,3 +1,7 @@
+let custom_step = {
+    'description': 'Custom section',
+    'help': "This looks like a custom section. While I don't know how to help you here, it's great that you have additional things to report on :)"
+};
 
 // Left-hand side stepper for reports
 function ReportStepper(div, editor, layout, helper) {
@@ -58,10 +62,11 @@ function ReportStepper(div, editor, layout, helper) {
             }
         }
             
-        let step = this.layout[s];
+        let step = (s == -1) ? custom_step : this.layout[s];
         // If helper exists, show useful data
         if (this.helper) {
-            this.helper.innerHTML = "<h4>%s:</h4>".format(step.description);
+            this.helper.innerHTML = "";
+            this.helper.inject(new HTML('h4', {}, step.description + ':'));
             // Add in help
             if (step.helpgenerator) {
                 let f = Function('a', 'b', "return %s(a, b);".format(step.helpgenerator));

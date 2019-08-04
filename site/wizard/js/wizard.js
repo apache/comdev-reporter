@@ -1486,7 +1486,6 @@ function activity_tips(data) {
     }
     ages.sort().reverse();
     ages = ages.splice(0,3);
-    console.log(ages)
     let releases_shown = 0;
     for (var rel in data.releases[project]) {
         let reldate = moment(data.releases[project][rel] * 1000.0);
@@ -1890,6 +1889,10 @@ function toggleView(id) {
  Fetched from source/stepper.js
 ******************************************/
 
+let custom_step = {
+    'description': 'Custom section',
+    'help': "This looks like a custom section. While I don't know how to help you here, it's great that you have additional things to report on :)"
+};
 
 // Left-hand side stepper for reports
 function ReportStepper(div, editor, layout, helper) {
@@ -1950,10 +1953,11 @@ function ReportStepper(div, editor, layout, helper) {
             }
         }
             
-        let step = this.layout[s];
+        let step = (s == -1) ? custom_step : this.layout[s];
         // If helper exists, show useful data
         if (this.helper) {
-            this.helper.innerHTML = "<h4>%s:</h4>".format(step.description);
+            this.helper.innerHTML = "";
+            this.helper.inject(new HTML('h4', {}, step.description + ':'));
             // Add in help
             if (step.helpgenerator) {
                 let f = Function('a', 'b', "return %s(a, b);".format(step.helpgenerator));
@@ -2084,15 +2088,28 @@ function UnifiedEditor_find_section(e) {
     
     let tprec = this.report.substr(0, spos);
     let at_step = -1;
-    for (var i = 0; i < this.layout.length; i++) {
-        let step = this.layout[i];
-        let tline = "## %s:".format(step.rawname || step.description);
-        if (tprec.indexOf(tline) != -1) {
-            at_step = i;
+    
+    let nextheader = tprec.match(/^## ([^\r\n]+)/mg);
+    if (nextheader) {
+        let title = nextheader[nextheader.length-1].replace(/:[\s\S]*?$/, '').replace(/^##\s+/, '');
+        custom_step.description = title;
+        for (var i = 0; i < this.layout.length; i++) {
+            let step = this.layout[i];
+            if (title == (step.rawname || step.description)) {
+                at_step = i;
+            }
+        }
+    } else {
+        for (var i = 0; i < this.layout.length; i++) {
+            let step = this.layout[i];
+            let tline = "## %s:".format(step.rawname || step.description);
+            if (tprec.indexOf(tline) != -1) {
+                at_step = i;
+            }
         }
     }
     
-    if (at_step != -1 && this.stepper) {
+    if (this.stepper) {
         this.stepper.build(at_step, false, true, e);
     } 
 }

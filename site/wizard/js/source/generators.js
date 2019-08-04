@@ -314,7 +314,6 @@ function activity_tips(data) {
     }
     ages.sort().reverse();
     ages = ages.splice(0,3);
-    console.log(ages)
     let releases_shown = 0;
     for (var rel in data.releases[project]) {
         let reldate = moment(data.releases[project][rel] * 1000.0);
