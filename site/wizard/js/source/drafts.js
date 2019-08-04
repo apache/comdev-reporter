@@ -30,6 +30,13 @@ function draft_saved(state, json) {
     
     if (json.filename) {
         modal("Draft was saved in the reporter database as <kbd>%s</kbd>. You can revisit this draft at any time by loading it from the base data tab. Drafts are kept for up to two months.".format(json.filename));
+        let obj = {
+          yours: true,
+          filename: json.filename
+        };
+        let a = json.filename.split('-');
+        let ts = a[2];
+        saved_drafts[ts] = obj;
     } else {
         modal("Could not save draft: %s".format(json.error || "Unspecified error"));
     }
