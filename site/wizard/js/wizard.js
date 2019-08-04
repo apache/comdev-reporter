@@ -1562,10 +1562,12 @@ function activity_tips(data) {
     }
     ages.sort().reverse();
     ages = ages.splice(0,new_releases >= 3 ? new_releases : 3);
+    let to_show = ages.length;
     let releases_shown = 0;
     while (ages.length) {
       let ts = ages.shift();
       for (var rel in data.releases[project]) {
+        if (releases_shown == to_show) break;
           let reldate = moment(data.releases[project][rel] * 1000.0);
           if (ts == reldate.unix()) {
               rtxt += "<li>%s was released on %s.</li>".format(rel, reldate.format('YYYY-MM-DD'));
