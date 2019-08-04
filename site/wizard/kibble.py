@@ -15,9 +15,12 @@ TOKEN = open('%s/data/kibble-token.txt' % RAO_HOME).read().strip()
 def main():
     form = cgi.FieldStorage()
     project = form.getvalue('project')
+    jira = []
     if not project:
         if len(sys.argv) > 1:
             project = sys.argv[1]
+            for j in sys.argv[2:]:
+                jira.append(j)
         else:    
             project = 'nosuchproject'
     
@@ -70,6 +73,38 @@ def main():
             isc_after += month.get('issues closed', 0)
         iso_change = '%u%%' % int((iso_after - iso_before) / (iso_before or 1) * 100)
         isc_change = '%u%%' % int((isc_after - isc_before) / (isc_before or 1) * 100)
+        
+        
+        # JIRA ??
+        # Issues/PRs
+        jio_before = 0
+        jic_before = 0
+        jio_after = 0
+        jic_after = 0
+        for j in jira:
+            issues = requests.post('https://demo.kibble.apache.org/api/issue/issues',
+                      headers = {
+                        'Content-Type': 'application/json',
+                        'Kibble-Token': TOKEN,
+                      },
+                      json = {
+                        "quick":True,
+                        "interval": "week",
+                        "subfilter":"/browse/" + j
+                        }
+                     ).json();
+            after = [x for x in issues['timeseries'] if x['date'] > BEFORE]
+            before = [x for x in issues['timeseries'] if x['date'] <= BEFORE]
+        
+            for month in before:
+                jio_before += month.get('issues opened', 0)
+                jic_before += month.get('issues closed', 0)
+            for month in after:
+                jio_after += month.get('issues opened', 0)
+                jic_after += month.get('issues closed', 0)
+                
+        jio_change = '%u%%' % int((jio_after - jio_before) / (jio_before or 1) * 100)
+        jic_change = '%u%%' % int((jic_after - jic_before) / (jic_before or 1) * 100)
         
         
         # Commits
@@ -163,6 +198,20 @@ def main():
                 'change': {
                     'opened': iso_change,
                     'closed': isc_change,
+                }
+            },
+            'jira': {
+                'before': {
+                    'opened': jio_before,
+                    'closed': jic_before,
+                },
+                'after': {
+                    'opened': jio_after,
+                    'closed': jic_after,
+                },
+                'change': {
+                    'opened': jio_change,
+                    'closed': jic_change,
                 }
             },
             'commits' : {
