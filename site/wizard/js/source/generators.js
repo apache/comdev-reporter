@@ -316,14 +316,17 @@ function activity_tips(data) {
         ages.push(reldate.unix());
     }
     ages.sort().reverse();
-    ages = ages.splice(0,3);
+    ages = ages.splice(0,new_releases >= 3 ? new_releases : 3);
     let releases_shown = 0;
-    for (var rel in data.releases[project]) {
-        let reldate = moment(data.releases[project][rel] * 1000.0);
-        if (reldate > three_months_ago || (new_releases < 3 && releases_shown < 3 && ages.has(reldate.unix()))) {
-            rtxt += "<li>%s was released on %s.</li>".format(rel, reldate.format('YYYY-MM-DD'));
-            releases_shown++;
-        }
+    while (ages.length) {
+      let ts = ages.shift();
+      for (var rel in data.releases[project]) {
+          let reldate = moment(data.releases[project][rel] * 1000.0);
+          if (ts == reldate.unix()) {
+              rtxt += "<li>%s was released on %s.</li>".format(rel, reldate.format('YYYY-MM-DD'));
+              releases_shown++;
+          }
+      }
     }
     if (rtxt != '') {
         rtxt = "<h6>Recent releases: </h6><ul>" + rtxt + "</ul><hr/>";
