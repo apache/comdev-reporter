@@ -1255,9 +1255,10 @@ function generate_pmc_roster(pdata) {
     }
     
     if (!no_added) {
-        txt += "- No new PMC members added in the past quarter.\n";
         if (last_added) {
-            txt += "- Last PMC addition was %s on %s.\n".format(last_added[0], moment(last_added[1]*1000.0).format('YYYY-MM-DD'));
+            txt += "- No new PMC members. Last addition was %s on %s.\n".format(last_added[0], moment(last_added[1]*1000.0).format('YYYY-MM-DD'));
+        } else {
+          txt += "- No new PMC members were added.\n";
         }
     }
     
@@ -1283,9 +1284,10 @@ function generate_pmc_roster(pdata) {
     }
     
     if (!no_added) {
-        txt += "- No new committers added in the past quarter.\n";
         if (last_added) {
-            txt += "- Last committer addition was %s on %s.\n".format(last_added[0], moment(last_added[1]*1000.0).format('YYYY-MM-DD'));
+            txt += "- No new committers. Last addition was %s on %s.\n".format(last_added[0], moment(last_added[1]*1000.0).format('YYYY-MM-DD'));
+        } else {
+          txt += "- No new committers were added.\n";
         }
     }
     
