@@ -31,7 +31,11 @@
         "help": "Please write a few lines (or more!) about the recent activity in the project and the community. This could be new software releases, new features, or community activity such as conferences and meetups.",
         "placeholder": "Example activity entries:\n\n- Apache Foo 1.2.3 Was released on 2019-04-05\n- Project members attended FooCon, it was a resounding success!\n- Added support for FooLib 2 and Async Gnoming.",
         "tipgenerator": "activity_tips",
-        "minchars": 50
+        "minchars": 50,
+        "examples": [
+            "Apache Foo just completed the release process for 1.2.3 and 2.0.1. Both\nversions contained a few new features, but were largely maintenance releases\ncarrying a number of bug fixes. At this time, we are focusing on trying to\nrelease code more often given the big release of 2.0.0 at the start of the\nyear, which took a long time to finalize.\n\nIn addition to the continued work on the 2.x line, early discussion and\nexploratory work for Foo 3.x have begun. 3.x contains some major shifts\nin thinking about the project - specifically, 3.x looks to achieve these goals:\n\n- First goal thingy here\n- Second goal here\n- Third goal goes here\n",
+            "Software development activity:\n\n - We released the bug fix release 1.2.3 on 2019-03-04.\n - We are preparing to making release candidates for 2.0 in the coming week.\n - We have added support for PonyAPI in our master branch.\n - We added user annotations on the types to support the CowFoo project.\n - We worked with the Splorg community to help them adopt the 1.2.3 release.\n\nMeetups and Conferences:\n\n - Four PMC members attended PonyCon 2019, giving three talks on Apache Foo.\n - A meetup was held in Ohio on April 5th, for the local Foo User Group.\n"
+        ]
     },
     {
         "id": "health",
@@ -40,12 +44,16 @@
         "help": "Tell us how your community is doing. Is there an influx of new contributors, is there a good flow of email on the mailing lists, or are things in decline? Are there any community metrics you'd like to showcase or make note of?",
         "placeholder": "Example health entries: \n\nWe had 25 contributors this quarter - including several new ones - in addition\nto the existing PMC and committers, and more activity on our issue tracker.\nNotably, there have been very promising contributions from some new developers\nto help with technical debt, particularly to remove uses of an internal\npackage that makes it impossible to use Apache Foo in an Splorg environment with\nnewer versions of Gson.\n\nHealth of the community remains strong with many active release lines,\nfeature development, active user and developer base including new\nparticipants and continued participants.",
         "tipgenerator": "health_tips",
-        "minchars": 80
+        "minchars": 80,
+        "examples": [
+            "Commit activity has held pretty steady over the summer, with only a slight\ndecrease (-8%). Contributor count has likewise held up, with 15 active\ncontributors during this quarter (or so says the wizard!). Pony Factor is\nholding steady at 5, which is a relatively good number for a project of this\nage.\n\nThe development mailing list saw a moderate increase in traffic, where some\ngritty technical issues and general business logic were heavily discussed -\nsome of it point towards a needed documentation fix (aka \"what does this thing\nactually do?\"). On the user mailing list side, things are business as usual,\nwith no notable change.",
+            "Overall community health is good. We have been performing extensive outreach\nto related projects, in order to attract new contributors, and are seeing a\nsteady influx of new people wishing to join and contribute, both programming-\nand documentation-wise.\n\nOn the UI/design-front, we are coming up short, and could use more people.\nWe'd like to take this opportunity to ask the board or others reading this\nreport for guidance on reaching a wider group of UI designers."
+        ]
     },
     {
         "id": "review",
         "icon": "microscope",
-        "description": "Review and Publish",
+        "description": "Review Report",
         "help": "That's it, we've compiled your report for you. Please review it. When it is time to file your report, you can submit it via the <a href='https://whimsy.apache.org/board/agenda/'>Whimsy Agenda Tool</a>.",
         "generator": "compile_report",
         "helpgenerator": "compile_check",

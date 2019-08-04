@@ -1555,6 +1555,15 @@ function compile_check(pdata, editor) {
   return editor.compile();
 }
 
+function show_examples(examples, title) {
+  let out = "<p>Here are some good examples of what to write in your <kbd>%s</kbd> section:</p>".format(title);
+  for (var i = 0; i < examples.length; i++) {
+    out += "<pre style='background: #FFE; border: 0.75px solid #3339; padding: 3px; border-radius: 3px;'>" + examples[i] + "</pre><hr/>";
+  }
+  title = "Examples for %s:".format(title);
+  modal(out, title);
+}
+
 /******************************************
  Fetched from source/init.js
 ******************************************/
@@ -1596,8 +1605,9 @@ let pdata = {};
 let cycles = {};
 let comments = {};
 
-function modal(txt) {
+function modal(txt, title = 'Notification') {
     document.getElementById('alert_text').innerHTML = txt;
+    document.getElementById('modal-title').innerText = title;
     $("#alert").modal();
 }
 
@@ -1987,11 +1997,26 @@ function ReportStepper(div, editor, layout, helper) {
                     this.helper.innerHTML += "<p style='color: red;'>This section needs at least %u more characters.</p>".format(chars_remain);
                 }
             }
+            
+            // Do we have examples?
+            if (step.examples && step.examples.length > 0) {
+                this.helper.inject(new HTML('hr'));
+                this.helper.inject(new HTML('big', {style: {color: '#396'}}, 'Need help with this section?  '));
+                let examples = step.examples;
+                let mtitle = step.rawname || step.description;
+                let btn = new HTML('button', {class: 'btn btn-warning'}, "Show examples");
+                this.helper.inject(btn);
+                btn.addEventListener('click', () => {show_examples(examples, mtitle);}, false);
+                this.helper.inject(new HTML('hr'));
+            }
+            
             // Add tips?
             if (step.tipgenerator) {
+                let thtml = new HTML('p');
                 let f = Function('a', 'b', "return %s(a,b);".format(step.tipgenerator));
-                data = f(this.pdata, this.editor)
-                this.helper.innerHTML += data;
+                data = f(this.pdata, this.editor);
+                thtml.innerHTML += data;
+                this.helper.inject(thtml);
             }
             // If clicked to a section, move cursor
             if (!noclick) {

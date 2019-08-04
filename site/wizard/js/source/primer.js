@@ -3,8 +3,9 @@ let pdata = {};
 let cycles = {};
 let comments = {};
 
-function modal(txt) {
+function modal(txt, title = 'Notification') {
     document.getElementById('alert_text').innerHTML = txt;
+    document.getElementById('modal-title').innerText = title;
     $("#alert").modal();
 }
 

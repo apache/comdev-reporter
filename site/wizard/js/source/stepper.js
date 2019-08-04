@@ -90,11 +90,26 @@ function ReportStepper(div, editor, layout, helper) {
                     this.helper.innerHTML += "<p style='color: red;'>This section needs at least %u more characters.</p>".format(chars_remain);
                 }
             }
+            
+            // Do we have examples?
+            if (step.examples && step.examples.length > 0) {
+                this.helper.inject(new HTML('hr'));
+                this.helper.inject(new HTML('big', {style: {color: '#396'}}, 'Need help with this section?  '));
+                let examples = step.examples;
+                let mtitle = step.rawname || step.description;
+                let btn = new HTML('button', {class: 'btn btn-warning'}, "Show examples");
+                this.helper.inject(btn);
+                btn.addEventListener('click', () => {show_examples(examples, mtitle);}, false);
+                this.helper.inject(new HTML('hr'));
+            }
+            
             // Add tips?
             if (step.tipgenerator) {
+                let thtml = new HTML('p');
                 let f = Function('a', 'b', "return %s(a,b);".format(step.tipgenerator));
-                data = f(this.pdata, this.editor)
-                this.helper.innerHTML += data;
+                data = f(this.pdata, this.editor);
+                thtml.innerHTML += data;
+                this.helper.inject(thtml);
             }
             // If clicked to a section, move cursor
             if (!noclick) {

@@ -382,3 +382,12 @@ function get_charter(pdata) {
 function compile_check(pdata, editor) {
   return editor.compile();
 }
+
+function show_examples(examples, title) {
+  let out = "<p>Here are some good examples of what to write in your <kbd>%s</kbd> section:</p>".format(title);
+  for (var i = 0; i < examples.length; i++) {
+    out += "<pre style='background: #FFE; border: 0.75px solid #3339; padding: 3px; border-radius: 3px;'>" + examples[i] + "</pre><hr/>";
+  }
+  title = "Examples for %s:".format(title);
+  modal(out, title);
+}
