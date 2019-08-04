@@ -1541,7 +1541,10 @@ function health_tips(data) {
     }
     
     // Append header IF there is data, otherwise nah.
-    if (txt.length > 0) txt = "<h5>Potentially useful observations on community health:</h5><ul>" + txt + "</ul>";
+    if (txt.length > 0) {
+      txt = "<h5>Potentially useful observations on community health:</h5><ul>" + txt + "</ul>";
+      txt += "<div class='card' style='padding: 4px;'><b>PLEASE DO NOT COPY THESE METRICS VERBATIM INTO THE REPORT!</b><p>While these metrics might offer insights into the wellbeing of the project, what the board of directors <b<really</b> wants to see is the <b>story</b> behind these metrics.</p><p>Please take some time to explain why these metrics are the way they are, and what this means for the project. If you are unsure how to do this, please take a look at some of the examples provided above  (click the button!)</div>";
+    }
     return txt;
 }
 
