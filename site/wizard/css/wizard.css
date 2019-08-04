@@ -254,3 +254,8 @@ body {
  resize: none;
  outline: none;
 }
+
+
+.modal-content {
+ min-width: 720px;
+}
