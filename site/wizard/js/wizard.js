@@ -2004,7 +2004,7 @@ function ReportStepper(div, editor, layout, helper) {
                 this.helper.inject(new HTML('big', {style: {color: '#396'}}, 'Need help with this section?  '));
                 let examples = step.examples;
                 let mtitle = step.rawname || step.description;
-                let btn = new HTML('button', {class: 'btn btn-warning'}, "Show examples");
+                let btn = new HTML('button', {class: 'btn btn-info'}, "Show examples");
                 this.helper.inject(btn);
                 btn.addEventListener('click', () => {show_examples(examples, mtitle);}, false);
                 this.helper.inject(new HTML('hr'));
