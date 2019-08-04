@@ -42,3 +42,5 @@ if (project.length < 2) {
     
     GET("/getjson.py?only=%s&anon=true".format(project), prime_wizard, {});
 }
+
+document.body.addEventListener('keydown', () => { if (event.keyCode == 27) $("#alert").modal('hide'); });
