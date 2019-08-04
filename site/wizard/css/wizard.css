@@ -173,7 +173,7 @@ body {
   border-top-right-radius: 5px;
   border-bottom-right-radius: 5px;
   display: inline-block;
-  width: calc(100% - 680px);
+  width: calc(100% - 696px);
   min-width: 300px;
   height: 100%;
   min-height: 600px;
@@ -181,6 +181,7 @@ body {
   background: #F5F5F5;
   font-size: 0.925rem !important;
   padding: 8px;
+  padding-left: 8px;
   margin: 0px;
   overflow-y: auto;
   font-family: SelawikRegular, sans-serif;
@@ -230,7 +231,7 @@ body {
 
 #unified-editor {
   display: inline-block;
-  width: 540px;
+  width: 556px;
   height: 100%;
   margin: 0;
   padding: 0;
@@ -239,7 +240,7 @@ body {
 }
 
 #unified-report {
- width: 100%;
+ width: calc(100% - 16px);
  height: calc(100% - 24px);
  font-size: 11px;
  white-space: pre-wrap;
