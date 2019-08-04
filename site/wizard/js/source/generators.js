@@ -295,6 +295,41 @@ function health_tips(data) {
       txt += "<li style='color: %s;'>%u PR%s closed on GitHub, past quarter (%s)</li>".format(color, data.kibble.prs.after.closed, s, ctxt);
     }
     
+    // GitHub: Issues
+    if (data.kibble) {
+      let color = 'black';
+      let ctxt = data.kibble.issues.change.opened
+      let pct = parseInt(ctxt);
+      if (pct > 0) {
+        if (pct > 10) color = 'green';
+        ctxt += ' increase';
+      } else if (pct < 0) {
+        if (pct < -10) color = 'maroon';
+        ctxt += ' decrease';
+      } else {
+        ctxt = 'no change';
+      }
+      let s = data.kibble.issues.after.opened == 1 ? '' : 's';
+      txt += "<li style='color: %s;'>%u issue%s opened on GitHub, past quarter (%s)</li>".format(color, data.kibble.issues.after.opened, s, ctxt);
+    }
+    
+    if (data.kibble) {
+      let color = 'black';
+      let ctxt = data.kibble.issues.change.closed
+      let pct = parseInt(ctxt);
+      if (pct > 0) {
+        if (pct > 10) color = 'green';
+        ctxt += ' increase';
+      } else if (pct < 0) {
+        if (pct < -10) color = 'maroon';
+        ctxt += ' decrease';
+      } else {
+        ctxt = 'no change';
+      }
+      let s = data.kibble.issues.after.closed == 1 ? '' : 's';
+      txt += "<li style='color: %s;'>%u issue%s closed on GitHub, past quarter (%s)</li>".format(color, data.kibble.issues.after.closed, s, ctxt);
+    }
+    
     // Append header IF there is data, otherwise nah.
     if (txt.length > 0) txt = "<h5>Potentially useful observations on community health:</h5><ul>" + txt + "</ul>";
     return txt;
