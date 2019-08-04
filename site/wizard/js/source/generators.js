@@ -56,7 +56,7 @@ function generate_pmc_roster(pdata) {
     
     
     // Last PMC addition
-    let changes = pdata.changes[project].pmc;
+    let changes = pdata.pmcdates[project].roster;
     let now = moment();
     let three_months_ago = now.subtract(3, 'months');
     let no_added = 0;
