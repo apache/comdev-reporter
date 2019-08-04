@@ -245,7 +245,7 @@ function UnifiedEditor_compile() {
       // Remark on additional sections not required
       for (var n = 0; n < this.sections.length; n++) {
           if (!required_sections.has(this.sections[n].title)) {
-            text += "<li><span style='display: inline-block; width: 20px; font-size: 18px; color: pink;'>&#8253;</span> Found unknown section <kbd>%s</kbd></li>".format(this.sections[n].title);
+            text += "<li><span style='display: inline-block; width: 20px; font-size: 18px; color: pink;'>&#8253;</span> Found custom section <kbd>%s</kbd></li>".format(this.sections[n].title);
           }
       }
      
