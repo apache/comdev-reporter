@@ -201,6 +201,9 @@ function health_tips(data) {
         let mldata = data.delivery[project][ml];
         let a = ml.split('-', 2);
         ml = "%s@%s.apache.org".format(a[1], a[0]);
+        if (a[1].match(/commits|cvs/) { // we already count commits, so...
+          continue;
+        }
         let pct_change =Math.floor( 100 * ( (mldata.quarterly[0] - mldata.quarterly[1]) / (mldata.quarterly[1]*1.0) ));
         let pct_change_txt = "%u%".format(Math.abs(pct_change));
         if (isNaN(pct_change) || !isFinite(pct_change)) {
