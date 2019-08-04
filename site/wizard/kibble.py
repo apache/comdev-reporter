@@ -38,7 +38,7 @@ def main():
                     "page":"issues",
                     "quick":True,
                     "interval": "week",
-                    "subfilter":"/" + project,
+                    "subfilter":"/" + project + ".*\\.git",
                     "distinguish":True
                     }
                  ).json();
