@@ -1667,7 +1667,7 @@ function activity_tips(data) {
     }
     if (rtxt != '') {
         rtxt = "<h6>Recent releases: </h6><ul>" + rtxt + "</ul>";
-        rtxt += new HTML('a', {href: 'https://reporter.apache.org/addrelease.html?%s'.format(project)}, 'Manage release data').outerHTML;
+        rtxt += new HTML('a', {target: '_blank', href: 'https://reporter.apache.org/addrelease.html?%s'.format(project)}, 'Manage release data').outerHTML;
         rtxt += "<hr/>";
     }
     
