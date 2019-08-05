@@ -76,7 +76,7 @@ function generate_pmc_roster(pdata) {
     }
     
     if (!no_added) {
-        if (founded.isBefore(three_months_ago)) {
+        if (founded.isAfter(three_months_ago)) {
           txt += "No new PMC members (project graduated recently).";
         }
         else if (last_added) {
