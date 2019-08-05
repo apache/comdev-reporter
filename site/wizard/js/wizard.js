@@ -1034,6 +1034,7 @@ function save_draft() {
     document.getElementById('loader_text').innerText = "Saving draft...";
     document.getElementById('wizard_spinner').style.display = 'block';
     document.getElementById('wrapper').style.display = 'none';
+    document.getElementById("pname").style.display = 'none';
     
     POST('drafts.py', draft_saved, {}, formdata);
 }
@@ -1042,6 +1043,7 @@ function draft_saved(state, json) {
     // Disengage spinner
     document.getElementById('wizard_spinner').style.display = 'none';
     document.getElementById('wrapper').style.display = 'block';
+    document.getElementById("pname").style.display = 'block';
     
     if (json.filename) {
         modal("Draft was saved in the reporter database as <kbd>%s</kbd>. You can revisit this draft at any time by loading it from the base data tab. Drafts are kept for up to two months.".format(json.filename));
