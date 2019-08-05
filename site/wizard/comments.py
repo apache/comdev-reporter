@@ -53,7 +53,7 @@ def main():
     if BASIC_AUTH and project and project in pmcSummary:
         
         # Fetch comments from cache or whimsy (hackish!)
-        wanted_file = "%s/tmp/comments_cache.json" % RAO_HOME
+        wanted_file = "%s/data/cache/comments_cache.json" % RAO_HOME
         if (os.path.exists(wanted_file) and os.path.getmtime(wanted_file) > (time.time() - 7200)):
             rv = json.load(open(wanted_file, "r"))
             cached = True
