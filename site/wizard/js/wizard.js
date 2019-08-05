@@ -1417,7 +1417,9 @@ function health_tips(data) {
         ctxt = 'no change';
       }
       let s = data.kibble.jira.after.opened == 1 ? '' : 's';
-      txt += "<li style='color: %s;'>%u issue%s opened in JIRA, past quarter (%s)</li>".format(color, data.kibble.jira.after.opened, s, ctxt);
+      if (! (ctxt == 'no change' && data.kibble.jira.after.opened == 0)) {
+        txt += "<li style='color: %s;'>%u issue%s opened in JIRA, past quarter (%s)</li>".format(color, data.kibble.jira.after.opened, s, ctxt);
+      }
     }
     if (data.kibble) {
       let color = 'black';
@@ -1433,7 +1435,9 @@ function health_tips(data) {
         ctxt = 'no change';
       }
       let s = data.kibble.jira.after.closed == 1 ? '' : 's';
-      txt += "<li style='color: %s;'>%u issue%s closed in JIRA, past quarter (%s)</li>".format(color, data.kibble.jira.after.closed, s, ctxt);
+      if (! (ctxt == 'no change' && data.kibble.jira.after.closed == 0)) {
+        txt += "<li style='color: %s;'>%u issue%s closed in JIRA, past quarter (%s)</li>".format(color, data.kibble.jira.after.closed, s, ctxt);
+      }
     }
     
     
@@ -1487,7 +1491,9 @@ function health_tips(data) {
         ctxt = 'no change';
       }
       let s = data.kibble.prs.after.opened == 1 ? '' : 's';
-      txt += "<li style='color: %s;'>%u PR%s opened on GitHub, past quarter (%s)</li>".format(color, data.kibble.prs.after.opened, s, ctxt);
+      if (! (ctxt == 'no change' && data.kibble.prs.after.opened == 0)) {
+        txt += "<li style='color: %s;'>%u PR%s opened on GitHub, past quarter (%s)</li>".format(color, data.kibble.prs.after.opened, s, ctxt);
+      }
     }
     
     if (data.kibble) {
@@ -1504,7 +1510,9 @@ function health_tips(data) {
         ctxt = 'no change';
       }
       let s = data.kibble.prs.after.closed == 1 ? '' : 's';
-      txt += "<li style='color: %s;'>%u PR%s closed on GitHub, past quarter (%s)</li>".format(color, data.kibble.prs.after.closed, s, ctxt);
+      if (! (ctxt == 'no change' && data.kibble.prs.after.closed == 0)) {
+        txt += "<li style='color: %s;'>%u PR%s closed on GitHub, past quarter (%s)</li>".format(color, data.kibble.prs.after.closed, s, ctxt);
+      }
     }
     
     // GitHub: Issues
@@ -1522,7 +1530,9 @@ function health_tips(data) {
         ctxt = 'no change';
       }
       let s = data.kibble.issues.after.opened == 1 ? '' : 's';
-      txt += "<li style='color: %s;'>%u issue%s opened on GitHub, past quarter (%s)</li>".format(color, data.kibble.issues.after.opened, s, ctxt);
+      if (! (ctxt == 'no change' && data.kibble.issues.after.opened == 0)) {
+        txt += "<li style='color: %s;'>%u issue%s opened on GitHub, past quarter (%s)</li>".format(color, data.kibble.issues.after.opened, s, ctxt);
+      }
     }
     
     if (data.kibble) {
@@ -1539,7 +1549,9 @@ function health_tips(data) {
         ctxt = 'no change';
       }
       let s = data.kibble.issues.after.closed == 1 ? '' : 's';
-      txt += "<li style='color: %s;'>%u issue%s closed on GitHub, past quarter (%s)</li>".format(color, data.kibble.issues.after.closed, s, ctxt);
+      if (! (ctxt == 'no change' && data.kibble.issues.after.closed == 0)) {
+        txt += "<li style='color: %s;'>%u issue%s closed on GitHub, past quarter (%s)</li>".format(color, data.kibble.issues.after.closed, s, ctxt);
+      }
     }
     
     // Busiest topics
