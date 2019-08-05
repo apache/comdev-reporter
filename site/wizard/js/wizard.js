@@ -1382,7 +1382,7 @@ function health_tips(data) {
         let mldata = data.delivery[project][ml];
         let a = ml.split('-', 2);
         ml = "%s@%s.apache.org".format(a[1], a[0]);
-        if (a[1].match(/commits|cvs/)) { // we already count commits, so...
+        if (a[1].match(/commits|cvs|announce/)) { // we already count commits, so...
           continue;
         }
         let pct_change =Math.floor( 100 * ( (mldata.quarterly[0] - mldata.quarterly[1]) / (mldata.quarterly[1]*1.0) ));
