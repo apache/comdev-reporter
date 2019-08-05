@@ -69,7 +69,7 @@ function generate_pmc_roster(pdata) {
         if (!last_added || last_added[1] < change[1])  {
             last_added = change;
         }
-        if (added.isAfter(three_months_ago) && added != founded) {
+        if (added.isAfter(three_months_ago) && added.format('YYYY-MM-DD') != founded.format('YYYY-MM-DD')) {
             no_added++;
             txt += "- %s was added to the PMC on %s\n".format(name, added.format('YYYY-MM-DD'));
         }
