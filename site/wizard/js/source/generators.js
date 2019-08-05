@@ -435,7 +435,9 @@ function health_tips(data) {
 
 function show_busiest(t) {
   if (busiest_html[t]) {
-    modal(busiest_html[t], "Busiest topics:");
+    let thtml = "<p>These figures are approximate and automatically generated. We advise that you also do your own research if you intend to use this for reports.</p>";
+    thtml += busiest_html[t];
+    modal(thtml, "Busiest topics:");
   }
 }
 
