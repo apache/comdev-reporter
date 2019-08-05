@@ -1373,6 +1373,8 @@ function splash(state, json, all) {
     
 }
 
+let busiest_html = {};
+
 function health_tips(data) {
     let txt = "";    
     // Mailing list changes
@@ -1540,12 +1542,80 @@ function health_tips(data) {
       txt += "<li style='color: %s;'>%u issue%s closed on GitHub, past quarter (%s)</li>".format(color, data.kibble.issues.after.closed, s, ctxt);
     }
     
+    // Busiest topics
+    if (data.kibble) {
+      let showit = false;
+      let busiest = new HTML('li', {}, "Busiest topics (click to pop up): ");
+      if (data.kibble.busiest.email.length > 0) {
+        showit = true;
+        let ul = new HTML('ul');
+        let arr = data.kibble.busiest.email;
+        for (var i = 0; i < arr.length; i++) {
+          let ml = arr[i].source.split('?')[1];
+          let li = new HTML('li', {}, [
+                                       new HTML("kbd", {}, ml),
+                                       new HTML('i', {style: {display: 'inline-block', textIndent: '10px'}}, arr[i].name),
+                                       new HTML('span', { style: {display: 'inline-block', textIndent: '10px'}}, "(%u emails)".format(arr[i].count))
+                                      ]);
+          ul.inject(li);
+        }
+        busiest_html['email'] = ul.outerHTML;
+        let a = new HTML('a', {href: '#', onclick: 'show_busiest("email");', style: {marginLeft: '10px'}}, 'email');
+        busiest.inject(a);
+      }
+      
+      
+      if (data.kibble.busiest.github.length > 0) {
+        showit = true;
+        let ul = new HTML('ul');
+        let arr = data.kibble.busiest.github;
+        for (var i = 0; i < arr.length; i++) {
+          let li = new HTML('li', {}, [
+                                       new HTML("a", {href: arr[i].url}, arr[i].url.replace('https://github.com/apache/', '')),
+                                       new HTML('i', {style: {display: 'inline-block', textIndent: '10px'}}, arr[i].subject),
+                                       new HTML('span', { style: {display: 'inline-block', textIndent: '10px'}}, "(%u comments)".format(arr[i].count))
+                                      ]);
+          ul.inject(li);
+        }
+        busiest_html['github'] = ul.outerHTML;
+        let a = new HTML('a', {href: '#', onclick: 'show_busiest("github");', style: {marginLeft: '10px'}}, 'GitHub');
+        busiest.inject(a);
+      }
+      
+      if (data.kibble.busiest.jira.length > 0) {
+        showit = true;
+        let ul = new HTML('ul');
+        let arr = data.kibble.busiest.jira;
+        for (var i = 0; i < arr.length; i++) {
+          let li = new HTML('li', {}, [
+                                       new HTML("a", {href: arr[i].url}, arr[i].key),
+                                       new HTML('i', {style: {display: 'inline-block', textIndent: '10px'}}, arr[i].subject),
+                                       new HTML('span', { style: {display: 'inline-block', textIndent: '10px'}}, "(%u comments)".format(arr[i].count))
+                                      ]);
+          ul.inject(li);
+        }
+        busiest_html['jira'] = ul.outerHTML;
+        let a = new HTML('a', {href: '#', onclick: 'show_busiest("jira");', style: {marginLeft: '10px'}}, 'JIRA');
+        busiest.inject(a);
+      }
+      
+      if (showit) {
+        txt += busiest.outerHTML;
+      }
+    }
+    
     // Append header IF there is data, otherwise nah.
     if (txt.length > 0) {
       txt = "<h5>Potentially useful observations on community health:</h5><ul>" + txt + "</ul>";
       txt += "<div class='card' style='padding: 4px;'><b>PLEASE DON'T COPY THESE METRICS INTO THE REPORT ALONE!</b><p>While these metrics might offer insights into the wellbeing of the project, what the board of directors <b<really</b> wants to see is the <b>story</b> behind these metrics.</p><p>Please take some time to explain why these metrics are the way they are, and what this means for the project. If you are unsure how to do this, please take a look at some of the examples provided above  (click the button!).</div>";
     }
     return txt;
+}
+
+function show_busiest(t) {
+  if (busiest_html[t]) {
+    modal(busiest_html[t], "Busiest topics:");
+  }
 }
 
 function activity_tips(data) {
