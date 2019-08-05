@@ -41,7 +41,7 @@ def main():
                     "page":"issues",
                     "quick":True,
                     "interval": "week",
-                    "subfilter":"/" + project + ".*\\.git",
+                    "subfilter":"/(?:incubator-)?" + project + ".*\\.git",
                     "distinguish":True
                     }
                  ).json();
@@ -85,7 +85,7 @@ def main():
                     "interval": "month",
                     "from": BEFORE, 
                     "to": int(time.time()),
-                    "subfilter":"/" + project + ".*\\.git",
+                    "subfilter":"/(?:incubator-)?" + project + ".*\\.git",
                     }
                  ).json();
         
@@ -147,7 +147,7 @@ def main():
                     "page":"issues",
                     "quick":True,
                     "interval": "week",
-                    "subfilter":"/" + project + ".*\\.git",
+                    "subfilter":"/(?:incubator-)?" + project + ".*\\.git",
                     }
                  ).json();
         after = [x for x in commits['timeseries'] if x['date'] > BEFORE]
@@ -173,7 +173,7 @@ def main():
                     "from": int(BEFORE - (90*86400)),
                     "to": BEFORE,
                     "interval": "99999d",
-                    "subfilter":"/" + project + ".*\\.git",
+                    "subfilter":"/(?:incubator-)?" + project + ".*\\.git",
                     }
                  ).json()
         authors_a = requests.post('https://demo.kibble.apache.org/api/code/committers',
@@ -187,7 +187,7 @@ def main():
                     "from": BEFORE,
                     "to": int(time.time()),
                     "interval": "99999d",
-                    "subfilter":"/" + project + ".*\\.git",
+                    "subfilter":"/(?:incubator-)?" + project + ".*\\.git",
                     }
                  ).json();
         after = authors_a['timeseries']
