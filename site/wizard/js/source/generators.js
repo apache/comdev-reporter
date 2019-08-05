@@ -76,7 +76,10 @@ function generate_pmc_roster(pdata) {
     }
     
     if (!no_added) {
-        if (last_added) {
+        if (founded.isBefore(three_months_ago)) {
+          txt += "No new PMC members (project graduated recently).";
+        }
+        else if (last_added) {
             txt += "- No new PMC members. Last addition was %s on %s.\n".format(last_added[0], moment(last_added[1]*1000.0).format('YYYY-MM-DD'));
         } else {
           txt += "- No new PMC members were added.\n";
