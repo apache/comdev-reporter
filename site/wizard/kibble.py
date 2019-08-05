@@ -74,14 +74,27 @@ def main():
         iso_change = '%u%%' % int((iso_after - iso_before) / (iso_before or 1) * 100)
         isc_change = '%u%%' % int((isc_after - isc_before) / (isc_before or 1) * 100)
         
+        # Busiest GH issues/PRs
+        bissues = requests.post('https://demo.kibble.apache.org/api/issue/top',
+                  headers = {
+                    'Content-Type': 'application/json',
+                    'Kibble-Token': TOKEN,
+                  },
+                  json = {
+                    "quick":True,
+                    "interval": "month",
+                    "from": BEFORE, 
+                    "to": int(time.time()),
+                    "subfilter":"/" + project + ".*\\.git",
+                    }
+                 ).json();
         
         # JIRA ??
-        # Issues/PRs
         jio_before = 0
         jic_before = 0
         jio_after = 0
         jic_after = 0
-        for j in jira:
+        if jira:
             issues = requests.post('https://demo.kibble.apache.org/api/issue/issues',
                       headers = {
                         'Content-Type': 'application/json',
@@ -90,7 +103,7 @@ def main():
                       json = {
                         "quick":True,
                         "interval": "week",
-                        "subfilter":"/browse/" + j
+                        "subfilter":"/browse/(" + "|".join(jira) + ")$",
                         }
                      ).json();
             after = [x for x in issues['timeseries'] if x['date'] > BEFORE]
@@ -106,6 +119,23 @@ def main():
         jio_change = '%u%%' % int((jio_after - jio_before) / (jio_before or 1) * 100)
         jic_change = '%u%%' % int((jic_after - jic_before) / (jic_before or 1) * 100)
         
+        # Busiest JIRAs
+        bjiras = []
+        if jira:
+            bjiras = requests.post('https://demo.kibble.apache.org/api/issue/top',
+                      headers = {
+                        'Content-Type': 'application/json',
+                        'Kibble-Token': TOKEN,
+                      },
+                      json = {
+                        "quick":True,
+                        "interval": "month",
+                        "from": BEFORE, 
+                        "to": int(time.time()),
+                        "subfilter":"/browse/(" + "|".join(jira) + ")$",
+                        }
+                     ).json();
+            
         
         # Commits
         commits = requests.post('https://demo.kibble.apache.org/api/code/commits',
@@ -117,7 +147,7 @@ def main():
                     "page":"issues",
                     "quick":True,
                     "interval": "week",
-                    "subfilter":"/" + project,
+                    "subfilter":"/" + project + ".*\\.git",
                     }
                  ).json();
         after = [x for x in commits['timeseries'] if x['date'] > BEFORE]
@@ -143,7 +173,7 @@ def main():
                     "from": int(BEFORE - (90*86400)),
                     "to": BEFORE,
                     "interval": "99999d",
-                    "subfilter":"/" + project,
+                    "subfilter":"/" + project + ".*\\.git",
                     }
                  ).json()
         authors_a = requests.post('https://demo.kibble.apache.org/api/code/committers',
@@ -157,7 +187,7 @@ def main():
                     "from": BEFORE,
                     "to": int(time.time()),
                     "interval": "99999d",
-                    "subfilter":"/" + project,
+                    "subfilter":"/" + project + ".*\\.git",
                     }
                  ).json();
         after = authors_a['timeseries']
@@ -170,6 +200,23 @@ def main():
             cmtp_after += month.get('authors', 0)
         cmtp_change = '%u%%' % int((cmtp_after - cmtp_before) / (cmtp_before or 1) * 100)
         
+        
+        # Most discussed email topics
+        # This requires 4 months of data because data is compiled into
+        # monthly segments, so mid-month requests return skewed data.
+        topics = requests.post('https://demo.kibble.apache.org/api/mail/top-topics',
+                  headers = {
+                    'Content-Type': 'application/json',
+                    'Kibble-Token': TOKEN,
+                  },
+                  json = {
+                    "quick":True,
+                    "interval": "month",
+                    "from": BEFORE - (86400*30), 
+                    "to": int(time.time()),
+                    "subfilter":"(dev|users?)@" + project + "\.apache\.org",
+                    }
+                 ).json();
         
         js = {
             'prs': {
@@ -227,6 +274,11 @@ def main():
                     'commits': cmt_change,
                     'authors': cmtp_change,
                 }
+            },
+            'busiest': {
+                'email': topics['topN']['items'][:5],
+                'github': bissues['topN']['items'][:5],
+                'jira': bjiras['topN']['items'][:5] if bjiras else [],
             }
         }
         output = json.dumps(js, indent = 2)
