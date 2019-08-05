@@ -110,12 +110,10 @@ def getPMCs(uid):
     """Returns the array of LDAP committee groups to which the uid belongs. Excludes incubator"""
     groups = []
     for group in projects:
-        xgroup = group
-        if group in ldapmap:
-            xgroup = ldapmap[group]
-        if group != "incubator" and 'pmc' in projects[xgroup]:
-            if uid in projects[xgroup]['owners']:
+        if group != "incubator" and 'pmc' in projects[group]:
+            if uid in projects[group]['owners']:
                 groups.append(group)
+    groups = [pmap.get(x, x) for x in groups]
     return groups
 
 
