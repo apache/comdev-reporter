@@ -382,12 +382,13 @@ if re.match(r"^[-a-zA-Z0-9_.]+$", user):
             xenv = os.environ.copy()
             del xenv['SCRIPT_NAME']
             cmd = ('%s/site/wizard/kibble.py' % RAOHOME_FULL, oproject)
-            if ddata and oproject in ddata:
+            if jdata and oproject in jdata:
                 cmd += tuple(jdata[oproject][2])
             txt = subprocess.check_output(cmd, env = xenv)
             kibble = json.loads(txt)
-        except:
-            pass
+        except subprocess.CalledProcessError as e:
+            sys.stderr.write("Kibble runtime error:")
+            sys.stderr.write(e.output)
     
     output = {
         'count': count,
