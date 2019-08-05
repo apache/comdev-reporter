@@ -382,7 +382,7 @@ if re.match(r"^[-a-zA-Z0-9_.]+$", user):
             xenv = os.environ.copy()
             del xenv['SCRIPT_NAME']
             cmd = ('%s/site/wizard/kibble.py' % RAOHOME_FULL, oproject)
-            if jdata and oproject in jdata:
+            if ddata and oproject in ddata:
                 cmd += tuple(jdata[oproject][2])
             txt = subprocess.check_output(cmd, env = xenv)
             kibble = json.loads(txt)
