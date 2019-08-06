@@ -379,6 +379,8 @@ def generate(user, project, runkibble):
                 if jdata and jdata[2]:
                     cmd += tuple(jdata[2])
                 txt = subprocess.check_output(cmd, env = xenv)
+                if type(txt) is bytes:
+                    txt = txt.decode('ascii')
                 kibble = json.loads(txt)
             except subprocess.CalledProcessError as e:
                 return None
