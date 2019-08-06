@@ -2266,7 +2266,7 @@ function statistics_health(data) {
                 ['x'],
                 [ml]
             ];
-            for (var i = 0; i < 26; i++) {
+            for (var i = 0; i < 27; i++) {
                 let date = moment.utc().subtract(i, 'weeks').startOf('week').weekday(4);
                 cols[0].push(date);
                 cols[1].push(mldata.weekly[date.unix()] || 0);
@@ -2381,7 +2381,7 @@ function statistics_health(data) {
                 ['Tickets opened'],
                 ['Tickets closed']
             ];
-            for (var i = 0; i < 26; i++) {
+            for (var i = 0; i < 27; i++) {
                 let date = moment.utc().subtract(i, 'weeks').startOf('week').weekday(1);
                 let c = 0;
                 let o = 0;
@@ -2496,7 +2496,7 @@ function statistics_health(data) {
                 ['x'],
                 ['Commits']
             ];
-            for (var i = 0; i < 26; i++) {
+            for (var i = 0; i < 27; i++) {
                 let date = moment.utc().subtract(i, 'weeks').startOf('week').weekday(1);
                 let c = 0;
                 for (var n = 0; n < data.kibble.timeseries.commits.length; n++) {
@@ -2617,7 +2617,7 @@ function statistics_health(data) {
                 ['PRs opened'],
                 ['PRs closed']
             ];
-            for (var i = 0; i < 26; i++) {
+            for (var i = 0; i < 27; i++) {
                 let date = moment.utc().subtract(i, 'weeks').startOf('week').weekday(1);
                 let c = 0;
                 let o = 0;
@@ -2745,7 +2745,7 @@ function statistics_health(data) {
                 ['issues opened'],
                 ['issues closed']
             ];
-            for (var i = 0; i < 26; i++) {
+            for (var i = 0; i < 27; i++) {
                 let date = moment.utc().subtract(i, 'weeks').startOf('week').weekday(1);
                 let c = 0;
                 let o = 0;
