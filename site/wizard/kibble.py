@@ -281,9 +281,9 @@ def main():
                 }
             },
             'busiest': {
-                'email': topics['topN']['items'][:5],
-                'github': bissues['topN']['items'][:5],
-                'jira': bjiras['topN']['items'][:5] if bjiras else [],
+                'email': topics['topN']['items'][:10],
+                'github': bissues['topN']['items'][:10],
+                'jira': bjiras['topN']['items'][:10] if bjiras else [],
             },
             'timeseries': {
                 'github': github_ts,
