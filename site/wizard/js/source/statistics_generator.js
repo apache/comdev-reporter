@@ -103,12 +103,17 @@ function statistics_roster(pdata) {
 }
 
 function statistics_meta(data) {
+    let chi = (6.33 + (data.health[project].score * -1.00 * (20 / 12.25))).toFixed(2);
+    let cscore = data.health[project].cscore;
+    let hcolors = ["#000070", "#007000", "#407000", "#70500", "#700000", "#A00000"]
+	let hvalues = ["Super Healthy", "Healthy", "Mostly Okay", "Unhealthy", "Action required!", "URGENT ACTION REQUIRED!"]
     let txt = "<h4>Base Data:</h4>";
     let founded = moment((data.pmcdates[project].pmc[2] || data.pmcdates[project].pmc[1]) * 1000.0);
     let age = founded.fromNow();
     txt += "<b>Founded: </b>%s (%s)<br/>".format(founded.format('YYYY-MM-DD'), age);
     txt += "<b>Chair: </b> %s<br/>".format(data.pdata[project].chair);
-    txt += getReportDate(cycles, project);
+    txt += getReportDate(cycles, project) + "<br/>";
+    txt += "<b>Community Health Score (Chi): <a href='/chi.py#%s'><span style='color: %s !important;'>%s (%s)</span></a><br/>".format(project, hcolors[cscore], chi, hvalues[cscore]);
 
     return txt;
 }
