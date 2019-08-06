@@ -1119,7 +1119,10 @@ function show_draft_list(state, json) {
 
 
 function delete_draft(filename) {
-    GET('drafts.py?action=delete&project=%s&filename=%s'.format(project, filename), deleted_draft, {filename: filename});
+  if (!window.confirm("Are you sure you wish to delete %s?".format(filename))) {
+    return;
+  }
+  GET('drafts.py?action=delete&project=%s&filename=%s'.format(project, filename), deleted_draft, {filename: filename});
 }
 
 function deleted_draft(state, json) {
