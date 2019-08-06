@@ -246,11 +246,6 @@ def getReleaseData(project):
 
 
 if re.match(r"^[-a-zA-Z0-9_.]+$", user):
-    pmcSummary = committee_info.PMCsummary()
-    dataHealth = readJson(RAOHOME+"data/health.json", [])
-    pchanges = readJson(RAOHOME+"data/pmcs.json")
-    cchanges = readJson(RAOHOME+"data/projects.json")
-    bugzillastats = readJson(RAOHOME+"data/bugzillastats.json", {})
     isMember = isMember(user)
 
     groups = getPMCs(user)
@@ -271,6 +266,12 @@ if re.match(r"^[-a-zA-Z0-9_.]+$", user):
         sys.stdout.write("Content-Type: application/json\r\nContent-Length: %u\r\n\r\n" % (len(dump)))
         sys.stdout.write(dump)
         sys.exit(0)
+        
+    pmcSummary = committee_info.PMCsummary()
+    dataHealth = readJson(RAOHOME+"data/health.json", [])
+    pchanges = readJson(RAOHOME+"data/pmcs.json")
+    cchanges = readJson(RAOHOME+"data/projects.json")
+    bugzillastats = readJson(RAOHOME+"data/bugzillastats.json", {})
     
     mlstats = {}
     ml = readJson(RAOHOME+"data/mailinglists.json")
