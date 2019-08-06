@@ -1391,7 +1391,7 @@ function health_tips(data) {
     // Mailing list changes
     for (var ml in data.delivery[project]) {
         let mldata = data.delivery[project][ml];
-        let a = ml.split('-', 2);
+        let a = ml.split('-', 1);
         ml = "%s@%s.apache.org".format(a[1], a[0]);
         if (a[1].match(/commits|cvs|announce/)) { // we already count commits, so...
           continue;
@@ -2238,7 +2238,7 @@ function statistics_health(data) {
             }
         });
         let mldata = data.delivery[project][ml];
-        let a = ml.split('-', 2);
+        let a = ml.split('-', 1);
         ml = "%s@%s.apache.org".format(a[1], a[0]);
         if (a[1].match(/commits|cvs|announce/)) { // we already count commits, so...
             continue;
