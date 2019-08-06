@@ -156,9 +156,16 @@ def getJIRAProjects(project):
         pass
     
     for entry in x:
-        if entry['name'].replace("Apache ", "").strip().lower() == project:
-            jiras.append(entry['key'])
-        elif 'projectCategory' in entry and fixProjectCategory(entry['projectCategory']['name']) == project:
+        # Check if this is actually a TLP not ours
+        mayuse = True
+        for xtlp in charters:
+            if xtlp['name'] == entry['name'] and xtlp['id'] != project:
+                mayuse = False
+                break
+            elif xtlp['name'] == entry['name'] and xtlp['id'] == project:
+                jiras.append(entry['key'])
+                break
+        if mayuse and 'projectCategory' in entry and fixProjectCategory(entry['projectCategory']['name']) == project:
             jiras.append(entry['key'])
     return jiras
 
