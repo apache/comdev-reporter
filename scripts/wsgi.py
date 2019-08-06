@@ -5,12 +5,14 @@ import json
 import pdata
 import time
 import re
+import committee_info
 
 CACHE_TIMEOUT = 14400
 
 
 def app(environ, start_fn):
     committers = pdata.loadJson(pdata.COMMITTER_INFO)['people']
+    pmcSummary = committee_info.PMCsummary()
     project = environ.get('QUERY_STRING')
     user = environ.get('HTTP_X_AUTHENTICATED_USER')
     
@@ -50,6 +52,7 @@ def app(environ, start_fn):
         dumps['you'] = committers[user]
         dumps['all'] = allpmcs
         dumps['pmcs'] = groups
+        dumps['pmcsummary'] = pmcSummary
         output = dumps
         
     start_fn('200 OK', [('Content-Type', 'application/json')])
