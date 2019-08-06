@@ -28,9 +28,16 @@ def main():
     if not re.match(r"^[-_.a-z0-9]+$", project):
         project = "bogus"
     cache_file = '/tmp/kibble-cache-%s.json' % project
+    runit = True
     if (os.path.exists(cache_file) and os.path.getmtime(cache_file) > (time.time() - 86400)):
         output = open(cache_file, "r").read()
-    else:
+        try:
+            js = json.loads(output)
+            assert('prs' in js)
+            runit = False
+        except:
+            pass
+    if runit:
         # Issues/PRs
         issues = requests.post('https://demo.kibble.apache.org/api/issue/issues',
                   headers = {
