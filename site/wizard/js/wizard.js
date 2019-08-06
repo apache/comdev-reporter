@@ -2264,7 +2264,7 @@ function statistics_health(data) {
         if (txt.length > 0) {
             let cols = [
                 ['x'],
-                ['%s@'.format(a[1])]
+                [ml]
             ];
             for (var i = 0; i < 24; i++) {
                 let date = moment.utc().subtract(i, 'weeks').startOf('week').weekday(4);
