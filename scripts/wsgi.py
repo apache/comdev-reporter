@@ -36,6 +36,8 @@ def app(environ, start_fn):
         # If cache failed, generate fom scratch
         else:
             mpdata = pdata.generate(user, xproject, xproject == project)
+            if not mpdata:
+                break
             open(wanted_file, "w").write(json.dumps(mpdata))
         # Weave results into combined object, mindful of kibble data
         for k, v in mpdata.items():
