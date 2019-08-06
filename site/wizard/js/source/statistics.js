@@ -2,6 +2,7 @@
 function StatisticsPage(layout, pdata) {
     let wrapper = document.getElementById('wrapper');
     wrapper.style.padding = '8px';
+    wrapper.style.height = 'auto';
     wrapper.innerHTML = "";
     for (var i = 0; i < layout.length; i++) {
         let step = layout[i];
