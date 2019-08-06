@@ -1334,7 +1334,7 @@ function generate_meta(data) {
 
 function pre_splash(state, json) {
     cycles = json;
-    GET("/getjson.py", splash, {});
+    GET("/quickjson", splash, {});
 }
 
 function splash(state, json, all) {
@@ -1773,7 +1773,7 @@ function init_wizard(so) {
         console.log("Initializing escrow checks");
         window.setInterval(escrow_check, 250);
         
-        GET("/getjson.py?only=%s&anon=true".format(project), prime_wizard, {});
+        GET("/quickjson?%s".format(project), prime_wizard, {});
     }
 }
 document.body.addEventListener('keydown', () => { if (event.keyCode == 27) $("#alert").modal('hide'); });

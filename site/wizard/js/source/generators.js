@@ -149,7 +149,7 @@ function generate_meta(data) {
 
 function pre_splash(state, json) {
     cycles = json;
-    GET("/getjson.py", splash, {});
+    GET("/quickjson", splash, {});
 }
 
 function splash(state, json, all) {
