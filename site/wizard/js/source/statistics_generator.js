@@ -870,6 +870,6 @@ function statistics_releases(data) {
 
     // Put it all together
     txt += rtxt;
-    if (txt) txt = "<h3>Project Release Activity:</h3>" + txt
+    if (txt) txt = "<h4>Project Release Activity:</h4>" + txt
     return txt;
 }
