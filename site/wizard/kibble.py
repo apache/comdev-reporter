@@ -74,6 +74,8 @@ def main():
         iso_change = '%u%%' % int((iso_after - iso_before) / (iso_before or 1) * 100)
         isc_change = '%u%%' % int((isc_after - isc_before) / (isc_before or 1) * 100)
         
+        github_ts = issues['timeseries']
+        
         # Busiest GH issues/PRs
         bissues = requests.post('https://demo.kibble.apache.org/api/issue/top',
                   headers = {
@@ -94,6 +96,7 @@ def main():
         jic_before = 0
         jio_after = 0
         jic_after = 0
+        jira_ts = []
         if jira:
             issues = requests.post('https://demo.kibble.apache.org/api/issue/issues',
                       headers = {
@@ -115,9 +118,11 @@ def main():
             for month in after:
                 jio_after += month.get('issues opened', 0)
                 jic_after += month.get('issues closed', 0)
-                
+            jira_ts = issues['timeseries']
+            
         jio_change = '%u%%' % int((jio_after - jio_before) / (jio_before or 1) * 100)
         jic_change = '%u%%' % int((jic_after - jic_before) / (jic_before or 1) * 100)
+        
         
         # Busiest JIRAs
         bjiras = []
@@ -159,7 +164,7 @@ def main():
         for month in after:
             cmt_after += month.get('commits', 0)
         cmt_change = '%u%%' % int((cmt_after - cmt_before) / (cmt_before or 1) * 100)
-        
+        commit_ts = commits['timeseries']
         
         # Committers
         authors_b = requests.post('https://demo.kibble.apache.org/api/code/committers',
@@ -279,6 +284,11 @@ def main():
                 'email': topics['topN']['items'][:5],
                 'github': bissues['topN']['items'][:5],
                 'jira': bjiras['topN']['items'][:5] if bjiras else [],
+            },
+            'timeseries': {
+                'github': github_ts,
+                'jira': jira_ts,
+                'commits': commit_ts,
             }
         }
         output = json.dumps(js, indent = 2)
