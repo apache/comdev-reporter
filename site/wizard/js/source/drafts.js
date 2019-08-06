@@ -74,7 +74,8 @@ function list_drafts(pdata, editor) {
 
 function show_draft_list(state, json) {
   if (json && json) { saved_drafts = json.drafts || {}; }
-  draft_stepper = state.stepper||drafts_stepper; // hackish for now!
+  draft_stepper = state.stepper||draft_stepper; // hackish for now!
+  if (!draft_stepper) return;
   let txt = "";
   let filenames = Object.keys(saved_drafts);
   if (filenames.length > 0) {

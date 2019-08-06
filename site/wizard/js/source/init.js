@@ -23,24 +23,28 @@ let PLACEHOLDER = '[Insert your own data here]';
 
 let editor = null;
 let stepper = null;
+let statsonly = false;
 
-if (project.length < 2) {
-    GET("/reportingcycles.json", pre_splash, {});
-} else {
-    document.title = "ASF Board Report Wizard: %s".format(project);
-    let titles = document.getElementsByClassName("title");
-    for (var i in titles) {
-        titles[i].innerText = document.title;
+function init_wizard(so) {
+    statsonly = so;
+    if (project.length < 2) {
+        GET("/reportingcycles.json", pre_splash, {});
+    } else {
+        document.title = so ? "ASF Project Statistics: %s".format(project) : "ASF Board Report Wizard: %s".format(project);
+        let titles = document.getElementsByClassName("title");
+        for (var i in titles) {
+            titles[i].innerText = document.title;
+        }
+        if (so) {
+            if (editor_type == 'unified') {
+                console.log("Using unified editor!");
+                document.getElementById('wrapper').setAttribute('class', 'unified');
+            }
+        }
+        console.log("Initializing escrow checks");
+        window.setInterval(escrow_check, 250);
+        
+        GET("/getjson.py?only=%s&anon=true".format(project), prime_wizard, {});
     }
-    
-    if (editor_type == 'unified') {
-        console.log("Using unified editor!");
-        document.getElementById('wrapper').setAttribute('class', 'unified');
-    }
-    console.log("Initializing escrow checks");
-    window.setInterval(escrow_check, 250);
-    
-    GET("/getjson.py?only=%s&anon=true".format(project), prime_wizard, {});
 }
-
 document.body.addEventListener('keydown', () => { if (event.keyCode == 27) $("#alert").modal('hide'); });

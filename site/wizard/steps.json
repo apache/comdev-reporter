@@ -8,7 +8,8 @@
         "generator": "get_charter",
         "help": "Bla bla",
         "helpgenerator": "generate_meta",
-        "tipgenerator": "list_drafts"
+        "tipgenerator": "list_drafts",
+        "statsgenerator": "statistics_meta"
     },
     {
         "id": "issues",
@@ -22,7 +23,8 @@
         "icon": "chart-bar",
         "description": "Membership Data",
         "help": "This is the basic project community data. You can usually leave this part as is, unless you wish to add additional information.",
-        "generator": "generate_pmc_roster"
+        "generator": "generate_pmc_roster",
+        "statsgenerator": "statistics_roster"
     },
     {
         "id": "activity",
@@ -31,6 +33,7 @@
         "help": "Please write a few lines (or more!) about the recent activity in the project and the community. This could be new software releases, new features, or community activity such as conferences and meetups.",
         "placeholder": "Example activity entries:\n\n- Apache Foo 1.2.3 Was released on 2019-04-05\n- Project members attended FooCon, it was a resounding success!\n- Added support for FooLib 2 and Async Gnoming.",
         "tipgenerator": "activity_tips",
+        "statsgenerator": "statistics_releases",
         "minchars": 50,
         "examples": [
             "Apache Foo just completed the release process for 1.2.3 and 2.0.1. Both\nversions contained a few new features, but were largely maintenance releases\ncarrying a number of bug fixes. At this time, we are focusing on trying to\nrelease code more often given the big release of 2.0.0 at the start of the\nyear, which took a long time to finalize.\n\nIn addition to the continued work on the 2.x line, early discussion and\nexploratory work for Foo 3.x have begun. 3.x contains some major shifts\nin thinking about the project - specifically, 3.x looks to achieve these goals:\n\n- First goal thingy here\n- Second goal here\n- Third goal goes here\n",
@@ -44,6 +47,7 @@
         "help": "Tell us how your community is doing. Is there an influx of new contributors, is there a good flow of email on the mailing lists, or are things in decline? Are there any community metrics you'd like to showcase or make note of?",
         "placeholder": "Example health entries: \n\nWe had 25 contributors this quarter - including several new ones - in addition\nto the existing PMC and committers, and more activity on our issue tracker.\nNotably, there have been very promising contributions from some new developers\nto help with technical debt, particularly to remove uses of an internal\npackage that makes it impossible to use Apache Foo in an Splorg environment with\nnewer versions of Gson.\n\nHealth of the community remains strong with many active release lines,\nfeature development, active user and developer base including new\nparticipants and continued participants.",
         "tipgenerator": "health_tips",
+        "statsgenerator": "statistics_health",
         "minchars": 80,
         "examples": [
             "Commit activity has held pretty steady over the summer, with only a slight\ndecrease (-8%). Contributor count has likewise held up, with 15 active\ncontributors during this quarter (or so says the wizard!). Pony Factor is\nholding steady at 5, which is a relatively good number for a project of this\nage.\n\nThe development mailing list saw a moderate increase in traffic, where some\ngritty technical issues and general business logic were heavily discussed -\nsome of it point towards a needed documentation fix (aka \"what does this thing\nactually do?\"). On the user mailing list side, things are business as usual,\nwith no notable change.",

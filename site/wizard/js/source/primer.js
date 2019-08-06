@@ -16,7 +16,7 @@ function prime_wizard(state, json) {
         return;
     }
     pdata = json;
-    document.title = "ASF Board Report Wizard: %s".format(json.pdata[project].name);
+    document.title = (statsonly ? "ASF Project Statistics: %s" : "ASF Board Report Wizard: %s").format(json.pdata[project].name);
     let titles = document.getElementsByClassName("title");
     for (var i in titles) {
         titles[i].innerText = document.title;
@@ -24,7 +24,11 @@ function prime_wizard(state, json) {
     
     let xtitle = document.getElementById("pname");
     xtitle.innerText = document.title;
-    GET("comments.py?project=%s".format(project), prime_comments, {})
+    if (statsonly) {
+        GET("/reportingcycles.json", prime_cycles, {});
+    } else {
+        GET("comments.py?project=%s".format(project), prime_comments, {})
+    }
 }
 
 function prime_comments(state, json) {
@@ -43,12 +47,17 @@ function prime_steps(state, json) {
     document.getElementById('wizard_spinner').style.display = 'none';
     document.getElementById('wrapper').style.display = 'block';
     
-    // Create editor and stepper class
-    let editor = new UnifiedEditor('unified-report', json.steps);
-    let stepper = new ReportStepper('unified-steps', editor, json.steps, 'unified-helper');
-    editor.stepper = stepper;
-    stepper.pdata = pdata;
-    stepper.build(0, true);
+    if (!statsonly) {
+        // Create editor and stepper class
+        let editor = new UnifiedEditor('unified-report', json.steps);
+        let stepper = new ReportStepper('unified-steps', editor, json.steps, 'unified-helper');
+        editor.stepper = stepper;
+        stepper.pdata = pdata;
+        stepper.build(0, true);
+    }
+    else {
+        StatisticsPage(json.steps, pdata);
+    }
     document.getElementById("pname").style.display = 'block';
 }
 
