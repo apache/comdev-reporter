@@ -167,12 +167,12 @@ function statistics_health(data) {
                 ['x'],
                 [ml]
             ];
-            for (var i = 0; i < 24; i++) {
+            for (var i = 0; i < 26; i++) {
                 let date = moment.utc().subtract(i, 'weeks').startOf('week').weekday(4);
                 cols[0].push(date);
                 cols[1].push(mldata.weekly[date.unix()] || 0);
             }
-            let cutoff = moment.utc().subtract(12, 'weeks').startOf('week').weekday(4);
+            let cutoff = moment.utc().subtract(13, 'weeks').startOf('week').weekday(4);
             let chartdiv = new HTML('div', {
                 style: {
                     clear: 'both',
@@ -191,7 +191,7 @@ function statistics_health(data) {
                     x: {
                         type: 'timeseries',
                         tick: {
-                            count: 12,
+                            count: 13,
                             format: (x) => {
                                 return moment(x).format('MMM D, YYYY');
                             }
@@ -203,7 +203,7 @@ function statistics_health(data) {
                     type: 'bar',
                     columns: cols,
                     color: (color, d) => {
-                        return d.index < 12 ? '#9639' : (pct_change < 0 ? '#900' : '#090');
+                        return d.index < 13 ? '#9639' : (pct_change < 0 ? '#900' : '#090');
                     }
                 },
                 bar: {
@@ -282,7 +282,7 @@ function statistics_health(data) {
                 ['Tickets opened'],
                 ['Tickets closed']
             ];
-            for (var i = 0; i < 24; i++) {
+            for (var i = 0; i < 26; i++) {
                 let date = moment.utc().subtract(i, 'weeks').startOf('week').weekday(1);
                 let c = 0;
                 let o = 0;
@@ -297,7 +297,7 @@ function statistics_health(data) {
                 cols[1].push(c);
                 cols[2].push(o);
             }
-            let cutoff = moment.utc().subtract(12, 'weeks').startOf('week').weekday(4);
+            let cutoff = moment.utc().subtract(13, 'weeks').startOf('week').weekday(4);
             let chartdiv = new HTML('div', {
                 style: {
                     clear: 'both',
@@ -316,7 +316,7 @@ function statistics_health(data) {
                     x: {
                         type: 'timeseries',
                         tick: {
-                            count: 12,
+                            count: 13,
                             format: (x) => {
                                 return moment(x).format('MMM D, YYYY');
                             }
@@ -328,7 +328,7 @@ function statistics_health(data) {
                     type: 'bar',
                     columns: cols,
                     color: (color, d) => {
-                        return (d.index < 12 ? color + '44': color +'FF');
+                        return (d.index < 13 ? color + '44': color +'FF');
                     }
                 },
                 bar: {
@@ -397,7 +397,7 @@ function statistics_health(data) {
                 ['x'],
                 ['Commits']
             ];
-            for (var i = 0; i < 24; i++) {
+            for (var i = 0; i < 26; i++) {
                 let date = moment.utc().subtract(i, 'weeks').startOf('week').weekday(1);
                 let c = 0;
                 for (var n = 0; n < data.kibble.timeseries.commits.length; n++) {
@@ -409,7 +409,7 @@ function statistics_health(data) {
                 cols[0].push(date);
                 cols[1].push(c);
             }
-            let cutoff = moment.utc().subtract(12, 'weeks').startOf('week').weekday(4);
+            let cutoff = moment.utc().subtract(13, 'weeks').startOf('week').weekday(4);
             let chartdiv = new HTML('div', {
                 style: {
                     clear: 'both',
@@ -428,7 +428,7 @@ function statistics_health(data) {
                     x: {
                         type: 'timeseries',
                         tick: {
-                            count: 12,
+                            count: 13,
                             format: (x) => {
                                 return moment(x).format('MMM D, YYYY');
                             }
@@ -440,7 +440,7 @@ function statistics_health(data) {
                     type: 'bar',
                     columns: cols,
                     color: (color, d) => {
-                        return (d.index < 12 ? color + '44': color +'FF');
+                        return (d.index < 13 ? color + '44': color +'FF');
                     }
                 },
                 bar: {
@@ -518,7 +518,7 @@ function statistics_health(data) {
                 ['PRs opened'],
                 ['PRs closed']
             ];
-            for (var i = 0; i < 24; i++) {
+            for (var i = 0; i < 26; i++) {
                 let date = moment.utc().subtract(i, 'weeks').startOf('week').weekday(1);
                 let c = 0;
                 let o = 0;
@@ -533,7 +533,7 @@ function statistics_health(data) {
                 cols[1].push(c);
                 cols[2].push(o);
             }
-            let cutoff = moment.utc().subtract(12, 'weeks').startOf('week').weekday(4);
+            let cutoff = moment.utc().subtract(13, 'weeks').startOf('week').weekday(4);
             let chartdiv = new HTML('div', {
                 style: {
                     clear: 'both',
@@ -552,7 +552,7 @@ function statistics_health(data) {
                     x: {
                         type: 'timeseries',
                         tick: {
-                            count: 12,
+                            count: 13,
                             format: (x) => {
                                 return moment(x).format('MMM D, YYYY');
                             }
@@ -568,7 +568,7 @@ function statistics_health(data) {
                         'PRs closed': '#993322'
                     },
                     color: (color, d) => {
-                        return (d.index < 12 ? color + '44': color +'FF');
+                        return (d.index < 13 ? color + '44': color +'FF');
                     }
                 },
                 bar: {
@@ -646,7 +646,7 @@ function statistics_health(data) {
                 ['issues opened'],
                 ['issues closed']
             ];
-            for (var i = 0; i < 24; i++) {
+            for (var i = 0; i < 26; i++) {
                 let date = moment.utc().subtract(i, 'weeks').startOf('week').weekday(1);
                 let c = 0;
                 let o = 0;
@@ -661,7 +661,7 @@ function statistics_health(data) {
                 cols[1].push(c);
                 cols[2].push(o);
             }
-            let cutoff = moment.utc().subtract(12, 'weeks').startOf('week').weekday(4);
+            let cutoff = moment.utc().subtract(13, 'weeks').startOf('week').weekday(4);
             let chartdiv = new HTML('div', {
                 style: {
                     clear: 'both',
@@ -680,7 +680,7 @@ function statistics_health(data) {
                     x: {
                         type: 'timeseries',
                         tick: {
-                            count: 12,
+                            count: 13,
                             format: (x) => {
                                 return moment(x).format('MMM D, YYYY');
                             }
@@ -696,7 +696,7 @@ function statistics_health(data) {
                         'issues closed': '#993322'
                     },
                     color: (color, d) => {
-                        return (d.index < 12 ? color + '44': color +'FF');
+                        return (d.index < 13 ? color + '44': color +'FF');
                     }
                 },
                 bar: {
