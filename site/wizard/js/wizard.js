@@ -2252,9 +2252,9 @@ function statistics_health(data) {
         if (isNaN(pct_change) || !isFinite(pct_change)) {
             pct_change_txt = 'big';
         }
-        if (pct_change > 25 && mldata.quarterly[0] > 5) {
+        if (pct_change >= 0 && mldata.quarterly[0] > 10) {
             txt += "<h6 style='color: #080'>%s had a %s increase in traffic in the past quarter (%u emails compared to %u):</h6>".format(ml, pct_change_txt, mldata.quarterly[0], mldata.quarterly[1]);
-        } else if (pct_change < -25 && mldata.quarterly[1] > 5) {
+        } else if (pct_change < 0 && mldata.quarterly[1] > 10) {
             txt += "<h6 style='color: #800'>%s had a %s decrease in traffic in the past quarter (%u emails compared to %u):</h6>".format(ml, pct_change_txt, mldata.quarterly[0], mldata.quarterly[1]);
         }
 
