@@ -164,6 +164,7 @@ def getJIRAProjects(project, tlpid):
                 break
             elif xtlp['name'] == entry['name'] and xtlp['id'] == tlpid:
                 jiras.append(entry['key'])
+                mayuse = False
                 break
         if mayuse and 'projectCategory' in entry and fixProjectCategory(entry['projectCategory']['name']) == project:
             jiras.append(entry['key'])
