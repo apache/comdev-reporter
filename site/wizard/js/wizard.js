@@ -1393,7 +1393,7 @@ function health_tips(data) {
         let mldata = data.delivery[project][ml];
         let a = ml.match(/([^-]+)-(.+)/);
         ml = "%s@%s.apache.org".format(a[2], a[1]);
-        if (a[1].match(/commits|cvs|announce/)) { // we already count commits, so...
+        if (a[2].match(/commits|cvs|announce/)) { // we already count commits, so...
           continue;
         }
         let pct_change =Math.floor( 100 * ( (mldata.quarterly[0] - mldata.quarterly[1]) / (mldata.quarterly[1]*1.0) ));
@@ -2240,7 +2240,7 @@ function statistics_health(data) {
         let mldata = data.delivery[project][ml];
         let a = ml.match(/([^-]+)-(.+)/);
         ml = "%s@%s.apache.org".format(a[2], a[1]);
-        if (a[1].match(/commits|cvs|announce/)) { // we already count commits, so...
+        if (a[2].match(/commits|cvs|announce/)) { // we already count commits, so...
             continue;
         }
         txt = "";
