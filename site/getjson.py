@@ -255,9 +255,9 @@ if re.match(r"^[-a-zA-Z0-9_.]+$", user):
         groups = [oproject]
     groups.sort() # so tabs appear in order
     
-    # Try cache first?
+    # Try cache first? (max 6 hours old)
     wanted_file = "/tmp/%s.json" % "-".join(groups)
-    if (os.path.exists(wanted_file) and os.path.getmtime(wanted_file) > (time.time() - 7200)):
+    if (os.path.exists(wanted_file) and os.path.getmtime(wanted_file) > (time.time() - 21600)):
         dump = json.load(open(wanted_file, "r"))
         dump['you'] = committers[user]
         if anon:
