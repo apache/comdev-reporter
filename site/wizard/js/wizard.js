@@ -2097,6 +2097,8 @@ function toggleView(id) {
  Fetched from source/statistics_generator.js
 ******************************************/
 
+moment.locale('en');
+
 function statistics_roster(pdata) {
     // PMC age
     let founded = moment((pdata.pmcdates[project].pmc[2] || pdata.pmcdates[project].pmc[1]) * 1000.0);
