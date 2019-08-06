@@ -184,7 +184,7 @@ function splash(state, json, all) {
             let tr = new HTML('tr');
             let rd = new HTML('td', {}, getReportDate(cycles, key, true));
             let elink = new HTML('td', {}, new HTML('a', {href: '?%s'.format(key)}, "Board report editor"));
-            let slink = new HTML('td', {}, new HTML('a', {href: '?%s'.format(key)}, "Full statistics for %s".format(tlpname)));
+            let slink = new HTML('td', {}, new HTML('a', {href: 'statistics?%s'.format(key)}, "Full statistics for %s".format(tlpname)));
             let title = new HTML('td', {}, new HTML('b', {}, tlpname));
             let cname = new HTML('td', {style: {color: ccolor}}, new HTML('b', {}, chair));
             tr.inject([title, cname, rd, elink, slink])
