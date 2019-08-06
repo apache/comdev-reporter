@@ -121,7 +121,7 @@ def isMember(uid):
     """Determine if the uid is a member of the ASF"""
     return uid in members
 
-def getJIRAProjects(project):
+def getJIRAProjects(project, tlpid):
     """Reads data/JIRA/jira_projects.json (re-creating it if it is stale)
        Returns the list of JIRA projects for the project argument
        Assumes that the project names match or the project category matches
@@ -159,10 +159,10 @@ def getJIRAProjects(project):
         # Check if this is actually a TLP not ours
         mayuse = True
         for xtlp in charters:
-            if xtlp['name'] == entry['name'] and xtlp['id'] != project:
+            if xtlp['name'] == entry['name'] and xtlp['id'] != tlpid:
                 mayuse = False
                 break
-            elif xtlp['name'] == entry['name'] and xtlp['id'] == project:
+            elif xtlp['name'] == entry['name'] and xtlp['id'] == tlpid:
                 jiras.append(entry['key'])
                 break
         if mayuse and 'projectCategory' in entry and fixProjectCategory(entry['projectCategory']['name']) == project:
@@ -344,7 +344,7 @@ if re.match(r"^[-a-zA-Z0-9_.]+$", user):
                     jdata[group][2].append(p)
                 keys[group].append(jiraname)
         elif group in ddata and 'name' in ddata[group]:
-            jiras = getJIRAProjects(ddata[group]['name'])
+            jiras = getJIRAProjects(ddata[group]['name'], group)
             keys[group] = jiras
             jdata[group][2] = []
             for jiraname in jiras:
