@@ -2806,7 +2806,6 @@ function statistics_health(data) {
     if (data.kibble) {
         let txt = "";
         let showit = false;
-        let busiest = new HTML('li', {}, "Busiest topics (click to pop up): ");
         if (data.kibble.busiest.email.length > 0) {
             txt += "<h5>Busiest email threads:</h5>";
             showit = true;
@@ -2894,9 +2893,6 @@ function statistics_health(data) {
             
         }
 
-        if (showit) {
-            txt += busiest.outerHTML;
-        }
         if (txt.length > 0) {
             let twrap = new HTML('div');
             twrap.innerHTML = txt;
