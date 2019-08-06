@@ -2226,7 +2226,7 @@ function statistics_health(data) {
     });
     html.inject(new HTML('h4', {}, "Community Health Metrics:"))
     document.body.inject(html);
-    let txt = "";
+    let txt = "<h5>Notable mailing list trends:</h5>";
     // Mailing list changes
     for (var ml in data.delivery[project]) {
 
@@ -2331,7 +2331,7 @@ function statistics_health(data) {
                 clear: 'both'
             }
         });
-        let txt = "<h5>JIRA Activity:</h5>";
+        let txt = "<h5>JIRA activity:</h5>";
         // Opened tickets
         let color = 'black';
         let ctxt = data.kibble.jira.change.opened;
