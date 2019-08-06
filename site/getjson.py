@@ -159,10 +159,10 @@ def getJIRAProjects(project, tlpid):
         # Check if this is actually a TLP not ours
         mayuse = True
         for xtlp in charters:
-            if xtlp['name'] == fixProjectCategory(entry['name']) and xtlp['id'] != tlpid:
+            if fixProjectCategory(xtlp['name']) == fixProjectCategory(entry['name']) and xtlp['id'] != tlpid:
                 mayuse = False
                 break
-            elif xtlp['name'] == fixProjectCategory(entry['name']) and xtlp['id'] == tlpid:
+            elif fixProjectCategory(xtlp['name']) == fixProjectCategory(entry['name']) and xtlp['id'] == tlpid:
                 jiras.append(entry['key'])
                 mayuse = False
                 break
