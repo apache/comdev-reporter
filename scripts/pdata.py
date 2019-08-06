@@ -24,7 +24,7 @@
 import os, sys, re, json, subprocess, time
 import base64, requests
 
-CACHE_TIMEOUT = 3600
+CACHE_TIMEOUT = 14400
 
 import committee_info
 from urlutils import UrlCache

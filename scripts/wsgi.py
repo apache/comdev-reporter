@@ -6,7 +6,7 @@ import pdata
 import time
 import re
 
-CACHE_TIMEOUT = 3600
+CACHE_TIMEOUT = 14400
 
 
 def app(environ, start_fn):
