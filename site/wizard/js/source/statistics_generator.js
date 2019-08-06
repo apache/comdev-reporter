@@ -848,7 +848,7 @@ function statistics_releases(data) {
         }
         ages.push(reldate.unix());
     }
-    ages.sort().reverse();
+    ages.sort((a,b) => b-a);
     ages = ages.splice(0, new_releases >= 3 ? new_releases : 3);
     let to_show = ages.length;
     let releases_shown = 0;
