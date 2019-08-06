@@ -384,9 +384,11 @@ if re.match(r"^[-a-zA-Z0-9_.]+$", user):
     if anon:
         mlstats = {}
     
-    # Add in kibble data if called with only= ...
+    # Add in kibble data if called with only= OR only one project...
     kibble = None
-    if oproject:
+    if oproject or len(groups) == 1:
+        if not oproject:
+            oproject = groups[0]
         try:
             xenv = os.environ.copy()
             del xenv['SCRIPT_NAME']
@@ -398,6 +400,7 @@ if re.match(r"^[-a-zA-Z0-9_.]+$", user):
         except subprocess.CalledProcessError as e:
             sys.stderr.write("Kibble runtime error:")
             sys.stderr.write(e.output)
+            
     
     output = {
         'count': count,
