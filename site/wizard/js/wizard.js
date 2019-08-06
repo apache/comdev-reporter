@@ -2328,7 +2328,7 @@ function statistics_health(data) {
     if (bz[0] || bz[1]) txt += "<li>%u BugZilla tickets opened and %u closed in the past quarter.</li>".format(bz[0], bz[1]);
 
     // JIRA changes
-    if (data.kibble.jira) {
+    if (data.kibble.timeseries.jira.length > 0) {
         let xhtml = new HTML('div', {
             style: {
                 position: 'relative',
@@ -2561,7 +2561,7 @@ function statistics_health(data) {
     
 
     // GitHub: PRs
-    if (data.kibble && data.kibble.prs) {
+    if (data.kibble.timeseries.github.length > 0) {
         
         let xhtml = new HTML('div', {
             style: {
@@ -2570,7 +2570,7 @@ function statistics_health(data) {
             }
         });
         html.inject(xhtml);
-        let txt = "<h5>GitHub activity:</h5>";
+        let txt = "<h5>GitHub PR activity:</h5>";
         
         let color = 'black';
         let ctxt = data.kibble.prs.change.opened
@@ -2689,7 +2689,7 @@ function statistics_health(data) {
 
     
     // GitHub: issues
-    if (data.kibble && data.kibble.issues) {
+    if (data.kibble.timeseries.github.length > 0 && !(data.kibble.issues.after.opened == 0 && data.kibble.issues.before.opened == 0) ) {
         
         let xhtml = new HTML('div', {
             style: {
