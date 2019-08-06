@@ -1346,7 +1346,8 @@ function splash(state, json, all) {
         new HTML('td', {}, "Project:"),
         new HTML('td', {}, "Chair:"),
         new HTML('td', {}, "Next report date:"),
-        new HTML('td', {}, "Wizard link:")
+        new HTML('td', {}, "Editor:"),
+        new HTML('td', {}, "Full statistics:"),
     ])
     tbl.inject(hdr);
     let keys = json.pdata;
@@ -1364,10 +1365,11 @@ function splash(state, json, all) {
             }
             let tr = new HTML('tr');
             let rd = new HTML('td', {}, getReportDate(cycles, key, true));
-            let link = new HTML('td', {}, new HTML('a', {href: '?%s'.format(key)}, "Wizard for %s".format(tlpname)));
+            let elink = new HTML('td', {}, new HTML('a', {href: '?%s'.format(key)}, "Board report editor"));
+            let slink = new HTML('td', {}, new HTML('a', {href: '?%s'.format(key)}, "Full statistics for %s".format(tlpname)));
             let title = new HTML('td', {}, new HTML('b', {}, tlpname));
             let cname = new HTML('td', {style: {color: ccolor}}, new HTML('b', {}, chair));
-            tr.inject([title, cname, rd, link])
+            tr.inject([title, cname, rd, elink, slink])
             tbl.inject(tr);
         }
     }
