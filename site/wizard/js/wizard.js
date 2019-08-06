@@ -2226,7 +2226,8 @@ function statistics_health(data) {
     });
     html.inject(new HTML('h4', {}, "Community Health Metrics:"))
     document.body.inject(html);
-    let txt = "<h5>Notable mailing list trends:</h5>";
+    html.inject(new HTML('h5', {}, "Notable mailing list trends:"))
+    let txt = "";
     // Mailing list changes
     for (var ml in data.delivery[project]) {
 
