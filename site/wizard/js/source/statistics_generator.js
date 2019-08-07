@@ -121,6 +121,87 @@ function statistics_meta(data) {
 }
 
 
+function kibble_mailstats(xhtml, timeseries, color) {
+
+    let cols = [
+        ['x'],
+        ['emails'],
+        ['threads'],
+        ['authors']
+    ];
+    for (var i = 0; i < 27; i++) {
+        let date = moment.utc().subtract(i, 'weeks').startOf('week').weekday(1);
+        let c = 0;
+        let o = 0;
+        let a = 0;
+        for (var n = 0; n < timeseries.length; n++) {
+            let el = timeseries[n];
+            if (el.date == date.unix()) {
+                c = el['emails'];
+                o = el['threads'];
+                a = el['authors'];
+            }
+        }
+        cols[0].push(date);
+        cols[1].push(c);
+        cols[2].push(o);
+        cols[3].push(a);
+    }
+    let cutoff = moment.utc().subtract(13, 'weeks').startOf('week').weekday(4);
+    let chartdiv = new HTML('div', {
+        style: {
+            clear: 'both',
+            width: '620px',
+            height: '220px',
+            position: 'relative',
+            background: '#FFF',
+            borderRadius: '5px',
+            border: '0.75px solid #333'
+        }
+    });
+    xhtml.inject(chartdiv);
+    let chart = c3.generate({
+        bindto: chartdiv,
+        axis: {
+            x: {
+                type: 'timeseries',
+                tick: {
+                    count: 13,
+                    format: (x) => {
+                        return moment(x).format('MMM D, YYYY');
+                    }
+                }
+            }
+        },
+        data: {
+            x: 'x',
+            types: {
+                'emails': 'bar',
+                'authors': 'line',
+                'threads': 'line'
+            },
+            columns: cols,
+            colors: {
+                'emails': color
+            },
+            color: (color, d) => {
+                return d.index < 13 ? '#9639' : color;
+            }
+        },
+        bar: {
+            width: {
+                ratio: 0.25
+            }
+        },
+        tooltip: {
+            format: {
+                title: (x) => 'Week %s'.format(moment(x).format('W, YYYY'))
+            }
+        }
+    });
+    xhtml.inject(new HTML('br'));
+}
+
 function statistics_health(data) {
     let html = new HTML('div', {
         style: {
@@ -153,16 +234,22 @@ function statistics_health(data) {
         if (isNaN(pct_change) || !isFinite(pct_change)) {
             pct_change_txt = 'big';
         }
+        let color = '#369';
         if (pct_change >= 0 && (mldata.quarterly[0] > 10 || a[2] == 'dev')) {
             txt += "<h6 style='color: #080'>%s had a %s increase in traffic in the past quarter (%u emails compared to %u):</h6>".format(ml, pct_change_txt, mldata.quarterly[0], mldata.quarterly[1]);
+            color = '#080';
         } else if (pct_change < 0 && (mldata.quarterly[1] > 10 || a[2] == 'dev')) {
             txt += "<h6 style='color: #800'>%s had a %s decrease in traffic in the past quarter (%u emails compared to %u):</h6>".format(ml, pct_change_txt, mldata.quarterly[0], mldata.quarterly[1]);
+            color = '#800';
         }
 
         xhtml.innerHTML = txt;
         html.inject(xhtml);
+        
+        let hasdevlist = (a[2] == 'dev' && data.kibble.timeseries.devlist && data.kibble.timeseries.devlist.length);
+        let hasuserlist = (a[2].match(/^users?$/) && data.kibble.timeseries.devlist && data.kibble.timeseries.devlist.length);
 
-        if (txt.length > 0) {
+        if (txt.length > 0 && !(hasdevlist||hasuserlist)) {
             let cols = [
                 ['x'],
                 [ml]
@@ -219,6 +306,10 @@ function statistics_health(data) {
                 }
             });
             xhtml.inject(new HTML('br'))
+        } else if (hasdevlist) {
+            kibble_mailstats(xhtml, data.kibble.timeseries.devlist, color);
+        } else if (hasuserlist) {
+            kibble_mailstats(xhtml, data.kibble.timeseries.userlist, color);
         }
 
     }
@@ -713,7 +804,6 @@ function statistics_health(data) {
             xhtml.inject(new HTML('br'));
         }
         html.inject(new HTML('hr'));
-        
     }
 
 
