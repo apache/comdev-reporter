@@ -53,7 +53,7 @@ def app(environ, start_fn):
         ddata, allpmcs, health = pdata.getProjectData()
         dumps['you'] = committers[user]
         dumps['all'] = sorted(allpmcs)
-        dumps['pmcs'] = groups
+        dumps['pmcs'] = sorted(groups)
         dumps['pmcsummary'] = pmcSummary
         output = dumps
         
