@@ -2246,7 +2246,7 @@ function kibble_mailstats(xhtml, timeseries, color) {
         cols[2].push(o);
         cols[3].push(a);
     }
-    let cutoff = moment.utc().subtract(13, 'weeks').startOf('week').weekday(4);
+    let cutoff = moment.utc().subtract(13, 'weeks').startOf('week').weekday(1);
     let chartdiv = new HTML('div', {
         style: {
             clear: 'both',
