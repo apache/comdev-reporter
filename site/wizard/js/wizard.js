@@ -2407,7 +2407,7 @@ function statistics_health(data) {
             xhtml.inject(new HTML('br'))
         } else if (hasdevlist) {
             kibble_mailstats(xhtml, data.kibble.timeseries.devlist, color);
-        } else if (hasuserlist) {
+        } else if (hasuserlist && txt.length > 0) {
             kibble_mailstats(xhtml, data.kibble.timeseries.userlist, color);
         }
 
