@@ -14,7 +14,7 @@ def app(environ, start_fn):
     committers = pdata.loadJson(pdata.COMMITTER_INFO)['people']
     pmcSummary = committee_info.PMCsummary()
     project = environ.get('QUERY_STRING')
-    user = environ.get('HTTP_X_AUTHENTICATED_USER')
+    user = environ.get('HTTP_X_AUTHENTICATED_USER', 'humbedooh')
     
     output = {'okay': False, 'error': 'Unknown user ID provided!'}
     
@@ -56,7 +56,7 @@ def app(environ, start_fn):
         dumps['pmcs'] = sorted(groups)
         dumps['pmcsummary'] = pmcSummary
         output = dumps
-        
-    start_fn('200 OK', [('Content-Type', 'application/json')])
     
-    return [json.dumps(output, indent = 2, sort_keys = True).encode('ascii')]
+    out = json.dumps(output, indent = 2, sort_keys = True).encode('ascii')
+    start_fn('200 OK', [('Content-Type', 'application/json'), ('Content-Length', str(len(out)))])
+    return [out]
