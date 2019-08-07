@@ -31,6 +31,7 @@ function draft_saved(state, json) {
     document.getElementById("pname").style.display = 'block';
     
     if (json.filename) {
+        draft_stepper.editor.check_changes(true);
         modal("Draft was saved in the reporter database as <kbd>%s</kbd>. You can revisit this draft at any time by loading it from the base data tab. Drafts are kept for up to two months.".format(json.filename));
         let obj = {
           yours: true,
@@ -55,6 +56,7 @@ function read_draft(state, json) {
         draft_stepper.editor.report = json.report;
         window.setTimeout(() => { draft_stepper.editor.highlight() }, 250);
         draft_stepper.build(0, false, false);
+        draft_stepper.editor.check_changes(true);
         modal("Draft was successfully loaded and is ready.");
     } else {
         modal("Could not load report draft :/");
@@ -159,6 +161,7 @@ function report_published(state, json) {
   
   if (json && json.okay) {
     modal("Your report was successfully posted to the board agenda!");
+    draft_stepper.editor.check_changes(true);
   } else {
     modal("Something went wrong, and we couldn't publish your report.<br/>Please check with the Whimsy tool to see if there is already a report posted!");
   }

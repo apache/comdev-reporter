@@ -65,6 +65,7 @@ function UnifiedEditor_highlight_sections(additional_text) {
             );
         $(this.object).focus();
     }
+    
 }
 
 
@@ -158,6 +159,8 @@ function UnifiedEditor_parse_report(quiet) {
       }
       
     }
+    
+    this.check_changes();
 }
 
 
@@ -269,6 +272,27 @@ function UnifiedEditor_compile() {
     return text;
 }
 
+function UnifiedEditor_check_changes(force) {
+    if (force) {
+        this.report_saved = this.report;
+    }
+    let saver = document.getElementById('unified-saver');
+    if (!saver && this.stepper && this.stepper.helper) {
+        saver = new HTML('div', {id: 'unified-saver'});
+        this.stepper.helper.inject(saver);
+    }
+    if (this.report != this.report_saved) {
+        if (saver) {
+            saver.innerText = "Current changes not saved yet - ";
+            let btn = new HTML('button', { onclick: 'save_draft();', class: 'btn btn-warning btn-sm'}, 'Save draft');
+            saver.inject(btn);
+            saver.style.display = 'inline-block';
+        }
+    } else if (saver) {
+        saver.style.display = 'none';
+    }
+}
+
 
 // This is the Unfied Editor for reports.
 function UnifiedEditor(div, layout) {
@@ -294,6 +318,7 @@ function UnifiedEditor(div, layout) {
     this.reset = UnifiedEditor_reset;
     this.find_section = UnifiedEditor_find_section;
     this.compile = UnifiedEditor_compile;
+    this.check_changes = UnifiedEditor_check_changes;
     
     // set div events
     this.object.addEventListener('keyup', () => { this.find_section(true); });

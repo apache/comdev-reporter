@@ -1046,6 +1046,7 @@ function draft_saved(state, json) {
     document.getElementById("pname").style.display = 'block';
     
     if (json.filename) {
+        draft_stepper.editor.check_changes(true);
         modal("Draft was saved in the reporter database as <kbd>%s</kbd>. You can revisit this draft at any time by loading it from the base data tab. Drafts are kept for up to two months.".format(json.filename));
         let obj = {
           yours: true,
@@ -1070,6 +1071,7 @@ function read_draft(state, json) {
         draft_stepper.editor.report = json.report;
         window.setTimeout(() => { draft_stepper.editor.highlight() }, 250);
         draft_stepper.build(0, false, false);
+        draft_stepper.editor.check_changes(true);
         modal("Draft was successfully loaded and is ready.");
     } else {
         modal("Could not load report draft :/");
@@ -1174,6 +1176,7 @@ function report_published(state, json) {
   
   if (json && json.okay) {
     modal("Your report was successfully posted to the board agenda!");
+    draft_stepper.editor.check_changes(true);
   } else {
     modal("Something went wrong, and we couldn't publish your report.<br/>Please check with the Whimsy tool to see if there is already a report posted!");
   }
@@ -3141,10 +3144,14 @@ function ReportStepper(div, editor, layout, helper) {
         
         if (start) {
             this.editor.reset();
+            this.editor.report_saved = this.editor.report;
         }
         
         
         if (this.changed) this.editor.highlight();
+        // skip building if nothing changed
+        if (!this.changed && !start && this.editor.report == this.editor.last_cursor_report) return;
+        this.editor.last_cursor_report = this.editor.report;
         
         // build the step div
         this.object.innerHTML = '';
@@ -3308,6 +3315,7 @@ function UnifiedEditor_highlight_sections(additional_text) {
             );
         $(this.object).focus();
     }
+    
 }
 
 
@@ -3401,6 +3409,8 @@ function UnifiedEditor_parse_report(quiet) {
       }
       
     }
+    
+    this.check_changes();
 }
 
 
@@ -3512,6 +3522,27 @@ function UnifiedEditor_compile() {
     return text;
 }
 
+function UnifiedEditor_check_changes(force) {
+    if (force) {
+        this.report_saved = this.report;
+    }
+    let saver = document.getElementById('unified-saver');
+    if (!saver && this.stepper && this.stepper.helper) {
+        saver = new HTML('div', {id: 'unified-saver'});
+        this.stepper.helper.inject(saver);
+    }
+    if (this.report != this.report_saved) {
+        if (saver) {
+            saver.innerText = "Current changes not saved yet - ";
+            let btn = new HTML('button', { onclick: 'save_draft();', class: 'btn btn-warning btn-sm'}, 'Save draft');
+            saver.inject(btn);
+            saver.style.display = 'inline-block';
+        }
+    } else if (saver) {
+        saver.style.display = 'none';
+    }
+}
+
 
 // This is the Unfied Editor for reports.
 function UnifiedEditor(div, layout) {
@@ -3537,6 +3568,7 @@ function UnifiedEditor(div, layout) {
     this.reset = UnifiedEditor_reset;
     this.find_section = UnifiedEditor_find_section;
     this.compile = UnifiedEditor_compile;
+    this.check_changes = UnifiedEditor_check_changes;
     
     // set div events
     this.object.addEventListener('keyup', () => { this.find_section(true); });

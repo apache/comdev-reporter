@@ -16,6 +16,21 @@ body {
     vertical-align:top;
 }
 
+#unified-saver {
+ position: absolute;
+ bottom: 0;
+ right: 0;
+ left: 0;
+ width: 100%;
+ height: 32px;
+ padding: 4px;
+ z-index: 1000;
+ background: #333B;
+ color: #FFF;
+ font-weight: 600;
+ line-height: 24px;
+}
+
 .wizard-step {
     width: 64px !important;
     height: 64px;
@@ -172,6 +187,7 @@ body {
  
 
 #unified-helper {
+  position: relative;
   border-top-right-radius: 5px;
   border-bottom-right-radius: 5px;
   display: inline-block;
