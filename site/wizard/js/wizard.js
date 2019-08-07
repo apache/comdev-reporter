@@ -3537,9 +3537,14 @@ function UnifiedEditor_check_changes(force) {
             let btn = new HTML('button', { onclick: 'save_draft();', class: 'btn btn-warning btn-sm'}, 'Save draft');
             saver.inject(btn);
             saver.style.display = 'inline-block';
+            window.onbeforeunload = (e) => {
+                return "You have unsaved changes to this report. Are you sure you wish to abandon these changes?";
+                }
+                
         }
     } else if (saver) {
         saver.style.display = 'none';
+        window.onbeforeunload = null;
     }
 }
 
