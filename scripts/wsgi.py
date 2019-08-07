@@ -59,4 +59,4 @@ def app(environ, start_fn):
         
     start_fn('200 OK', [('Content-Type', 'application/json')])
     
-    return [json.dumps(output, indent = 2).encode('ascii')]
+    return [json.dumps(output, indent = 2, sort_keys = True).encode('ascii')]
