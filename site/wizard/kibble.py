@@ -213,6 +213,39 @@ def main():
         cmtp_change = '%u%%' % int((cmtp_after - cmtp_before) / (cmtp_before or 1) * 100)
         
         
+        # Dev+user list traffic?
+        dev_ts = []
+        user_ts = []
+        if True:
+            ml = r'dev@%s\.apache\.org' % project
+            emails = requests.post('https://demo.kibble.apache.org/api/mail/timeseries-single',
+                      headers = {
+                        'Content-Type': 'application/json',
+                        'Kibble-Token': TOKEN,
+                      },
+                      json = {
+                        "quick":True,
+                        "interval": "week",
+                        "subfilter":"\?%s$" % ml,
+                        }
+                     ).json()
+            dev_ts = emails['timeseries']
+            
+            ml = r'users?@%s\.apache\.org' % project
+            emails = requests.post('https://demo.kibble.apache.org/api/mail/timeseries-single',
+                      headers = {
+                        'Content-Type': 'application/json',
+                        'Kibble-Token': TOKEN,
+                      },
+                      json = {
+                        "quick":True,
+                        "interval": "week",
+                        "subfilter":"\?%s$" % ml,
+                        }
+                     ).json()
+            user_ts = emails['timeseries']
+            
+            
         # Most discussed email topics
         # This requires 4 months of data because data is compiled into
         # monthly segments, so mid-month requests return skewed data.
@@ -296,6 +329,8 @@ def main():
                 'github': github_ts,
                 'jira': jira_ts,
                 'commits': commit_ts,
+                'devlist': dev_ts,
+                'userlist': user_ts,
             }
         }
         output = json.dumps(js, indent = 2)
