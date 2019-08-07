@@ -52,6 +52,7 @@ crontab -l -u www-data: (Not currently stored in puppet)
 30 00 * * *      cd /var/www/reporter.apache.org/scripts && ./python3logger.sh bugzillastats.py
 50 00 * * *      cd /var/www/reporter.apache.org/scripts && ./python3logger.sh health.py
 32  * * * *      cd /var/www/reporter.apache.org/scripts && ./python3logger.sh readchecker.py
+*/30 * * * *     pgrep -f "gunicorn3.*wsgi:app" || (cd /var/www/reporter.apache.org/scripts && gunicorn3 -b 127.0.0.1:8000 -w 6 -D wsgi:app && echo "restarting gunicorn for reporter")
 
 # ensure that any new data files get picked up by the commit (which must be done by root)
 40  * * * *      cd /var/www/reporter.apache.org/scripts && ./svnadd.sh ../data/releases
