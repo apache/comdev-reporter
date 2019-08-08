@@ -264,10 +264,14 @@ function UnifiedEditor_compile() {
       text += "Your report could possibly use some more work, and that's okay! You can always save your current report as a draft and return later to work more on it. Drafts are saved for up to two months.";
     }
     else {
-        text += "That's it, your board report compiled a-okay and is potentially ready for submission! If you'd like more time to work on it, you can save it as a draft, and return later to make some final edits. Or you can publish it to the agenda via Whimsy.";
+        text += "That's it, your board report compiled a-okay and is potentially ready for submission! If you'd lih to ke more time to work on it, you can save it as a draft, and return later to make some final edits. Or you can publish it to the agenda via Whimsy.";
     }
     text += "<br/><button class='btn btn-warning' onclick='save_draft();'>Save as draft</button>"
-    if (this.compiles) text += " &nbsp; &nbsp; <button onclick='publish_report();' class='btn btn-success'>Publish via Whimsy</button>"
+    if (!meta_data.found) {
+        text += " &nbsp; &nbsp; <button class='btn btn-secondary' disabled title='Your project is not listed in the current agenda!'>Publish via Whimsy</button>";
+        text += "<br/><span style='color: maroon;'>Your project is not expected to report this month. You may save drafts but you cannot publish yet.</span>";
+    }
+    else if (this.compiles) text += " &nbsp; &nbsp; <button onclick='publish_report();' class='btn btn-success'>Publish via Whimsy</button>"
     else text += " &nbsp; &nbsp; <button class='btn btn-secondary' disabled title='Please fix the above issues before you can publish'>Publish via Whimsy</button>"
     return text;
 }
@@ -282,6 +286,7 @@ function UnifiedEditor_check_changes(force) {
         this.stepper.helper.inject(saver);
     }
     if (this.report != this.report_saved) {
+        this.unsaved = true;
         if (saver) {
             saver.innerText = "Current changes not saved yet - ";
             let btn = new HTML('button', { onclick: 'save_draft();', class: 'btn btn-warning btn-sm'}, 'Save draft');
@@ -293,6 +298,7 @@ function UnifiedEditor_check_changes(force) {
                 
         }
     } else if (saver) {
+        this.unsaved = false;
         saver.style.display = 'none';
         window.onbeforeunload = null;
     }

@@ -16,9 +16,9 @@ echo '/*
  limitations under the License.
 */
 // THIS IS AN AUTOMATICALLY COMBINED FILE. PLEASE EDIT source/*.js!!
-' > ../wizard.js
+' > ../wizard-beta.js
 for f in `ls *.js`; do
-    printf "\n\n/******************************************\n Fetched from source/${f}\n******************************************/\n\n" >> ../wizard.js
-    perl -0pe 's/\/\*.*?\*\/[\r\n]*//sm' ${f} >> ../wizard.js
+    printf "\n\n/******************************************\n Fetched from source/${f}\n******************************************/\n\n" >> ../wizard-beta.js
+    perl -0pe 's/\/\*.*?\*\/[\r\n]*//sm' ${f} >> ../wizard-beta.js
 done
 echo "Done!"

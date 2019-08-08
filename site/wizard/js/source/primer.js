@@ -1,7 +1,7 @@
 // some glopbal vars for now - we'll get them localized soon enough.
 let pdata = {};
 let cycles = {};
-let comments = {};
+let meta_data = {};
 
 function modal(txt, title = 'Notification') {
     document.getElementById('alert_text').innerHTML = txt;
@@ -27,12 +27,13 @@ function prime_wizard(state, json) {
     if (statsonly) {
         GET("/reportingcycles.json", prime_cycles, {});
     } else {
-        GET("comments.py?project=%s".format(project), prime_comments, {})
+        GET("/api/whimsy/agenda?%s".format(project), prime_meta, {})
     }
 }
 
-function prime_comments(state, json) {
-    comments = json;
+function prime_meta(state, json) {
+    meta_data = json;
+    if (state && state.noreset) return;
     GET("/reportingcycles.json", prime_cycles, {})
 }
 

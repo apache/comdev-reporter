@@ -44,7 +44,7 @@ function init_wizard(so) {
         console.log("Initializing escrow checks");
         window.setInterval(escrow_check, 250);
         
-        GET("/quickjson?%s".format(project), prime_wizard, {});
+        GET("/api/overview?%s".format(project), prime_wizard, {});
     }
 }
 document.body.addEventListener('keydown', () => { if (event.keyCode == 27) $("#alert").modal('hide'); });

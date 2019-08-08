@@ -122,13 +122,24 @@ function generate_meta(data) {
     let txt = "<b>Founded: </b>%s (%s)<br/>".format(founded.format('YYYY-MM-DD'), age);
     txt += "<b>Chair: </b> %s<br/>".format(data.pdata[project].chair);
     txt += getReportDate(cycles, project);
+    txt += "<br/>"
+    if (meta_data.found) {
+      txt += "<b>Report expected this month:</b> YES<br/>";
+      txt += "<b>Filed to agenda: </b>";
+      if (meta_data.filed) {
+        txt += "<span style='color: #080;'>Yes</span> <a class='btn btn-primary btn-sm' href='javascript:void(load_from_agenda());'>Load from agenda</a>.";
+      } else {
+        txt += "<span style='color: #800;'>Not yet</span>";
+      }
+      txt += "<br/>"
+    }
     
     // Previous comments of note?
-    let cdates = Object.keys(comments.comments);
+    let cdates = Object.keys(meta_data.comments||{});
     cdates.sort();
-    if (comments && cdates.length > 0) {
+    if (meta_data && cdates.length > 0) {
       let date = cdates[cdates.length-1];
-      let comment = comments.comments[date];
+      let comment = meta_data.comments[date];
       
       // split and rejoin comments
       let ntxt = "";
@@ -149,7 +160,7 @@ function generate_meta(data) {
 
 function pre_splash(state, json) {
     cycles = json;
-    GET("/quickjson", splash, {});
+    GET("/api/overview", splash, {});
 }
 
 function splash(state, json, all) {

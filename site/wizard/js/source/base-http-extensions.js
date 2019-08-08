@@ -85,7 +85,7 @@ async function GET(url, callback, state, snap, method, body) {
             let meta = {method: method, credentials: 'include', referrerPolicy: 'unsafe-url', headers: {'x-original-referral': document.referrer}};
             if (body) {
                 meta.body = body;
-                meta.headers['Content-Type'] = 'application/x-www-form-urlencoded; charset=UTF-8';
+                meta.headers['Content-Type'] = 'application/json; charset=UTF-8';
             }
             console.log("putting %s in escrow...".format(url));
             async_escrow[pkey] = new Date(); // Log start of request in escrow dict
