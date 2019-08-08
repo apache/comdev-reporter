@@ -41,6 +41,9 @@ MEMBER_INFO = 'https://whimsy.apache.org/public/member-info.json'
 PROJECTS = 'https://whimsy.apache.org/public/public_ldap_projects.json'
 DESCRIPTIONS = 'https://projects.apache.org/json/foundation/committees.json'
 
+def has_cache(filename, ttl = 14400):
+    return (os.path.exists(filename) and os.path.getmtime(filename) > (time.time() - ttl))
+
 jmap = {
     'trafficserver': ['TS'],
     'cordova': ['CB'],
