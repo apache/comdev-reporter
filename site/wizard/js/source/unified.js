@@ -187,6 +187,11 @@ function UnifiedEditor_mark_section(title) {
 
 // Function for resetting a report to follow layout
 function UnifiedEditor_reset() {
+    // Check whether we have a report in agenda, if so reset to that.
+    if (meta_data && meta_data.report) {
+        load_from_agenda();
+        return
+    }
     this.report = "";
     this.changed = true;
     for (var i = 0; i < this.layout.length; i++) {

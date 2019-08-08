@@ -186,5 +186,10 @@ function load_from_agenda() {
     window.setTimeout(() => { draft_stepper.editor.highlight() }, 250);
     draft_stepper.build(0, false, false);
     draft_stepper.editor.check_changes(true);
+    let reflower = document.getElementById('unified-reflow');
+    if (reflower) {
+      reflower.innerHTML = "Notice: Loaded most recent version of report from current agenda into editor.";
+      reflower.style.visibility = 'visible';
+    }
   }
 }

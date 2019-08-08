@@ -1201,6 +1201,11 @@ function load_from_agenda() {
     window.setTimeout(() => { draft_stepper.editor.highlight() }, 250);
     draft_stepper.build(0, false, false);
     draft_stepper.editor.check_changes(true);
+    let reflower = document.getElementById('unified-reflow');
+    if (reflower) {
+      reflower.innerHTML = "Notice: Loaded most recent version of report from current agenda into editor.";
+      reflower.style.visibility = 'visible';
+    }
   }
 }
 
@@ -1874,6 +1879,7 @@ function prime_steps(state, json) {
         let editor = new UnifiedEditor('unified-report', json.steps);
         let stepper = new ReportStepper('unified-steps', editor, json.steps, 'unified-helper');
         editor.stepper = stepper;
+        draft_stepper = stepper;
         stepper.pdata = pdata;
         stepper.build(0, true);
     }
@@ -3471,6 +3477,11 @@ function UnifiedEditor_mark_section(title) {
 
 // Function for resetting a report to follow layout
 function UnifiedEditor_reset() {
+    // Check whether we have a report in agenda, if so reset to that.
+    if (meta_data && meta_data.report) {
+        load_from_agenda();
+        return
+    }
     this.report = "";
     this.changed = true;
     for (var i = 0; i < this.layout.length; i++) {
