@@ -1194,7 +1194,7 @@ function report_published(state, json) {
 }
 
 function load_from_agenda() {
-  if (meta_data && meta_data.report) {
+  if (meta_data && meta_data.report && meta_data.filed) {
     if (draft_stepper.editor.unsaved && !window.confirm("You have unsaved changes to your current draft. Do you wish to override these with the report in the agenda file??")) return;
     draft_stepper.editor.object.value = meta_data.report.report;
     draft_stepper.editor.report = meta_data.report.report;
