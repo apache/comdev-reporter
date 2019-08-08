@@ -24,6 +24,43 @@ def get_whimsy(url, env, ttl = 14400):
         try:
             print("Fetching %s => %s..." % (url, wanted_file))
             js = requests.get(url, headers = {'Authorization': env.get('HTTP_AUTHORIZATION')}, timeout = 5).json()
+            
+            # Some weaving may be required here if we're not member or chair
+            if url == WHIMSY_AGENDA and len(js) < 50 and ttl <= 3600:
+                try:
+                    ojs = json.load(open(wanted_file))
+                except:
+                    ojs = []
+                xjs = []
+                for attachment in js:
+                    aa = attachment.get('attach')
+                    at = attachment.get('title')
+                    found = False
+                    for old_attachment in ojs:
+                        ba = old_attachment.get('attach')
+                        bt = old_attachment.get('title')
+                        if (aa and ba and aa == ba) and (at and bt and at == bt) and attachment.get('digest'):
+                            #print("Weaved %s into old.." % ba)
+                            old_attachment['digest'] = attachment['digest']
+                            old_attachment['report'] = attachment['report']
+                            found = True
+                            break
+                    if not found:
+                        ojs.append(attachment)
+                    
+                js = ojs
+            
+            # Extend old cache if needed
+            elif url == WHIMSY_COMMENTS:
+                try:
+                    ojs = json.load(open(wanted_file))
+                except:
+                    ojs = {}
+                for key, comments in js.items():
+                    ojs[key] = comments
+                js = ojs
+                
+                        
             with open(wanted_file, "w") as f:
                 json.dump(js, f)
                 f.close()
