@@ -32,5 +32,6 @@
  "accumulo-1.9.3": 1554854400, 
  "accumulo-2.0.0": 1564704000, 
  "accumulo-2.0.0-alpha-1": 1539475200, 
- "accumulo-2.0.0-alpha-2": 1548892800
+ "accumulo-2.0.0-alpha-2": 1548892800, 
+ "accumulo2-maven-plugin-1.0.0": 1565136000
 }
