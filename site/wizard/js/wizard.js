@@ -1672,7 +1672,7 @@ function activity_tips(data) {
         if (releases_shown == to_show) break;
           let reldate = moment(data.releases[project][rel] * 1000.0);
           if (ts == reldate.unix()) {
-              rtxt += "<li>%s was released on %s.</li>".format(rel, reldate.format('YYYY-MM-DD'));
+              rtxt += "<li>%s was released on %s.</li>".format(rel, reldate.utc().format('YYYY-MM-DD'));
               releases_shown++;
           }
       }
@@ -3050,7 +3050,7 @@ function statistics_releases(data) {
             if (releases_shown == to_show) break;
             let reldate = moment(data.releases[project][rel] * 1000.0);
             if (ts == reldate.unix()) {
-                rtxt += "<li>%s was released on %s.</li>".format(rel, reldate.format('YYYY-MM-DD'));
+                rtxt += "<li>%s was released on %s.</li>".format(rel, reldate.utc().format('YYYY-MM-DD'));
                 releases_shown++;
             }
         }
