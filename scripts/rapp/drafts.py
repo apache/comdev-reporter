@@ -134,6 +134,7 @@ def forgotten(environ, user):
             else:
                 applicables = []
                 last_report  = ""
+                last_author = None
                 has_draft = False
                 ts = 0
                 for filename in drafts:
@@ -144,12 +145,14 @@ def forgotten(environ, user):
                 if has_access(user, rid) and applicables:
                     has_draft = True
                     last_report = open(os.path.join(DRAFTS_DIR, applicables[-1]), "r").read()
-                    ts = os.path.getmtime(os.path.join(DRAFTS_DIR, applicables[-1]))
+                    e, p, t, u = applicables[-1].split('-', 3)
+                    ts = int(t)
+                    last_author = u.replace('.draft', '')
                 lost[rid] = {
                     'filed': False,
                     'has_draft': has_draft,
                     'last_draft': last_report,
-                    'last_author': u.replace('.draft', ''),
+                    'last_author': last_author,
                     'draft_timestamp': ts,
                     'attach': entry['attach']
                 }
