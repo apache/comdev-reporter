@@ -128,7 +128,7 @@ def getJIRAProjects(project, tlpid):
             x = readJson(RAOHOME+"data/JIRA/jira_projects.json")
         else:
             if sys.version_info >= (3, 0):
-                base64string = base64.encodestring(('%s:%s' % ('githubbot', jirapass)).encode('ascii'))[:-1]
+                base64string = base64.encodestring(('%s:%s' % ('githubbot', jirapass)).encode('ascii')).decode('ascii')[:-1]
             else:
                 base64string = base64.encodestring('%s:%s' % ('githubbot', jirapass))[:-1]
     
