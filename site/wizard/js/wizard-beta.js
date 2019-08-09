@@ -3559,7 +3559,7 @@ function UnifiedEditor_compile() {
       text += "Your report could possibly use some more work, and that's okay! You can always save your current report as a draft and return later to work more on it. Drafts are saved for up to two months.";
     }
     else {
-        text += "That's it, your board report compiled a-okay and is potentially ready for submission! If you'd lih to ke more time to work on it, you can save it as a draft, and return later to make some final edits. Or you can publish it to the agenda via Whimsy.";
+        text += "That's it, your board report compiled a-okay and is potentially ready for submission! If you'd like more time to work on it, you can save it as a draft, and return later to make some final edits. Or you can publish it to the agenda via Whimsy.";
     }
     text += "<br/><button class='btn btn-warning' onclick='save_draft();'>Save as draft</button>"
     if (!meta_data.found) {
