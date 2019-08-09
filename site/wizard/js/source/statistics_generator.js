@@ -621,8 +621,8 @@ function statistics_health(data) {
                     }
                 }
                 cols[0].push(date);
-                cols[1].push(c);
-                cols[2].push(o);
+                cols[1].push(o);
+                cols[2].push(c);
             }
             let cutoff = moment.utc().subtract(13, 'weeks').startOf('week').weekday(4);
             let chartdiv = new HTML('div', {
@@ -749,8 +749,8 @@ function statistics_health(data) {
                     }
                 }
                 cols[0].push(date);
-                cols[1].push(c);
-                cols[2].push(o);
+                cols[1].push(o);
+                cols[2].push(c);
             }
             let cutoff = moment.utc().subtract(13, 'weeks').startOf('week').weekday(4);
             let chartdiv = new HTML('div', {
