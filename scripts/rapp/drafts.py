@@ -149,6 +149,7 @@ def forgotten(environ, user):
                     'filed': False,
                     'has_draft': has_draft,
                     'last_draft': last_report,
+                    'last_author': u.replace('.draft', ''),
                     'draft_timestamp': ts,
                     'attach': entry['attach']
                 }
