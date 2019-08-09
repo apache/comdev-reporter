@@ -118,7 +118,8 @@ def save(environ, user):
 
 def forgotten(environ, user):
     """ Query for which TLP reports have drafts but haven't filed to agenda yet """
-    agenda, cached = rapp.whimsy.get_whimsy(rapp.whimsy.WHIMSY_AGENDA, environ)
+    which_agenda, aurl = rapp.whimsy.latest_agenda(environ)
+    agenda, cached = rapp.whimsy.get_whimsy(aurl, environ)
     drafts = sorted([x for x in os.listdir(DRAFTS_DIR) if x.startswith(EDITOR_TYPE) and x.endswith('.draft')])
     lost = {}
     for entry in agenda:
@@ -129,6 +130,7 @@ def forgotten(environ, user):
             if entry.get('report'):
                 lost[rid] = {
                     'filed': True,
+                    'agenda': which_agenda,
                     'attach': entry['attach']
                 }
             else:
@@ -150,6 +152,7 @@ def forgotten(environ, user):
                     last_author = u.replace('.draft', '')
                 lost[rid] = {
                     'filed': False,
+                    'agenda': which_agenda,
                     'has_draft': has_draft,
                     'last_draft': last_report,
                     'last_author': last_author,

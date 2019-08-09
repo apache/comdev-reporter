@@ -11,8 +11,11 @@ import pdata
 import committee_info
 
 WHIMSY_SUBMIT = 'https://whimsy.apache.org/board/agenda/json/post'
-WHIMSY_AGENDA = 'https://whimsy.apache.org/board/agenda/latest.json'
+WHIMSY_AGENDA_IP = 'https://whimsy.apache.org/board/agenda/%s.json'
+WHIMSY_AGENDA_RE = r'https://whimsy\.apache\.org/board/agenda/(latest|\d+-\d+-\d+)\.json'
+
 WHIMSY_COMMENTS = 'https://whimsy.apache.org/board/agenda/json/historical-comments'
+WHIMSY_CALENDAR = 'https://whimsy.apache.org/board/agenda/calendar.json'
 
 def get_whimsy(url, env, ttl = 14400):
     cached = True
@@ -23,10 +26,13 @@ def get_whimsy(url, env, ttl = 14400):
     else:
         try:
             print("Fetching %s => %s..." % (url, wanted_file))
-            js = requests.get(url, headers = {'Authorization': env.get('HTTP_AUTHORIZATION')}, timeout = 5).json()
+            rv = requests.get(url, headers = {'Authorization': env.get('HTTP_AUTHORIZATION')}, timeout = 5)
+            js = rv.json()
             
-            # Some weaving may be required here if we're not member or chair
-            if url == WHIMSY_AGENDA and len(js) < 50 and ttl <= 3600:
+            # If we get a partial response (206), we need to weave the partial
+            # into the full object in cache.
+            if re.match(WHIMSY_AGENDA_RE, url) and (len(js) < 50 or rv.status_code == 206):
+                print("Got partial response, weaving!!")
                 try:
                     ojs = json.load(open(wanted_file))
                 except:
@@ -51,7 +57,7 @@ def get_whimsy(url, env, ttl = 14400):
                 js = ojs
             
             # Extend old cache if needed
-            elif url == WHIMSY_COMMENTS:
+            elif url == WHIMSY_COMMENTS and rv.status_code == 206:
                 try:
                     ojs = json.load(open(wanted_file))
                 except:
@@ -69,6 +75,15 @@ def get_whimsy(url, env, ttl = 14400):
             js = json.load(open(wanted_file))
     
     return js, cached
+
+def latest_agenda(environ):
+    calendar, cached = get_whimsy(WHIMSY_CALENDAR, environ)
+    latest = calendar['agendas'][-1]
+    ymd = re.match(r"board_agenda_(\d\d\d\d_\d\d_\d\d)\.txt", latest)
+    if ymd:
+        return latest, WHIMSY_AGENDA_IP % ymd.group(1).replace('_', '-')
+    else:
+        return latest, WHIMSY_AGENDA_IP % 'latest'
 
 def has_access(user, project):
     member = pdata.isASFMember(user)
@@ -88,15 +103,17 @@ def guess_title(project):
 
 def agenda_forced(environ, user):
     """ Force whimsy agenda refresh... """
-    get_whimsy(WHIMSY_AGENDA, environ, ttl = 0)
+    txtfile, url = latest_agenda(environ)
+    get_whimsy(url, environ, ttl = 0)
     return agenda(environ, user)
 
 def agenda(environ, user):
     """ Returns data on the board report for a project, IF present and/or filed in the current agenda """
     project = environ.get('QUERY_STRING')
     report = None
+    txtfile, url = latest_agenda(environ)
     if has_access(user, project):
-        agenda, cached = get_whimsy(WHIMSY_AGENDA, environ, ttl = 3600)
+        agenda, cached = get_whimsy(url, environ, ttl = 3600)
         for entry in agenda:
             ml = entry.get('mail_list') # mailing list id, usually correct
             rid = entry.get('roster', '').replace('https://whimsy.apache.org/roster/committee/', '') # ldap id per roster
