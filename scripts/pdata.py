@@ -133,7 +133,7 @@ def getJIRAProjects(project, tlpid):
                 base64string = base64.encodestring('%s:%s' % ('githubbot', jirapass))[:-1]
     
             try:
-                req = requests.get("https://issues.apache.org/jira/rest/api/2/project.json", headers = {"Authorization": "Basic %s" % base64string}).json()
+                x = requests.get("https://issues.apache.org/jira/rest/api/2/project.json", headers = {"Authorization": "Basic %s" % base64string}).json()
                 with open(RAOHOME+"data/JIRA/jira_projects.json", "w") as f:
                     json.dump(x, f, indent=1)
                     f.close()
@@ -170,24 +170,22 @@ def getJIRAS(project):
         st=os.stat(RAOHOME+"data/JIRA/%s.json" % project)
         mtime=st.st_mtime
         if mtime >= (time.time() - (2*86400)):
-            refresh = False
             x = readJson(RAOHOME+"data/JIRA/%s.json" % project)
+            refresh = False
             return x[0], x[1], x[2]
     except:
         pass
-
     if refresh:
         if sys.version_info >= (3, 0):
-            base64string = base64.encodestring(('%s:%s' % ('githubbot', jirapass)).encode('ascii'))[:-1]
+            base64string = base64.encodestring(('%s:%s' % ('githubbot', jirapass)).encode('ascii')).decode('ascii')[:-1]
         else:
             base64string = base64.encodestring('%s:%s' % ('githubbot', jirapass))[:-1]
-
         try:
             headers = {"Authorization": "Basic %s" % base64string}
-            req = requests.get("""https://issues.apache.org/jira/rest/api/2/search?jql=project%20=%20'""" + project + """'%20AND%20created%20%3E=%20-91d""", headers = headers)            
+            req = requests.get("""https://issues.apache.org/jira/rest/api/2/search?jql=project%20=%20'""" + project + """'%20AND%20created%20%3E=%20-91d""", headers = headers)
             cdata = req.json()
             req = requests.get("""https://issues.apache.org/jira/rest/api/2/search?jql=project%20=%20'""" + project + """'%20AND%20resolved%20%3E=%20-91d""", headers = headers)
-            rdata = req.json
+            rdata = req.json()
             with open(RAOHOME+"data/JIRA/%s.json" % project, "w") as f:
                 json.dump([cdata['total'], rdata['total'], project], f, indent=1)
                 f.close()
@@ -335,12 +333,12 @@ def generate(user, project, runkibble):
                 if x > 0 or y > 0:
                     jdata[2].append(p)
                 keys.append(jiraname)
-        elif group in ddata and 'name' in ddata:
+        elif 'name' in ddata:
             jiras = getJIRAProjects(ddata['name'], group)
             keys = jiras
             jdata[2] = []
             for jiraname in jiras:
-                x,y, p= getJIRAS(jiraname)
+                x,y,p= getJIRAS(jiraname)
                 jdata[0] += x
                 jdata[1] += y
                 if x > 0 or y > 0:
