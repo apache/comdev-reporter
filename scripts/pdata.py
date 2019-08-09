@@ -23,6 +23,7 @@
 
 import os, sys, re, json, subprocess, time
 import base64, requests
+import rapp.kibble
 
 CACHE_TIMEOUT = 14400
 
@@ -278,6 +279,10 @@ def generate(user, project, runkibble):
             lastRead = time.time()
         
         emails = {}
+        mlid = project # mailing list ID, might differ from ldap id
+        for k, v in pmap.items():
+            if v == project:
+                mlid = k
         
         for entry in mld: # e.g. hc-dev, ant-users, ws-dev
             tlp = entry.split("-")[0]
@@ -285,9 +290,7 @@ def generate(user, project, runkibble):
             if tlp == "empire":
                 tlp = "empire-db"
                 nentry = entry.replace("empire-", "empire-db-")
-            if tlp in pmap: # convert ml prefix to PMC internal name
-                tlp = pmap[tlp]
-            if tlp  == project:
+            if tlp  == mlid:
                 emails[nentry] = mld[entry]
                 
         dates = {}
@@ -373,19 +376,9 @@ def generate(user, project, runkibble):
         kibble = None
         if runkibble:
             try:
-                xenv = os.environ.copy()
-                if 'SCRIPT_NAME' in xenv:
-                    del xenv['SCRIPT_NAME']
-                cmd = ('%s/site/wizard/kibble.py' % RAOHOME_FULL, project)
-                if jdata and jdata[2]:
-                    cmd += tuple(jdata[2])
-                txt = subprocess.check_output(cmd, env = xenv)
-                if type(txt) is bytes:
-                    txt = txt.decode('ascii')
-                kibble = json.loads(txt)
-            except subprocess.CalledProcessError as e:
-                return None
-                
+                kibble = rapp.kibble.stats(project, jira = jdata[2], mlid = mlid)
+            except:
+                pass
             
         output = {
             'count': count,
