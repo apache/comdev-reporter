@@ -20,6 +20,7 @@ webmap = {
     '/api/drafts/save': rapp.drafts.save,
     '/api/drafts/fetch': rapp.drafts.fetch,
     '/api/drafts/delete': rapp.drafts.delete,
+    '/api/drafts/forgotten': rapp.drafts.forgotten,
 }
 
 def app(environ, start_fn):
