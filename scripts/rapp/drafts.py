@@ -144,7 +144,7 @@ def forgotten(environ, user):
                 if has_access(user, rid) and applicables:
                     has_draft = True
                     last_report = open(os.path.join(DRAFTS_DIR, applicables[-1]), "r").read()
-                    ts = os.stat.getmtime(os.path.join(DRAFTS_DIR, applicables[-1]))
+                    ts = os.path.getmtime(os.path.join(DRAFTS_DIR, applicables[-1]))
                 lost[rid] = {
                     'filed': False,
                     'has_draft': has_draft,
