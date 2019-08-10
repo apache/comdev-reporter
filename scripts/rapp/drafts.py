@@ -10,7 +10,7 @@ import pdata
 import committee_info
 import rapp.whimsy
 
-DRAFTS_DIR = '/tmp/rapp-drafts'
+DRAFTS_DIR = '/var/lib/rapp/drafts'
 EDITOR_TYPE = 'unified'
 
 if not os.path.isdir(DRAFTS_DIR):
