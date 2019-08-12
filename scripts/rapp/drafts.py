@@ -6,12 +6,14 @@ import sys
 import time
 import json
 import re
+import requests
 import pdata
 import committee_info
 import rapp.whimsy
 
 DRAFTS_DIR = '/var/lib/rapp/drafts'
 EDITOR_TYPE = 'unified'
+WHIMSY_NOTIFY = 'https://whimsy.apache.org/board/agenda/json/reporter'
 
 if not os.path.isdir(DRAFTS_DIR):
     os.makedirs(DRAFTS_DIR, exist_ok = True)
@@ -94,6 +96,15 @@ def save(environ, user):
                 with open(os.path.join(DRAFTS_DIR, filename), "w") as f:
                     f.write(report)
                     f.close()
+                # Notify whimsy - this may fail, or not, we don't care :)
+                try:
+                    forgot = forgotten(environ, user)
+                    requests.post(WHIMSY_NOTIFY, headers = {
+                        'Authorization': environ.get('HTTP_AUTHORIZATION'),
+                        "Content-Type": "application/json"
+                        }, json = forgot, timeout = 2)
+                except:
+                    pass
                 return {
                     'okay': True,
                     'filename': filename,
@@ -126,38 +137,38 @@ def forgotten(environ, user):
         ml = entry.get('mail_list') # mailing list id, usually correct
         rid = entry.get('roster', '').replace('https://whimsy.apache.org/roster/committee/', '') # ldap id per roster
         if ml and rid and 'report' in entry and entry.get('attach') >= 'A': # If standard TLP report entry...
-            
-            if entry.get('report'):
-                lost[rid] = {
-                    'filed': True,
-                    'agenda': which_agenda,
-                    'attach': entry['attach']
-                }
-            else:
-                applicables = []
-                last_report  = ""
-                last_author = None
-                has_draft = False
-                ts = 0
-                for filename in drafts:
-                    e, p, t, u = filename.split('-', 3)
-                    t = int(t)
-                    if p == rid and t > (time.time() - 45*86400):
-                        applicables.append(filename)
-                if has_access(user, rid) and applicables:
-                    has_draft = True
-                    last_report = open(os.path.join(DRAFTS_DIR, applicables[-1]), "r").read()
-                    e, p, t, u = applicables[-1].split('-', 3)
-                    ts = int(t)
-                    last_author = u.replace('.draft', '')
-                lost[rid] = {
-                    'filed': False,
-                    'agenda': which_agenda,
-                    'has_draft': has_draft,
-                    'last_draft': last_report,
-                    'last_author': last_author,
-                    'draft_timestamp': ts,
-                    'attach': entry['attach']
-                }
+            if has_access(user, rid):
+                if entry.get('report'):
+                    lost[rid] = {
+                        'filed': True,
+                        'agenda': which_agenda,
+                        'attach': entry['attach']
+                    }
+                else:
+                    applicables = []
+                    last_report  = ""
+                    last_author = None
+                    has_draft = False
+                    ts = 0
+                    for filename in drafts:
+                        e, p, t, u = filename.split('-', 3)
+                        t = int(t)
+                        if p == rid and t > (time.time() - 45*86400):
+                            applicables.append(filename)
+                    if applicables:
+                        has_draft = True
+                        last_report = open(os.path.join(DRAFTS_DIR, applicables[-1]), "r").read()
+                        e, p, t, u = applicables[-1].split('-', 3)
+                        ts = int(t)
+                        last_author = u.replace('.draft', '')
+                    lost[rid] = {
+                        'filed': False,
+                        'agenda': which_agenda,
+                        'has_draft': has_draft,
+                        'last_draft': last_report,
+                        'last_author': last_author,
+                        'draft_timestamp': ts,
+                        'attach': entry['attach']
+                    }
             
     return { 'report_status': lost }
