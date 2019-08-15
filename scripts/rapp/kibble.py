@@ -7,7 +7,7 @@ import re
 import os
 
 RAO_HOME = '/var/www/reporter.apache.org'
-TOKEN = open('%s/data/kibble-token.txt' % RAO_HOME).read().strip()
+TOKEN = open('/usr/local/etc/tokens/kibble.txt').read().strip()
 
 def stats(project, jira = [], mlid = None):
     BEFORE = int(time.time() - (91*86400))
