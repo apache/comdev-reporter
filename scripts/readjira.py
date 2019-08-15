@@ -36,7 +36,7 @@ print("Scanning mypath=%s" % mypath)
 myfiles = [ f for f in listdir(mypath) if f.endswith(".json") and isfile(join(mypath,f)) ]
 
 jirapass = ""
-with open("%s/data/jirapass.txt" % MYHOME, "r") as f:
+with open("/usr/local/etc/tokens/jira.txt", "r") as f:
     jirapass = f.read().strip()
     f.close()
 

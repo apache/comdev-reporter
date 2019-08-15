@@ -77,7 +77,7 @@ ldapmap = {
 }
 
 jirapass = ""
-with open(RAOHOME+"data/jirapass.txt", "r") as f:
+with open("/usr/local/etc/tokens/jira.txt", "r") as f:
     jirapass = f.read().strip()
     f.close()
 

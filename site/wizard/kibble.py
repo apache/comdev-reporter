@@ -10,7 +10,7 @@ import sys
 
 BEFORE = int(time.time() - (90*86400))
 RAO_HOME = '/var/www/reporter.apache.org'
-TOKEN = open('%s/data/kibble-token.txt' % RAO_HOME).read().strip()
+TOKEN = open('/usr/local/etc/tokens/kibble.txt').read().strip()
 
 def main():
     form = cgi.FieldStorage()
