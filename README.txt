@@ -57,12 +57,14 @@ crontab -l -u www-data: (Not currently stored in puppet)
 # ensure that any new data files get picked up by the commit (which must be done by root)
 40  * * * *      cd /var/www/reporter.apache.org/scripts && ./svnadd.sh ../data/releases
 
-00 12 * * * curl -sS "(redacted)" > /var/www/reporter.apache.org/data/mailinglists.json
+# no longer needed?
+#00 12 * * * curl -sS "(redacted)" > /var/www/reporter.apache.org/data/mailinglists.json
 
 # Run scandist
 @reboot         cd /var/www/reporter.apache.org/scripts && ./scandist.sh
 @monthly        cd /var/www/reporter.apache.org/scripts && ./scandist.sh restart
 
+There are additional jobs for projects.a.o which are documented in its file STRUCTURE.txt
 
 Scripts:
 - scripts/health.py
