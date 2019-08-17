@@ -9,6 +9,7 @@ function UnifiedEditor_highlight_sections(additional_text) {
     let hilites = [];
       // Headers are blue
     hilites.push({highlight: /^## [^\r\n]+:/mg, className: 'blue' });
+    hilites.push({highlight: /^<private>.+?<\/private>/g, className: 'orange' });
       // Placeholders are grey with red border
     hilites.push({highlight: PLACEHOLDER, className: 'none' });
     
