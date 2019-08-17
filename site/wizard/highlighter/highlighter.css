@@ -61,15 +61,21 @@
     background-color: #ffec99;
 }
 
-.hwt-content mark.orange {
-    background-color: #ffac99;
-}
-
 .hwt-content div.green {
-    background-color: #efe;
+    background-color: #afa3;
 	width: 100%;
 	display: inline-block;
 }
+
+
+.hwt-content mark.classified {
+    background-color: #3335 !important;
+	width: 100%;
+	font-weight: bold;
+	display: inline-block;
+	visibility: visible;
+}
+
 
 mark.green {
 	visibility: hidden;
