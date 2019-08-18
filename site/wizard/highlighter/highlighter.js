@@ -203,7 +203,7 @@
 
 			// FF fix
 			padding['padding-left'] = '0px';
-			padding['padding-right'] = (parseInt(padding['padding-right']) + 5) + 'px';
+			padding['padding-right'] = (parseInt(padding['padding-right']) + 8) + 'px';
 			this.$backdrop
 				.css({
 					// give padding pixels to backdrop div
