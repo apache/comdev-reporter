@@ -3190,7 +3190,7 @@ function ReportStepper(div, editor, layout, helper) {
         
         if (this.changed) this.editor.highlight();
         // skip building if nothing changed
-        if (!this.changed && !start && this.editor.report == this.editor.last_cursor_report) return;
+        if (!this.changed && !start && this.editor.report == this.editor.last_cursor_report && s != -1) return;
         this.editor.last_cursor_report = this.editor.report;
         
         // build the step div
@@ -3298,7 +3298,7 @@ function UnifiedEditor_highlight_sections(additional_text) {
     // Set which sections  highlight
     let hilites = [];
       // Headers are blue
-    hilites.push({highlight: /^## [^\r\n]+:/mg, className: 'blue' });
+    hilites.push({highlight: /^## [^\r\n]+:?/mg, className: 'blue' });
       // Placeholders are grey with red border
     hilites.push({highlight: PLACEHOLDER, className: 'none' });
      // <private> sections
@@ -3388,7 +3388,7 @@ function UnifiedEditor_find_section(e) {
     } else {
         for (var i = 0; i < this.layout.length; i++) {
             let step = this.layout[i];
-            let tline = "## %s:".format(step.rawname || step.description);
+            let tline = "## %s".format(step.rawname || step.description);
             if (tprec.indexOf(tline) != -1) {
                 at_step = i;
             }
@@ -3463,7 +3463,7 @@ function UnifiedEditor_mark_section(title) {
     for (var i = 0; i < this.sections.length; i++) {
         let section = this.sections[i];
         if (section.title == title && section.text.indexOf(PLACEHOLDER) == -1 && section.text.length > 4) {
-            //console.log("Marking entire %s section from %u to %u".format(title, sections[i].start, sections[i].end))
+            //console.log("Marking entire %s section from %u to %u".format(title, this.sections[i].start, this.sections[i].end))
             this.highlight(section.text);
             foundit = true;
             break;

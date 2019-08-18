@@ -35,7 +35,7 @@ function ReportStepper(div, editor, layout, helper) {
         
         if (this.changed) this.editor.highlight();
         // skip building if nothing changed
-        if (!this.changed && !start && this.editor.report == this.editor.last_cursor_report) return;
+        if (!this.changed && !start && this.editor.report == this.editor.last_cursor_report && s != -1) return;
         this.editor.last_cursor_report = this.editor.report;
         
         // build the step div
