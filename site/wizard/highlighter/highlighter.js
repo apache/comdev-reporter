@@ -201,6 +201,8 @@
 				'border-width': '0'
 			});
 
+			// FF fix
+			padding['padding-left'] = '0px';
 			this.$backdrop
 				.css({
 					// give padding pixels to backdrop div
