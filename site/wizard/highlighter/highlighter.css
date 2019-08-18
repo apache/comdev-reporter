@@ -45,6 +45,7 @@
 
 .hwt-content mark {
 	padding: 0 !important;
+	padding-right: 4px !important;
 	color: inherit;
 }
 
