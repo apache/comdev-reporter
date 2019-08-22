@@ -1284,6 +1284,10 @@
    "Phillip Cloud",
    1521259201
   ],
+  "emkornfield": [
+   "Micah Kornfield",
+   1566504000
+  ],
   "hg": [
    "Hanifi Gunes",
    0
@@ -1339,6 +1343,10 @@
   "rxin": [
    "Reynold Xin",
    0
+  ],
+  "sbinet": [
+   "Sebastien Binet",
+   1566504000
   ],
   "siddteotia": [
    "Siddharth Teotia",
@@ -10912,6 +10920,10 @@
    "Hao Hao",
    1513224004
   ],
+  "helifu": [
+   "LiFu He",
+   1566504000
+  ],
   "jarcec": [
    "Jarek Jarcec Cecho",
    0
@@ -10963,6 +10975,14 @@
   "wdberkeley": [
    "William Berkeley",
    1473883201
+  ],
+  "yaoxu": [
+   "Yao Xu",
+   1566504000
+  ],
+  "yaozhang": [
+   "Yao Zhang",
+   1566504000
   ]
  },
  "kylin": {
