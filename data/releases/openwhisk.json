@@ -1,6 +1,7 @@
 {
  "openwhisk-apigateway-0.10.0-incubating": 1560297600, 
  "openwhisk-catalog-0.10.0-incubating": 1562544000, 
+ "openwhisk-client-js-3.20.0": 1566950400, 
  "openwhisk-composer-0.11.0-incubating": 1556496000, 
  "openwhisk-runtime-docker-1.13.0-incubating": 1557792000, 
  "openwhisk-runtime-dotnet-1.13.0-incubating": 1557792000, 
