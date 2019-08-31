@@ -26,6 +26,7 @@
 	word-wrap: break-word !important;
 	color: transparent !important;
 	overflow: hidden !important;
+	box-sizing: content-box !important;
 }
 
 .hwt-input {
@@ -66,7 +67,6 @@
     background-color: #afa3;
 	width: 100%;
 	display: inline-block;
-	box-sizing: content-box !important;
 }
 
 
