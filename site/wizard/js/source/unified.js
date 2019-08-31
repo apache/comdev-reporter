@@ -48,7 +48,7 @@ function UnifiedEditor_highlight_sections(additional_text) {
         
         // Sections are marked light green
         hilites.push({
-            highlight: additional_text,
+            highlight: additional_text.replace(/\r?\n$/, ''),
             className: color
             });
     }
