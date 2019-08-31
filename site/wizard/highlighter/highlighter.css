@@ -66,6 +66,7 @@
     background-color: #afa3;
 	width: 100%;
 	display: inline-block;
+	box-sizing: content-box !important;
 }
 
 
