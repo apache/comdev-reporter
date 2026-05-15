@@ -27,7 +27,20 @@ github:
     edit_comment_discussion: "Re: [D] {title} ({repository})"
     delete_comment_discussion: "Re: [D] {title} ({repository})"
 
+  rulesets:
+    - name: "Default Branch Protection"
+      type: branch
+      branches:
+        includes:
+          - "~DEFAULT_BRANCH"
+          - "release/*"
+          - "rel/*"
+        excludes: []
+      bypass_teams:
+        - root
+      restrict_deletion: true
+      restrict_force_push: true
 notifications:
-  commits:      commits@community.apache.org
-  issues:       dev@community.apache.org
+  commits: commits@community.apache.org
+  issues: dev@community.apache.org
   pullrequests: dev@community.apache.org
